@@ -83,7 +83,7 @@ function bindAuthUi() {
         }
       } catch (error) {
         console.error(error);
-        setAuthFeedback('Не удалось отправить ссылку. Проверьте настройки Supabase Auth.', 'error');
+        setAuthFeedback(explainAuthError(error), 'error');
       }
     });
   }
@@ -204,6 +204,29 @@ function setAuthFeedback(message, type) {
   if (type) {
     authFeedback.classList.add(`is-${type}`);
   }
+}
+
+function explainAuthError(error) {
+  const message = String(error?.message || '').trim();
+  const normalized = message.toLowerCase();
+
+  if (
+    normalized.includes('rate limit') ||
+    normalized.includes('too many') ||
+    normalized.includes('otp')
+  ) {
+    return 'Ссылка временно не отправляется из-за лимита писем Supabase. Подождите немного и попробуйте снова. Для боевого режима лучше подключить свой SMTP.';
+  }
+
+  if (normalized.includes('not authorized')) {
+    return 'Этот email не разрешён для отправки через текущую почтовую настройку Supabase. Проверьте SMTP или список разрешённых адресов.';
+  }
+
+  if (message) {
+    return `Не удалось отправить ссылку: ${message}`;
+  }
+
+  return 'Не удалось отправить ссылку. Проверьте настройки Supabase Auth.';
 }
 
 function toggleNode(node, shouldShow) {
