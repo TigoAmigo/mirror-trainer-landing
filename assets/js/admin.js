@@ -2,14 +2,35 @@
 const dataApi = window.MirrorTrainerData || {};
 const fetchDashboardSnapshot = dataApi.getDashboardSnapshot || (async () => ({ summary: {}, interestBreakdown: [], purchaseBreakdown: [], ctaBreakdown: [], scrollDepth: [], updatedAt: new Date().toISOString(), demo: true }));
 const fetchLeadRecords = dataApi.getLeadRecords || (async () => []);
+const getAdminSession = dataApi.getAdminSession || (async () => ({ mode: 'local', session: null, user: null }));
+const requestAdminMagicLink = dataApi.requestAdminMagicLink || (async () => ({ mode: 'local', sent: false }));
+const performAdminSignOut = dataApi.signOutAdmin || (async () => ({ mode: 'local' }));
+const subscribeToAuthChanges = dataApi.onAuthStateChange || (async () => (() => {}));
 const refreshButton = document.querySelector('[data-refresh-dashboard]');
 const updatedLabel = document.querySelector('[data-updated-label]');
+const authPanel = document.querySelector('[data-admin-auth-panel]');
+const authTitle = document.querySelector('[data-admin-auth-title]');
+const authSubtitle = document.querySelector('[data-admin-auth-subtitle]');
+const authFeedback = document.querySelector('[data-admin-auth-feedback]');
+const authForm = document.querySelector('[data-admin-login-form]');
+const sessionActions = document.querySelector('[data-admin-session-actions]');
+const sessionEmail = document.querySelector('[data-admin-session-email]');
+const logoutButton = document.querySelector('[data-admin-logout]');
+const dashboard = document.querySelector('[data-admin-dashboard]');
+const hasRemoteConfig = Boolean(dataApi.hasRemoteConfig);
 let isLoading = false;
+let authReady = false;
+let currentUser = null;
 
 init();
 
-function init() {
-  loadDashboard();
+async function init() {
+  bindAuthUi();
+  await syncAuthState();
+
+  if (!hasRemoteConfig) {
+    loadDashboard();
+  }
 
   if (refreshButton) {
     refreshButton.addEventListener('click', () => loadDashboard());
@@ -27,9 +48,177 @@ function init() {
       loadDashboard();
     }
   }, 12000);
+
+  subscribeToAuthChanges(handleAuthStateChange).catch((error) => {
+    console.error('Failed to subscribe to auth state changes', error);
+  });
+}
+
+function bindAuthUi() {
+  if (authForm) {
+    authForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(authForm);
+      const email = String(formData.get('email') || '').trim().toLowerCase();
+
+      if (!email) {
+        setAuthFeedback('Введите email администратора.', 'error');
+        return;
+      }
+
+      setAuthFeedback('Отправляем ссылку для входа...', 'warning');
+
+      try {
+        const result = await requestAdminMagicLink(email);
+
+        if (result.sent) {
+          setAuthFeedback(
+            `Ссылка для входа отправлена на ${email}. Открой письмо на этом устройстве и вернитесь в админку.`,
+            'success'
+          );
+          authForm.reset();
+        } else {
+          setAuthFeedback('Supabase ещё не подключён. Сейчас доступен только локальный режим.', 'warning');
+        }
+      } catch (error) {
+        console.error(error);
+        setAuthFeedback('Не удалось отправить ссылку. Проверьте настройки Supabase Auth.', 'error');
+      }
+    });
+  }
+
+  if (logoutButton) {
+    logoutButton.addEventListener('click', async () => {
+      try {
+        await performAdminSignOut();
+        currentUser = null;
+        syncAuthState();
+      } catch (error) {
+        console.error(error);
+        setAuthFeedback('Не удалось завершить сессию.', 'error');
+      }
+    });
+  }
+}
+
+async function syncAuthState() {
+  if (!hasRemoteConfig) {
+    authReady = true;
+    currentUser = null;
+    updateAuthView();
+    return;
+  }
+
+  setAuthFeedback('Проверяем доступ к онлайн-данным...', 'warning');
+
+  try {
+    const { user } = await getAdminSession();
+    authReady = true;
+    currentUser = user || null;
+    updateAuthView();
+
+    if (currentUser) {
+      loadDashboard();
+    }
+  } catch (error) {
+    console.error(error);
+    authReady = true;
+    currentUser = null;
+    updateAuthView();
+    setAuthFeedback('Не удалось проверить сессию. Проверьте настройки Supabase.', 'error');
+  }
+}
+
+function handleAuthStateChange({ user }) {
+  currentUser = user || null;
+  authReady = true;
+  updateAuthView();
+
+  if (currentUser) {
+    loadDashboard();
+  }
+}
+
+function updateAuthView() {
+  if (!authPanel) {
+    return;
+  }
+
+  if (!authReady) {
+    setAuthCopy('Проверка доступа', 'Подготавливаем режим админки');
+    toggleNode(authForm, false);
+    toggleNode(sessionActions, false);
+    toggleNode(dashboard, false);
+    return;
+  }
+
+  if (!hasRemoteConfig) {
+    setAuthCopy('Локальный режим', 'Supabase не подключён, доступны только demo- и локальные данные этого браузера');
+    toggleNode(authForm, false);
+    toggleNode(sessionActions, false);
+    toggleNode(dashboard, true);
+    setAuthFeedback('Для боевого режима подключите Supabase и вход по email для админки.', 'warning');
+    return;
+  }
+
+  if (currentUser) {
+    setAuthCopy('Доступ подтверждён', 'Админка подключена к Supabase и показывает общие онлайн-данные');
+    toggleNode(authForm, false);
+    toggleNode(sessionActions, true);
+    toggleNode(dashboard, true);
+
+    if (sessionEmail) {
+      sessionEmail.textContent = currentUser.email || 'Администратор';
+    }
+
+    setAuthFeedback('Вход выполнен. Данные читаются из Supabase.', 'success');
+    return;
+  }
+
+  setAuthCopy('Вход в админку', 'Для просмотра реальных заявок и аналитики войдите по email администратора');
+  toggleNode(authForm, true);
+  toggleNode(sessionActions, false);
+  toggleNode(dashboard, false);
+  setAuthFeedback('После входа откроется общая онлайн-сводка по клиентам.', 'warning');
+}
+
+function setAuthCopy(title, subtitle) {
+  if (authTitle) {
+    authTitle.textContent = title;
+  }
+
+  if (authSubtitle) {
+    authSubtitle.textContent = subtitle;
+  }
+}
+
+function setAuthFeedback(message, type) {
+  if (!authFeedback) {
+    return;
+  }
+
+  authFeedback.textContent = message;
+  authFeedback.classList.remove('is-success', 'is-error', 'is-warning');
+
+  if (type) {
+    authFeedback.classList.add(`is-${type}`);
+  }
+}
+
+function toggleNode(node, shouldShow) {
+  if (!node) {
+    return;
+  }
+
+  node.hidden = !shouldShow;
 }
 
 async function loadDashboard() {
+  if (hasRemoteConfig && !currentUser) {
+    return;
+  }
+
   if (isLoading) {
     return;
   }
@@ -73,6 +262,10 @@ async function loadDashboard() {
     console.error(error);
     if (updatedLabel) {
       updatedLabel.textContent = 'Не удалось загрузить данные';
+    }
+
+    if (hasRemoteConfig) {
+      setAuthFeedback('Не удалось получить онлайн-данные. Проверьте, что ваш email добавлен в список администраторов.', 'error');
     }
   } finally {
     isLoading = false;

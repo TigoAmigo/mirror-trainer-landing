@@ -74,6 +74,11 @@ create table if not exists public.event_logs (
   metadata jsonb not null default '{}'::jsonb
 );
 
+create table if not exists public.admin_users (
+  email text primary key,
+  created_at timestamptz not null default timezone('utc', now())
+);
+
 create index if not exists idx_leads_created_at on public.leads (created_at desc);
 create index if not exists idx_leads_session_id on public.leads (session_id);
 create index if not exists idx_feedback_votes_interest_level on public.feedback_votes (interest_level);
@@ -86,11 +91,39 @@ alter table public.leads enable row level security;
 alter table public.feedback_votes enable row level security;
 alter table public.purchase_intent enable row level security;
 alter table public.event_logs enable row level security;
+alter table public.admin_users enable row level security;
 
 revoke all on table public.leads from anon, authenticated;
 revoke all on table public.feedback_votes from anon, authenticated;
 revoke all on table public.purchase_intent from anon, authenticated;
 revoke all on table public.event_logs from anon, authenticated;
+revoke all on table public.admin_users from anon, authenticated;
+
+create or replace function public.is_admin_user()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.admin_users
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  );
+$$;
+
+create or replace function public.assert_admin_access()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not public.is_admin_user() then
+    raise exception 'admin access required';
+  end if;
+end;
+$$;
 
 create or replace function public.create_lead(payload jsonb)
 returns uuid
@@ -307,10 +340,15 @@ $$;
 
 create or replace function public.get_dashboard_snapshot()
 returns jsonb
-language sql
+language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  result jsonb;
+begin
+  perform public.assert_admin_access();
+
   with summary as (
     select
       (select count(*) from public.leads) as total_leads,
@@ -369,9 +407,11 @@ as $$
       values
         ('hero_primary', 1),
         ('hero_secondary', 2),
-        ('header_preorder', 3),
-        ('price_preorder', 4),
-        ('final_cta', 5)
+        ('hero_quick_product', 3),
+        ('hero_quick_training', 4),
+        ('header_preorder', 5),
+        ('mobile_dock', 6),
+        ('final_cta', 7)
     ) as labels(label, sort_order)
     left join lateral (
       select count(*) as total
@@ -420,15 +460,24 @@ as $$
     'ctaBreakdown', coalesce((select data from cta_breakdown), '[]'::jsonb),
     'scrollDepth', coalesce((select data from scroll_breakdown), '[]'::jsonb)
   )
+  into result
   from summary;
+
+  return result;
+end;
 $$;
 
 create or replace function public.get_recent_leads(limit_count int default 50)
 returns jsonb
-language sql
+language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  result jsonb;
+begin
+  perform public.assert_admin_access();
+
   select coalesce(
     jsonb_agg(
       jsonb_build_object(
@@ -446,17 +495,27 @@ as $$
     ),
     '[]'::jsonb
   )
+  into result
   from (
     select *
     from public.leads
     order by created_at desc
     limit greatest(limit_count, 1)
   ) as leads;
+
+  return result;
+end;
 $$;
 
 grant execute on function public.create_lead(jsonb) to anon, authenticated;
 grant execute on function public.upsert_feedback_vote(jsonb) to anon, authenticated;
 grant execute on function public.upsert_purchase_intent(jsonb) to anon, authenticated;
 grant execute on function public.log_event(jsonb) to anon, authenticated;
+grant execute on function public.is_admin_user() to anon, authenticated;
+grant execute on function public.assert_admin_access() to anon, authenticated;
 grant execute on function public.get_dashboard_snapshot() to anon, authenticated;
 grant execute on function public.get_recent_leads(int) to anon, authenticated;
+
+-- После выполнения схемы добавьте свой email администратора:
+-- insert into public.admin_users (email) values ('you@example.com')
+-- on conflict (email) do nothing;

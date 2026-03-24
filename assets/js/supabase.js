@@ -103,8 +103,9 @@ async function getSupabaseClient() {
       .then(({ createClient }) =>
         createClient(appConfig.supabaseUrl, appConfig.supabaseAnonKey, {
           auth: {
-            persistSession: false,
-            autoRefreshToken: false,
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true,
           },
         })
       )
@@ -333,6 +334,103 @@ async function runRpc(functionName, payload) {
   return data;
 }
 
+async function getAdminSession() {
+  const client = await getSupabaseClient();
+
+  if (!client) {
+    return {
+      mode: 'local',
+      session: null,
+      user: null,
+    };
+  }
+
+  const { data, error } = await client.auth.getSession();
+
+  if (error) {
+    throw error;
+  }
+
+  return {
+    mode: 'remote',
+    session: data.session,
+    user: data.session?.user ?? null,
+  };
+}
+
+async function requestAdminMagicLink(email) {
+  const client = await getSupabaseClient();
+
+  if (!client) {
+    return {
+      mode: 'local',
+      sent: false,
+    };
+  }
+
+  const isLocalHost =
+    window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const baseUrl = isLocalHost ? window.location.href : appConfig.siteUrl || window.location.href;
+  const redirectTo = new URL('admin.html', baseUrl).toString();
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+
+  const { error } = await client.auth.signInWithOtp({
+    email: normalizedEmail,
+    options: {
+      emailRedirectTo: redirectTo,
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return {
+    mode: 'remote',
+    sent: true,
+    redirectTo,
+  };
+}
+
+async function signOutAdmin() {
+  const client = await getSupabaseClient();
+
+  if (!client) {
+    return {
+      mode: 'local',
+    };
+  }
+
+  const { error } = await client.auth.signOut();
+
+  if (error) {
+    throw error;
+  }
+
+  return {
+    mode: 'remote',
+  };
+}
+
+async function onAuthStateChange(callback) {
+  const client = await getSupabaseClient();
+
+  if (!client || typeof callback !== 'function') {
+    return () => {};
+  }
+
+  const {
+    data: { subscription },
+  } = client.auth.onAuthStateChange((_event, session) => {
+    callback({
+      session,
+      user: session?.user ?? null,
+    });
+  });
+
+  return () => subscription.unsubscribe();
+}
+
 async function saveLead(payload) {
   const row = {
     id: createLocalId('lead'),
@@ -483,11 +581,16 @@ async function getLeadRecords(limit = 50) {
 
 window.MirrorTrainerData = {
   storageMode,
+  hasRemoteConfig,
   saveLead,
   saveInterestVote,
   savePurchaseIntent,
   logEvent,
   getDashboardSnapshot,
   getLeadRecords,
+  getAdminSession,
+  requestAdminMagicLink,
+  signOutAdmin,
+  onAuthStateChange,
 };
 })();

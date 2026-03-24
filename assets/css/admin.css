@@ -186,6 +186,90 @@ a:focus-visible {
   gap: 18px;
 }
 
+.admin-auth-panel {
+  margin-bottom: 18px;
+}
+
+.admin-auth-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+}
+
+.admin-label {
+  display: grid;
+  gap: 8px;
+  flex: 1 1 280px;
+}
+
+.admin-label span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.admin-input {
+  width: 100%;
+  min-height: 50px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font: inherit;
+  transition:
+    border-color 220ms ease,
+    background 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.admin-input::placeholder {
+  color: rgba(196, 205, 224, 0.56);
+}
+
+.admin-input:hover,
+.admin-input:focus-visible {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 6px rgba(199, 214, 245, 0.06);
+}
+
+.admin-auth-feedback {
+  margin: 16px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.admin-auth-feedback.is-success {
+  color: var(--success);
+}
+
+.admin-auth-feedback.is-error {
+  color: #f1a3ad;
+}
+
+.admin-auth-feedback.is-warning {
+  color: var(--accent);
+}
+
+.admin-session-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-session-email {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--accent);
+}
+
 .admin-grid-highlight {
   margin-bottom: 18px;
 }
@@ -398,6 +482,12 @@ a:focus-visible {
     width: 100%;
   }
 
+  .admin-auth-form {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .admin-grid {
     grid-template-columns: 1fr;
   }
@@ -416,6 +506,15 @@ a:focus-visible {
   .admin-link,
   .admin-button {
     width: 100%;
+  }
+
+  .admin-session-actions {
+    width: 100%;
+  }
+
+  .admin-session-email {
+    width: 100%;
+    justify-content: center;
   }
 
   .kpi-grid {

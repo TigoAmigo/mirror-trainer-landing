@@ -15,7 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oranienbaum&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/admin.css?v=20260324-4" />
+    <link rel="stylesheet" href="./assets/css/admin.css?v=20260325-1" />
   </head>
   <body>
     <div class="runtime-warning runtime-warning-admin" data-runtime-warning hidden>
@@ -47,6 +47,43 @@
       </header>
 
       <main class="admin-main">
+        <section class="panel admin-auth-panel" data-admin-auth-panel>
+          <div class="panel-header">
+            <div>
+              <h2 data-admin-auth-title>Проверка доступа</h2>
+              <span data-admin-auth-subtitle>Подготавливаем режим админки</span>
+            </div>
+            <div class="admin-session-actions" data-admin-session-actions hidden>
+              <span class="admin-session-email" data-admin-session-email></span>
+              <button class="admin-link" type="button" data-admin-logout>
+                Выйти
+              </button>
+            </div>
+          </div>
+
+          <form class="admin-auth-form" data-admin-login-form hidden>
+            <label class="admin-label">
+              <span>Email администратора</span>
+              <input
+                class="admin-input"
+                type="email"
+                name="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required
+              />
+            </label>
+            <button class="admin-button" type="submit">
+              Получить ссылку для входа
+            </button>
+          </form>
+
+          <p class="admin-auth-feedback" data-admin-auth-feedback>
+            Проверяем подключение к Supabase и текущую сессию.
+          </p>
+        </section>
+
+        <div data-admin-dashboard hidden>
         <section class="kpi-grid" data-dashboard-state="loading">
           <article class="kpi-card">
             <span>Уникальные посетители</span>
@@ -154,10 +191,11 @@
 
         <section class="admin-note">
           <p>
-            Если Supabase ещё не подключён, страница покажет локальные
-            данные из этого же браузера и будет обновляться при новых действиях на лендинге.
+            Если Supabase ещё не подключён, страница работает в локальном режиме.
+            После подключения Supabase доступ к онлайн-данным выдаётся через вход по email.
           </p>
         </section>
+        </div>
       </main>
     </div>
 
@@ -167,8 +205,8 @@
         if (node) node.hidden = false;
       }
     </script>
-    <script src="./assets/js/config.js?v=20260324-4"></script>
-    <script src="./assets/js/supabase.js?v=20260324-4"></script>
-    <script src="./assets/js/admin.js?v=20260324-4"></script>
+    <script src="./assets/js/config.js?v=20260325-1"></script>
+    <script src="./assets/js/supabase.js?v=20260325-1"></script>
+    <script src="./assets/js/admin.js?v=20260325-1"></script>
   </body>
 </html>

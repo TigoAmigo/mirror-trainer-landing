@@ -76,7 +76,11 @@ python3 -m http.server 4173
 
 ### 1. Создайте проект в Supabase
 
-Нужен обычный проект с `Project URL` и `anon public key`.
+Нужен обычный проект с:
+
+- `Project URL`
+- `anon public key`
+- включённым `Email auth` для входа в админку
 
 ### 2. Примените SQL schema
 
@@ -90,9 +94,33 @@ python3 -m http.server 4173
 - `feedback_votes`
 - `purchase_intent`
 - `event_logs`
+- `admin_users`
 - RPC-функции для записи и чтения агрегированной сводки
 
-### 3. Заполните конфиг
+### 3. Настройте Auth для админки
+
+В Supabase откройте:
+
+- `Authentication -> URL Configuration`
+
+Добавьте:
+
+- `Site URL`: `https://tigoamigo.github.io/mirror-trainer-landing/`
+- `Redirect URL`: `https://tigoamigo.github.io/mirror-trainer-landing/admin.html`
+
+Если хотите тестировать вход локально через `http://127.0.0.1:4173`, добавьте ещё и локальный redirect:
+
+- `http://127.0.0.1:4173/admin.html`
+
+После этого добавьте свой email в список админов через SQL Editor:
+
+```sql
+insert into public.admin_users (email)
+values ('you@example.com')
+on conflict (email) do nothing;
+```
+
+### 4. Заполните конфиг
 
 Скопируйте:
 
@@ -115,7 +143,7 @@ window.APP_CONFIG = {
 };
 ```
 
-### 4. Проверьте, что запись работает
+### 5. Проверьте, что запись работает
 
 После настройки:
 
@@ -124,6 +152,7 @@ window.APP_CONFIG = {
 3. Нажмите вариант в блоке purchase intent.
 4. Отправьте форму.
 5. Откройте `admin.html`.
+6. Войдите в админку по email из таблицы `admin_users`.
 
 Если всё подключено правильно, данные пойдут в Supabase, а summary будет строиться по RPC-функции `get_dashboard_snapshot()`.
 
@@ -197,6 +226,7 @@ window.APP_CONFIG = {
 Важно:
 
 - если Supabase не подключён, админка показывает локальные данные из того же браузера
+- если Supabase подключён, админка работает как онлайн-кабинет и требует вход по email администратора
 - для реальных данных от клиентов с разных устройств нужен заполненный `supabaseUrl` и `supabaseAnonKey`
 
 ## Деплой на GitHub Pages
@@ -210,11 +240,12 @@ window.APP_CONFIG = {
 5. В `Build and deployment` выберите `Deploy from a branch`.
 6. Укажите нужную ветку и `/root`.
 7. После публикации проверьте `index.html` и `admin.html`.
+8. Проверьте, что в Supabase Auth добавлены `Site URL` и `Redirect URL` для `admin.html`.
 
 ## Что важно обновить перед продом
 
 - Вставить реальные `siteUrl`, `contactTelegramUrl`, `contactTelegramLabel`
-- Обновить `og:url` и `og:image` в [index.html](/Users/ilqar/Documents/Блокнот/index.html)
+- При необходимости заменить email администратора в `public.admin_users`
 - При необходимости заменить изображения в [assets/images](/Users/ilqar/Documents/Блокнот/assets/images)
 - Проверить тексты, FAQ и цену
 
@@ -235,6 +266,7 @@ window.APP_CONFIG = {
 
 ## Ограничения и замечания
 
-- `admin.html` построен как безопасная агрегированная сводка. Для полного приватного CRM-подобного кабинета уже нужен backend или закрытая админка.
+- `admin.html` в боевом режиме должен открываться только после входа через Supabase Auth.
+- Для полного CRM-подобного кабинета с ролями и глубокой фильтрацией уже нужен отдельный backend.
 - `supabase anon key` предназначен для публичного фронтенда, это нормально.
 - В проекте нет тяжёлых фреймворков и нет обязательного build step.
