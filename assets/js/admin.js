@@ -301,6 +301,7 @@ function humanizeCtaLabel(label) {
     hero_quick_product: 'Hero: состав комплекта',
     hero_quick_training: 'Hero: тренировка',
     header_preorder: 'Header: предзаказ',
+    mobile_dock: 'Mobile dock: заявка',
     final_cta: 'Финальный CTA',
   };
 

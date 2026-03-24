@@ -157,12 +157,22 @@ function initHeader() {
     return;
   }
 
+  const closeNav = () => {
+    document.body.classList.remove('nav-open');
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+
   const updateHeaderState = () => {
     header.classList.toggle('is-scrolled', window.scrollY > 10);
+
+    if (window.innerWidth > 840) {
+      closeNav();
+    }
   };
 
   updateHeaderState();
   window.addEventListener('scroll', updateHeaderState, { passive: true });
+  window.addEventListener('resize', updateHeaderState, { passive: true });
 
   toggle.addEventListener('click', () => {
     const isOpen = document.body.classList.toggle('nav-open');
@@ -171,9 +181,20 @@ function initHeader() {
 
   nav.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
-      document.body.classList.remove('nav-open');
-      toggle.setAttribute('aria-expanded', 'false');
+      closeNav();
     });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (
+      !document.body.classList.contains('nav-open') ||
+      nav.contains(event.target) ||
+      toggle.contains(event.target)
+    ) {
+      return;
+    }
+
+    closeNav();
   });
 }
 

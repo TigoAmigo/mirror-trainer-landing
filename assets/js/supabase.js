@@ -282,6 +282,7 @@ function buildLocalDashboardSnapshot() {
     'hero_quick_product',
     'hero_quick_training',
     'header_preorder',
+    'mobile_dock',
     'final_cta',
   ]);
 

@@ -277,6 +277,7 @@ a:focus-visible {
   margin-top: 6px;
   color: var(--muted);
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .lead-tags {
@@ -302,6 +303,7 @@ a:focus-visible {
   margin-top: 14px;
   color: var(--text);
   line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 .funnel-grid {
@@ -392,6 +394,10 @@ a:focus-visible {
     align-items: flex-start;
   }
 
+  .admin-actions {
+    width: 100%;
+  }
+
   .admin-grid {
     grid-template-columns: 1fr;
   }
@@ -407,11 +413,29 @@ a:focus-visible {
     padding-top: 20px;
   }
 
+  .admin-link,
+  .admin-button {
+    width: 100%;
+  }
+
   .kpi-grid {
     grid-template-columns: 1fr;
   }
 
   .funnel-grid {
     grid-template-columns: 1fr;
+  }
+
+  .kpi-card,
+  .panel,
+  .admin-note {
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .lead-card,
+  .funnel-card,
+  .bar-item {
+    padding: 16px;
   }
 }
