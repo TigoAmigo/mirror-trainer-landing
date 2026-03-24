@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mirror Trainer Admin Summary</title>
+    <meta
+      name="description"
+      content="Сводка по заявкам, интересу, CTA и глубине скролла для лендинга Тренажёр работы через зеркало."
+    />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oranienbaum&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/admin.css?v=20260324-2" />
+  </head>
+  <body>
+    <div class="runtime-warning runtime-warning-admin" data-runtime-warning hidden>
+      <div class="admin-shell runtime-warning-inner">
+        <strong>Админка в file-режиме может не синхронизироваться корректно.</strong>
+        <span>
+          Откройте через локальный сервер:
+          <code>bash "/Users/ilqar/Documents/Блокнот/start-local.sh"</code>
+        </span>
+      </div>
+    </div>
+
+    <div class="admin-shell">
+      <header class="admin-header">
+        <div>
+          <p class="admin-eyebrow">Admin summary</p>
+          <h1>Сводка по спросу и ключевым действиям</h1>
+          <p>
+            Страница показывает метрики спроса и список последних заявок,
+            чтобы можно было быстро увидеть не только цифры, но и живые сигналы от аудитории.
+          </p>
+        </div>
+        <div class="admin-actions">
+          <a class="admin-link" href="./index.html">Открыть лендинг</a>
+          <button class="admin-button" type="button" data-refresh-dashboard>
+            Обновить данные
+          </button>
+        </div>
+      </header>
+
+      <main class="admin-main">
+        <section class="kpi-grid" data-dashboard-state="loading">
+          <article class="kpi-card">
+            <span>Уникальные посетители</span>
+            <strong data-kpi="uniqueVisitors">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Всего заявок</span>
+            <strong data-kpi="totalLeads">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Ответов по интересу</span>
+            <strong data-kpi="interestResponses">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Ответов по покупке</span>
+            <strong data-kpi="purchaseResponses">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Очень интересно</span>
+            <strong data-kpi="veryInterested">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Позитивный интерес</span>
+            <strong data-kpi="positiveInterest">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Купил(а) бы</span>
+            <strong data-kpi="buyYes">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Потенциальный спрос</span>
+            <strong data-kpi="potentialDemand">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Если цена ниже</span>
+            <strong data-kpi="buyLowerPrice">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Конверсия формы</span>
+            <strong data-kpi="formConversion">0%</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Охват опроса</span>
+            <strong data-kpi="surveyCoverage">0%</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Все CTA клики</span>
+            <strong data-kpi="ctaClicks">0</strong>
+          </article>
+        </section>
+
+        <section class="admin-grid admin-grid-highlight">
+          <article class="panel panel-wide">
+            <div class="panel-header">
+              <h2>Воронка спроса</h2>
+              <span>От посещения до заявки</span>
+            </div>
+            <div class="funnel-grid" data-funnel-grid></div>
+          </article>
+        </section>
+
+        <section class="admin-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <h2>Опрос интереса</h2>
+              <span data-updated-label>Данные загружаются</span>
+            </div>
+            <div class="bar-list" data-list="interest"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <h2>Купили бы вы это?</h2>
+              <span>Ответ по покупке</span>
+            </div>
+            <div class="bar-list" data-list="purchase"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <h2>CTA клики</h2>
+              <span>Какие действия нажимают чаще</span>
+            </div>
+            <div class="bar-list" data-list="cta"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <h2>Глубина скролла</h2>
+              <span>Сколько людей доходят до конца</span>
+            </div>
+            <div class="bar-list" data-list="scroll"></div>
+          </article>
+        </section>
+
+        <section class="admin-grid admin-grid-highlight">
+          <article class="panel panel-wide">
+            <div class="panel-header">
+              <h2>Заявки и предзаказы</h2>
+              <span>Последние контакты и ответы пользователей</span>
+            </div>
+            <div class="lead-list" data-lead-list></div>
+          </article>
+        </section>
+
+        <section class="admin-note">
+          <p>
+            Если Supabase ещё не подключён, страница покажет локальные
+            данные из этого же браузера и будет обновляться при новых действиях на лендинге.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      if (window.location.protocol === 'file:') {
+        const node = document.querySelector('[data-runtime-warning]');
+        if (node) node.hidden = false;
+      }
+    </script>
+    <script src="./assets/js/config.js?v=20260324-3"></script>
+    <script src="./assets/js/supabase.js?v=20260324-3"></script>
+    <script src="./assets/js/admin.js?v=20260324-3"></script>
+  </body>
+</html>
