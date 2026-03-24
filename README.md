@@ -87,6 +87,7 @@ python3 -m http.server 4173
 Откройте SQL Editor в Supabase и выполните файл:
 
 - [supabase-schema.sql](/Users/ilqar/Documents/Блокнот/sql/supabase-schema.sql)
+- [reset-live-data.sql](/Users/ilqar/Documents/Блокнот/sql/reset-live-data.sql)
 
 Что создаётся:
 
@@ -96,6 +97,10 @@ python3 -m http.server 4173
 - `event_logs`
 - `admin_users`
 - RPC-функции для записи и чтения агрегированной сводки
+
+Если хотите начать с полного нуля уже после запуска, выполните отдельно:
+
+- [reset-live-data.sql](/Users/ilqar/Documents/Блокнот/sql/reset-live-data.sql)
 
 ### 3. Настройте Auth для админки
 
@@ -228,6 +233,7 @@ window.APP_CONFIG = {
 - если Supabase не подключён, админка показывает локальные данные из того же браузера
 - если Supabase подключён, админка работает как онлайн-кабинет и требует вход по email администратора
 - для реальных данных от клиентов с разных устройств нужен заполненный `supabaseUrl` и `supabaseAnonKey`
+- demo-данные в проекте отключены: пустая база теперь показывает нули, а не фейковые цифры
 
 ## Деплой на GitHub Pages
 

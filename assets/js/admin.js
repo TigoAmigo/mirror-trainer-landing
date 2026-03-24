@@ -1,6 +1,6 @@
 (function () {
 const dataApi = window.MirrorTrainerData || {};
-const fetchDashboardSnapshot = dataApi.getDashboardSnapshot || (async () => ({ summary: {}, interestBreakdown: [], purchaseBreakdown: [], ctaBreakdown: [], scrollDepth: [], updatedAt: new Date().toISOString(), demo: true }));
+const fetchDashboardSnapshot = dataApi.getDashboardSnapshot || (async () => ({ summary: {}, interestBreakdown: [], purchaseBreakdown: [], ctaBreakdown: [], scrollDepth: [], updatedAt: new Date().toISOString(), storageMode: 'local' }));
 const fetchLeadRecords = dataApi.getLeadRecords || (async () => []);
 const getAdminSession = dataApi.getAdminSession || (async () => ({ mode: 'local', session: null, user: null }));
 const requestAdminMagicLink = dataApi.requestAdminMagicLink || (async () => ({ mode: 'local', sent: false }));
@@ -154,7 +154,7 @@ function updateAuthView() {
   }
 
   if (!hasRemoteConfig) {
-    setAuthCopy('Локальный режим', 'Supabase не подключён, доступны только demo- и локальные данные этого браузера');
+    setAuthCopy('Локальный режим', 'Supabase не подключён, доступны только локальные данные этого браузера');
     toggleNode(authForm, false);
     toggleNode(sessionActions, false);
     toggleNode(dashboard, true);
@@ -254,9 +254,10 @@ async function loadDashboard() {
 
     if (updatedLabel) {
       const formatted = formatDate(snapshot.updatedAt);
-      updatedLabel.textContent = snapshot.demo
-        ? `Локальные данные: ${formatted}`
-        : `Обновлено: ${formatted}`;
+      updatedLabel.textContent =
+        snapshot.storageMode === 'local'
+          ? `Локальные данные: ${formatted}`
+          : `Обновлено: ${formatted}`;
     }
   } catch (error) {
     console.error(error);

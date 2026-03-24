@@ -16,82 +16,48 @@ let clientPromise = null;
 
 const storageMode = hasRemoteConfig ? 'remote' : 'local';
 
-const DEMO_DASHBOARD_SNAPSHOT = {
+const EMPTY_DASHBOARD_SNAPSHOT = {
   storageMode: 'local',
-  demo: true,
   updatedAt: new Date().toISOString(),
   summary: {
-    totalLeads: 18,
-    uniqueVisitors: 164,
-    veryInterested: 39,
-    buyYes: 21,
-    buyLowerPrice: 14,
-    formConversion: 11.0,
-    ctaClicks: 102,
+    totalLeads: 0,
+    uniqueVisitors: 0,
+    veryInterested: 0,
+    buyYes: 0,
+    buyLowerPrice: 0,
+    formConversion: 0,
+    ctaClicks: 0,
   },
   interestBreakdown: [
-    { label: 'Очень интересно', count: 39 },
-    { label: 'Скорее интересно', count: 31 },
-    { label: 'Нейтрально', count: 12 },
-    { label: 'Неинтересно', count: 4 },
+    { label: 'Очень интересно', count: 0 },
+    { label: 'Скорее интересно', count: 0 },
+    { label: 'Нейтрально', count: 0 },
+    { label: 'Неинтересно', count: 0 },
   ],
   purchaseBreakdown: [
-    { label: 'Да, купил(а) бы', count: 21 },
-    { label: 'Возможно, если будут отзывы / подробности', count: 24 },
-    { label: 'Возможно, если будет ниже цена', count: 14 },
-    { label: 'Нет', count: 5 },
+    { label: 'Да, купил(а) бы', count: 0 },
+    { label: 'Возможно, если будут отзывы / подробности', count: 0 },
+    { label: 'Возможно, если будет ниже цена', count: 0 },
+    { label: 'Нет', count: 0 },
   ],
   ctaBreakdown: [
-    { label: 'hero_primary', count: 29 },
-    { label: 'hero_secondary', count: 18 },
-    { label: 'hero_quick_product', count: 17 },
-    { label: 'hero_quick_training', count: 14 },
-    { label: 'header_preorder', count: 11 },
-    { label: 'final_cta', count: 13 },
+    { label: 'hero_primary', count: 0 },
+    { label: 'hero_secondary', count: 0 },
+    { label: 'hero_quick_product', count: 0 },
+    { label: 'hero_quick_training', count: 0 },
+    { label: 'header_preorder', count: 0 },
+    { label: 'mobile_dock', count: 0 },
+    { label: 'final_cta', count: 0 },
   ],
   scrollDepth: [
-    { label: '25%', depth: 25, count: 132 },
-    { label: '50%', depth: 50, count: 88 },
-    { label: '75%', depth: 75, count: 49 },
-    { label: '100%', depth: 100, count: 22 },
+    { label: '25%', depth: 25, count: 0 },
+    { label: '50%', depth: 50, count: 0 },
+    { label: '75%', depth: 75, count: 0 },
+    { label: '100%', depth: 100, count: 0 },
   ],
 };
 
-const DEMO_LEAD_RECORDS = [
-  {
-    id: 'demo-lead-1',
-    created_at: new Date(Date.now() - 1000 * 60 * 42).toISOString(),
-    name: 'Анна',
-    contact: '@anna_student',
-    email: 'anna@example.com',
-    comment: 'Интересен формат. Хотелось бы увидеть отзывы и примеры заданий.',
-    source_context: 'inline',
-    interest_choice: 'Очень интересно',
-    purchase_intent_choice: 'Да, купил(а) бы',
-  },
-  {
-    id: 'demo-lead-2',
-    created_at: new Date(Date.now() - 1000 * 60 * 150).toISOString(),
-    name: 'Мария',
-    contact: '+7 999 123-45-67',
-    email: null,
-    comment: 'Купила бы, если будет понятна дата старта.',
-    source_context: 'modal',
-    interest_choice: 'Скорее интересно',
-    purchase_intent_choice: 'Возможно, если будут отзывы / подробности',
-  },
-  {
-    id: 'demo-lead-3',
-    created_at: new Date(Date.now() - 1000 * 60 * 320).toISOString(),
-    name: 'Илья',
-    contact: '@dent_start',
-    email: null,
-    comment: 'Цена важна. Сам продукт выглядит полезным.',
-    source_context: 'inline',
-    interest_choice: 'Скорее интересно',
-    purchase_intent_choice: 'Возможно, если будет ниже цена',
-  },
-];
+const EMPTY_LEAD_RECORDS = [];
 
 async function getSupabaseClient() {
   if (!hasRemoteConfig) {
@@ -249,7 +215,7 @@ function buildLocalDashboardSnapshot() {
   const eventLogs = readLocal(STORAGE_KEYS.eventLogs, []);
 
   if (!leads.length && !feedbackVotes.length && !purchaseIntent.length && !eventLogs.length) {
-    return DEMO_DASHBOARD_SNAPSHOT;
+    return EMPTY_DASHBOARD_SNAPSHOT;
   }
 
   const pageViewSessions = new Set(
@@ -570,13 +536,37 @@ async function getLeadRecords(limit = 50) {
   const leads = readLocal(STORAGE_KEYS.leads, []);
 
   if (!leads.length) {
-    return DEMO_LEAD_RECORDS.slice(0, normalizedLimit);
+    return EMPTY_LEAD_RECORDS.slice(0, normalizedLimit);
   }
 
   return leads
     .slice()
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, normalizedLimit);
+}
+
+function clearLocalData() {
+  Object.values(STORAGE_KEYS).forEach((key) => {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.warn(`Failed to clear localStorage key "${key}"`, error);
+    }
+
+    delete memoryStore[key];
+    document.cookie = `${encodeURIComponent(key)}=; path=/; max-age=0; SameSite=Lax`;
+  });
+
+  window.dispatchEvent(
+    new CustomEvent('mirror-trainer-storage-updated', {
+      detail: { cleared: true },
+    })
+  );
+
+  return {
+    mode: 'local',
+    cleared: true,
+  };
 }
 
 window.MirrorTrainerData = {
@@ -592,5 +582,6 @@ window.MirrorTrainerData = {
   requestAdminMagicLink,
   signOutAdmin,
   onAuthStateChange,
+  clearLocalData,
 };
 })();
