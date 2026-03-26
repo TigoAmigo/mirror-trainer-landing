@@ -6,7 +6,7 @@
     <title>Mirror Trainer Admin Summary</title>
     <meta
       name="description"
-      content="Сводка по заявкам, интересу, CTA и глубине скролла для лендинга Тренажёр работы через зеркало."
+      content="Сводка по посещениям, заявкам, CTA и глубине скролла для лендинга Тренажёр работы через зеркало."
     />
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,7 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oranienbaum&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/admin.css?v=20260326-1" />
+    <link rel="stylesheet" href="./assets/css/admin.css?v=20260327-1" />
   </head>
   <body>
     <div class="runtime-warning runtime-warning-admin" data-runtime-warning hidden>
@@ -32,10 +32,10 @@
       <header class="admin-header">
         <div>
           <p class="admin-eyebrow">Admin summary</p>
-          <h1>Сводка по спросу и ключевым действиям</h1>
+          <h1>Сводка по посещениям и предзаказам</h1>
           <p>
-            Страница показывает метрики спроса и список последних заявок,
-            чтобы можно было быстро увидеть не только цифры, но и живые сигналы от аудитории.
+            Админка показывает только боевые метрики: посещения, клики по ключевым
+            действиям, глубину просмотра и последние заявки на предзаказ.
           </p>
         </div>
         <div class="admin-actions">
@@ -94,40 +94,8 @@
             <strong data-kpi="totalLeads">0</strong>
           </article>
           <article class="kpi-card">
-            <span>Ответов по интересу</span>
-            <strong data-kpi="interestResponses">0</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Ответов по покупке</span>
-            <strong data-kpi="purchaseResponses">0</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Очень интересно</span>
-            <strong data-kpi="veryInterested">0</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Позитивный интерес</span>
-            <strong data-kpi="positiveInterest">0</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Купил(а) бы</span>
-            <strong data-kpi="buyYes">0</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Потенциальный спрос</span>
-            <strong data-kpi="potentialDemand">0</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Если цена ниже</span>
-            <strong data-kpi="buyLowerPrice">0</strong>
-          </article>
-          <article class="kpi-card">
             <span>Конверсия формы</span>
             <strong data-kpi="formConversion">0%</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Охват опроса</span>
-            <strong data-kpi="surveyCoverage">0%</strong>
           </article>
           <article class="kpi-card">
             <span>Все CTA клики</span>
@@ -138,8 +106,8 @@
         <section class="admin-grid admin-grid-highlight">
           <article class="panel panel-wide">
             <div class="panel-header">
-              <h2>Воронка спроса</h2>
-              <span>От посещения до заявки</span>
+              <h2>Воронка предзаказа</h2>
+              <span>От визита до оставленной заявки</span>
             </div>
             <div class="funnel-grid" data-funnel-grid></div>
           </article>
@@ -148,24 +116,8 @@
         <section class="admin-grid">
           <article class="panel">
             <div class="panel-header">
-              <h2>Опрос интереса</h2>
-              <span data-updated-label>Данные загружаются</span>
-            </div>
-            <div class="bar-list" data-list="interest"></div>
-          </article>
-
-          <article class="panel">
-            <div class="panel-header">
-              <h2>Купили бы вы это?</h2>
-              <span>Ответ по покупке</span>
-            </div>
-            <div class="bar-list" data-list="purchase"></div>
-          </article>
-
-          <article class="panel">
-            <div class="panel-header">
               <h2>CTA клики</h2>
-              <span>Какие действия нажимают чаще</span>
+              <span data-updated-label>Данные загружаются</span>
             </div>
             <div class="bar-list" data-list="cta"></div>
           </article>
@@ -183,7 +135,12 @@
           <article class="panel panel-wide">
             <div class="panel-header">
               <h2>Заявки и предзаказы</h2>
-              <span>Последние контакты и ответы пользователей</span>
+              <div class="panel-header-actions">
+                <span>Последние контакты и экспорт в Excel</span>
+                <button class="admin-button admin-button-secondary" type="button" data-export-xlsx>
+                  Скачать Excel (.xlsx)
+                </button>
+              </div>
             </div>
             <div class="lead-list" data-lead-list></div>
           </article>
@@ -205,8 +162,9 @@
         if (node) node.hidden = false;
       }
     </script>
-    <script src="./assets/js/config.js?v=20260326-1"></script>
-    <script src="./assets/js/supabase.js?v=20260326-1"></script>
-    <script src="./assets/js/admin.js?v=20260326-1"></script>
+    <script src="./assets/js/config.js?v=20260327-1"></script>
+    <script src="./assets/js/supabase.js?v=20260327-1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+    <script src="./assets/js/admin.js?v=20260327-1"></script>
   </body>
 </html>

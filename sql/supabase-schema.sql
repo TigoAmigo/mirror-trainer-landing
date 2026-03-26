@@ -5,6 +5,8 @@ create table if not exists public.leads (
   created_at timestamptz not null default timezone('utc', now()),
   name text not null,
   contact text not null,
+  phone text,
+  telegram text,
   email text,
   comment text,
   page_path text,
@@ -18,6 +20,9 @@ create table if not exists public.leads (
   device_type text,
   referrer text
 );
+
+alter table public.leads add column if not exists phone text;
+alter table public.leads add column if not exists telegram text;
 
 create table if not exists public.feedback_votes (
   id uuid primary key default gen_random_uuid(),
@@ -134,26 +139,36 @@ as $$
 declare
   inserted_id uuid;
   input_name text := btrim(coalesce(payload ->> 'name', ''));
+  input_phone text := btrim(coalesce(payload ->> 'phone', ''));
+  input_telegram text := btrim(coalesce(payload ->> 'telegram', ''));
   input_contact text := btrim(coalesce(payload ->> 'contact', ''));
 begin
   if input_name = '' then
     raise exception 'name is required';
   end if;
 
+  if input_phone = '' then
+    raise exception 'phone is required';
+  end if;
+
+  if input_telegram = '' then
+    raise exception 'telegram is required';
+  end if;
+
   if input_contact = '' then
-    raise exception 'contact is required';
+    input_contact := concat_ws(' / ', input_phone, input_telegram);
   end if;
 
   insert into public.leads (
     name,
     contact,
+    phone,
+    telegram,
     email,
     comment,
     page_path,
     source_context,
     session_id,
-    purchase_intent_choice,
-    interest_choice,
     utm_source,
     utm_medium,
     utm_campaign,
@@ -163,13 +178,13 @@ begin
   values (
     input_name,
     input_contact,
+    input_phone,
+    input_telegram,
     nullif(btrim(payload ->> 'email'), ''),
     nullif(btrim(payload ->> 'comment'), ''),
     nullif(payload ->> 'page_path', ''),
     nullif(payload ->> 'source_context', ''),
     nullif(payload ->> 'session_id', ''),
-    nullif(payload ->> 'purchase_intent_choice', ''),
-    nullif(payload ->> 'interest_choice', ''),
     nullif(payload ->> 'utm_source', ''),
     nullif(payload ->> 'utm_medium', ''),
     nullif(payload ->> 'utm_campaign', ''),
@@ -353,50 +368,7 @@ begin
     select
       (select count(*) from public.leads) as total_leads,
       (select count(distinct session_id) from public.event_logs where event_name = 'page_view') as unique_visitors,
-      (select count(*) from public.feedback_votes where interest_level = 'Очень интересно') as very_interested,
-      (select count(*) from public.purchase_intent where purchase_choice = 'Да, купил(а) бы') as buy_yes,
-      (
-        select count(*)
-        from public.purchase_intent
-        where purchase_choice = 'Возможно, если будет ниже цена'
-      ) as buy_lower_price,
       (select count(*) from public.event_logs where event_name = 'cta_click') as cta_clicks
-  ),
-  interest_breakdown as (
-    select jsonb_agg(
-      jsonb_build_object('label', labels.label, 'count', coalesce(counts.total, 0))
-      order by labels.sort_order
-    ) as data
-    from (
-      values
-        ('Очень интересно', 1),
-        ('Скорее интересно', 2),
-        ('Нейтрально', 3),
-        ('Неинтересно', 4)
-    ) as labels(label, sort_order)
-    left join lateral (
-      select count(*) as total
-      from public.feedback_votes
-      where interest_level = labels.label
-    ) counts on true
-  ),
-  purchase_breakdown as (
-    select jsonb_agg(
-      jsonb_build_object('label', labels.label, 'count', coalesce(counts.total, 0))
-      order by labels.sort_order
-    ) as data
-    from (
-      values
-        ('Да, купил(а) бы', 1),
-        ('Возможно, если будут отзывы / подробности', 2),
-        ('Возможно, если будет ниже цена', 3),
-        ('Нет', 4)
-    ) as labels(label, sort_order)
-    left join lateral (
-      select count(*) as total
-      from public.purchase_intent
-      where purchase_choice = labels.label
-    ) counts on true
   ),
   cta_breakdown as (
     select jsonb_agg(
@@ -409,8 +381,7 @@ begin
         ('hero_secondary', 2),
         ('hero_quick_product', 3),
         ('hero_quick_training', 4),
-        ('header_preorder', 5),
-        ('final_cta', 6)
+        ('header_preorder', 5)
     ) as labels(label, sort_order)
     left join lateral (
       select count(*) as total
@@ -443,9 +414,6 @@ begin
     'summary', jsonb_build_object(
       'totalLeads', summary.total_leads,
       'uniqueVisitors', summary.unique_visitors,
-      'veryInterested', summary.very_interested,
-      'buyYes', summary.buy_yes,
-      'buyLowerPrice', summary.buy_lower_price,
       'formConversion',
         case
           when summary.unique_visitors > 0
@@ -454,8 +422,6 @@ begin
         end,
       'ctaClicks', summary.cta_clicks
     ),
-    'interestBreakdown', coalesce((select data from interest_breakdown), '[]'::jsonb),
-    'purchaseBreakdown', coalesce((select data from purchase_breakdown), '[]'::jsonb),
     'ctaBreakdown', coalesce((select data from cta_breakdown), '[]'::jsonb),
     'scrollDepth', coalesce((select data from scroll_breakdown), '[]'::jsonb)
   )
@@ -483,12 +449,17 @@ begin
         'id', leads.id,
         'created_at', leads.created_at,
         'name', leads.name,
+        'phone', leads.phone,
+        'telegram', leads.telegram,
         'contact', leads.contact,
         'email', leads.email,
         'comment', leads.comment,
         'source_context', leads.source_context,
-        'interest_choice', leads.interest_choice,
-        'purchase_intent_choice', leads.purchase_intent_choice
+        'page_path', leads.page_path,
+        'referrer', leads.referrer,
+        'utm_source', leads.utm_source,
+        'utm_medium', leads.utm_medium,
+        'utm_campaign', leads.utm_campaign
       )
       order by leads.created_at desc
     ),

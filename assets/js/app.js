@@ -1,23 +1,18 @@
 (function () {
 const dataApi = window.MirrorTrainerData || {};
 const persistEventLog = dataApi.logEvent || (async () => ({ mode: 'noop' }));
-const persistInterestVote = dataApi.saveInterestVote || (async () => ({ mode: 'noop' }));
 const persistLead = dataApi.saveLead || (async () => ({ mode: 'noop' }));
-const persistPurchaseIntent = dataApi.savePurchaseIntent || (async () => ({ mode: 'noop' }));
 const config = window.APP_CONFIG || {};
 const memoryStore = window.__MIRROR_TRAINER_MEMORY__ || (window.__MIRROR_TRAINER_MEMORY__ = {});
 const SESSION_KEY = 'mirror-trainer-session-id';
-const INTEREST_KEY = 'mirror-trainer-interest-choice';
-const PURCHASE_KEY = 'mirror-trainer-purchase-choice';
 
 const state = {
   sessionId: getOrCreateSessionId(),
-  interestChoice: readStorageItem(INTEREST_KEY),
-  purchaseChoice: readStorageItem(PURCHASE_KEY),
   sectionViews: new Set(),
   scrollDepths: new Set(),
   activeModal: null,
   lastFocus: null,
+  faqItems: [],
 };
 
 const utm = {
@@ -41,9 +36,8 @@ function init() {
     initScrollDepthTracking();
     initModalSystem();
     initLightbox();
-    initSurveyGroup('interest');
-    initSurveyGroup('purchase');
-    initForms();
+    initFaqAccordion();
+    initLeadForms();
     bindScrollLinks();
     logPageView();
   } catch (error) {
@@ -258,6 +252,7 @@ function initSectionTracking() {
 
 function initScrollDepthTracking() {
   const thresholds = [25, 50, 75, 100];
+
   const trackDepth = () => {
     const scrollTop = window.scrollY;
     const viewportHeight = window.innerHeight;
@@ -281,18 +276,8 @@ function initScrollDepthTracking() {
 }
 
 function initModalSystem() {
-  const modalOpeners = document.querySelectorAll('[data-open-lead-modal]');
-  const leadModal = document.querySelector('[data-modal="lead"]');
   const closeButtons = document.querySelectorAll('[data-close-modal]');
-
-  modalOpeners.forEach((opener) => {
-    opener.addEventListener('click', (event) => {
-      event.preventDefault();
-      openModal('lead');
-      trackEvent('cta_click', { label: opener.dataset.eventLabel || 'lead_modal' });
-      trackEvent('modal_open', { label: 'lead' });
-    });
-  });
+  const modals = document.querySelectorAll('.modal-shell');
 
   closeButtons.forEach((button) => {
     button.addEventListener('click', () => closeModal());
@@ -304,13 +289,13 @@ function initModalSystem() {
     }
   });
 
-  if (leadModal) {
-    leadModal.addEventListener('click', (event) => {
-      if (event.target === leadModal) {
+  modals.forEach((modal) => {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
         closeModal();
       }
     });
-  }
+  });
 }
 
 function initLightbox() {
@@ -363,91 +348,143 @@ function initImageFallbacks() {
   });
 }
 
-function initSurveyGroup(groupName) {
-  const group = document.querySelector(`[data-survey-group="${groupName}"]`);
-  const status = document.querySelector(`[data-survey-status="${groupName}"]`);
+function initFaqAccordion() {
+  const items = Array.from(document.querySelectorAll('.faq-item'));
 
-  if (!group || !status) {
+  if (!items.length) {
     return;
   }
 
-  const selectedValue = groupName === 'interest' ? state.interestChoice : state.purchaseChoice;
-  if (selectedValue) {
-    setActiveOption(group, selectedValue);
-    status.textContent = 'Ответ уже сохранён. При желании его можно изменить.';
-    status.classList.add('is-muted');
-  }
+  state.faqItems = items;
 
-  group.querySelectorAll('[data-option-value]').forEach((button) => {
-    button.addEventListener('click', async () => {
-      const value = button.dataset.optionValue || '';
-      const buttons = group.querySelectorAll('[data-option-value]');
-      setActiveOption(group, value);
-      status.textContent = 'Сохраняем ответ...';
-      status.classList.remove('is-success', 'is-muted');
-      status.classList.add('is-pending');
-      group.classList.add('is-busy');
-      button.classList.add('is-pending');
-      buttons.forEach((item) => {
-        item.disabled = true;
-      });
+  items.forEach((item) => {
+    const summary = item.querySelector('summary');
 
-      try {
-        if (groupName === 'interest') {
-          state.interestChoice = value;
-          writeStorageItem(INTEREST_KEY, value);
-          await persistInterestVote(buildVotePayload(value));
-          trackEvent('feedback_vote_select', { label: value });
-          status.textContent = 'Спасибо, ответ сохранён.';
-        } else {
-          state.purchaseChoice = value;
-          writeStorageItem(PURCHASE_KEY, value);
-          await persistPurchaseIntent(buildVotePayload(value));
-          trackEvent('purchase_intent_select', { label: value });
-          status.textContent = 'Спасибо, ответ сохранён.';
-        }
+    if (!summary) {
+      return;
+    }
 
-        status.classList.add('is-success');
-      } catch (error) {
-        console.error(error);
-        status.textContent = 'Не удалось сохранить ответ. Попробуйте ещё раз.';
-      } finally {
-        status.classList.remove('is-pending');
-        group.classList.remove('is-busy');
-        button.classList.remove('is-pending');
-        buttons.forEach((item) => {
-          item.disabled = false;
-        });
+    item.open = false;
+    item.classList.remove('is-open');
+    summary.setAttribute('aria-expanded', 'false');
+    syncFaqItemHeight(item);
+
+    summary.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      if (item.dataset.animating === 'true') {
+        return;
+      }
+
+      if (item.open) {
+        closeFaqItem(item);
+      } else {
+        openFaqItem(item);
       }
     });
   });
+
+  window.addEventListener('resize', syncFaqHeights, { passive: true });
 }
 
-function setActiveOption(group, value) {
-  group.querySelectorAll('[data-option-value]').forEach((button) => {
-    const isActive = button.dataset.optionValue === value;
-    button.classList.toggle('is-active', isActive);
-    button.setAttribute('aria-pressed', String(isActive));
+function syncFaqHeights() {
+  state.faqItems.forEach((item) => syncFaqItemHeight(item));
+}
+
+function syncFaqItemHeight(item) {
+  const summary = item.querySelector('summary');
+
+  if (!summary) {
+    return;
+  }
+
+  if (item.open) {
+    item.style.maxHeight = 'none';
+    return;
+  }
+
+  item.style.maxHeight = `${summary.offsetHeight}px`;
+}
+
+function openFaqItem(item) {
+  const summary = item.querySelector('summary');
+
+  if (!summary) {
+    return;
+  }
+
+  item.dataset.animating = 'true';
+  item.open = true;
+  item.classList.add('is-open');
+  summary.setAttribute('aria-expanded', 'true');
+  item.style.maxHeight = `${summary.offsetHeight}px`;
+
+  requestAnimationFrame(() => {
+    item.style.maxHeight = `${item.scrollHeight}px`;
   });
-}
 
-function buildVotePayload(value) {
-  return {
-    value,
-    sessionId: state.sessionId,
-    pagePath,
-    utmSource: utm.source,
-    utmMedium: utm.medium,
-    utmCampaign: utm.campaign,
-    deviceType: getDeviceType(),
-    referrer,
+  const handleTransitionEnd = (event) => {
+    if (event.target !== item || event.propertyName !== 'max-height') {
+      return;
+    }
+
+    item.style.maxHeight = 'none';
+    item.dataset.animating = 'false';
+    item.removeEventListener('transitionend', handleTransitionEnd);
   };
+
+  item.addEventListener('transitionend', handleTransitionEnd);
 }
 
-function initForms() {
+function closeFaqItem(item) {
+  const summary = item.querySelector('summary');
+
+  if (!summary) {
+    return;
+  }
+
+  item.dataset.animating = 'true';
+  item.style.maxHeight = `${item.scrollHeight}px`;
+
+  requestAnimationFrame(() => {
+    item.classList.remove('is-open');
+    item.style.maxHeight = `${summary.offsetHeight}px`;
+  });
+
+  const handleTransitionEnd = (event) => {
+    if (event.target !== item || event.propertyName !== 'max-height') {
+      return;
+    }
+
+    item.open = false;
+    item.dataset.animating = 'false';
+    summary.setAttribute('aria-expanded', 'false');
+    item.removeEventListener('transitionend', handleTransitionEnd);
+  };
+
+  item.addEventListener('transitionend', handleTransitionEnd);
+}
+
+function initLeadForms() {
   const forms = document.querySelectorAll('[data-lead-form]');
 
   forms.forEach((form) => {
+    const nameInput = form.querySelector('[data-name-input]');
+    const phoneInput = form.querySelector('[data-phone-input]');
+    const telegramInput = form.querySelector('[data-telegram-input]');
+
+    if (nameInput) {
+      bindNameInput(nameInput);
+    }
+
+    if (phoneInput) {
+      bindPhoneInput(phoneInput);
+    }
+
+    if (telegramInput) {
+      bindTelegramInput(telegramInput);
+    }
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
@@ -456,25 +493,11 @@ function initForms() {
       const submitButton = form.querySelector('button[type="submit"]');
       const sourceContext = form.dataset.formSource || 'inline';
 
-      const payload = {
-        name: String(formData.get('name') || '').trim(),
-        contact: String(formData.get('contact') || '').trim(),
-        email: String(formData.get('email') || '').trim(),
-        comment: String(formData.get('comment') || '').trim(),
-        sourceContext,
-        pagePath,
-        sessionId: state.sessionId,
-        purchaseIntentChoice: state.purchaseChoice,
-        interestChoice: state.interestChoice,
-        utmSource: utm.source,
-        utmMedium: utm.medium,
-        utmCampaign: utm.campaign,
-        deviceType: getDeviceType(),
-        referrer,
-      };
+      const payload = buildLeadPayload(formData, sourceContext);
+      const validationMessage = validateLeadPayload(payload);
 
-      if (!payload.name || !payload.contact) {
-        setFormFeedback(feedbackNode, 'Заполните имя и Telegram или телефон.', 'error');
+      if (validationMessage) {
+        setFormFeedback(feedbackNode, validationMessage, 'error');
         return;
       }
 
@@ -495,6 +518,7 @@ function initForms() {
         );
         showToast('Заявка отправлена.', 'success');
         form.reset();
+        resetLeadFormInputs(form);
         showSuccessModal();
       } catch (error) {
         console.error(error);
@@ -507,11 +531,203 @@ function initForms() {
       } finally {
         if (submitButton) {
           submitButton.disabled = false;
-          submitButton.textContent = sourceContext === 'modal' ? 'Оставить заявку' : 'Хочу предзаказ';
+          submitButton.textContent = 'Хочу предзаказ';
         }
       }
     });
   });
+}
+
+function buildLeadPayload(formData, sourceContext) {
+  const normalizedName = normalizeName(formData.get('name'));
+  const formattedPhone = formatPhoneInputValue(String(formData.get('phone') || ''));
+  const telegramHandle = sanitizeTelegramValue(String(formData.get('telegram') || ''));
+  const telegram = telegramHandle ? `@${telegramHandle}` : '';
+
+  return {
+    name: normalizedName,
+    phone: formattedPhone,
+    telegram,
+    contact: [formattedPhone, telegram].filter(Boolean).join(' / '),
+    email: String(formData.get('email') || '').trim(),
+    comment: String(formData.get('comment') || '').trim(),
+    sourceContext,
+    pagePath,
+    sessionId: state.sessionId,
+    utmSource: utm.source,
+    utmMedium: utm.medium,
+    utmCampaign: utm.campaign,
+    deviceType: getDeviceType(),
+    referrer,
+  };
+}
+
+function validateLeadPayload(payload) {
+  if (!isValidName(payload.name)) {
+    return 'Укажите имя без цифр и лишних символов.';
+  }
+
+  if (!isValidPhone(payload.phone)) {
+    return 'Укажите корректный российский номер телефона.';
+  }
+
+  if (!isValidTelegram(payload.telegram)) {
+    return 'Укажите корректный Telegram через username.';
+  }
+
+  return '';
+}
+
+function bindNameInput(input) {
+  input.addEventListener('input', () => {
+    const sanitized = sanitizeNameValue(input.value);
+    if (input.value !== sanitized) {
+      input.value = sanitized;
+    }
+  });
+
+  input.addEventListener('blur', () => {
+    input.value = normalizeName(input.value);
+  });
+}
+
+function bindPhoneInput(input) {
+  input.addEventListener('focus', () => {
+    if (!input.value.trim()) {
+      input.value = '+7';
+    }
+  });
+
+  input.addEventListener('input', () => {
+    input.value = formatPhoneInputValue(input.value);
+  });
+
+  input.addEventListener('blur', () => {
+    const digits = normalizePhoneDigits(input.value);
+    input.value = digits.length > 1 ? formatPhoneInputValue(input.value) : '';
+  });
+
+  input.addEventListener('paste', (event) => {
+    event.preventDefault();
+    const paste = event.clipboardData?.getData('text') || '';
+    input.value = formatPhoneInputValue(paste);
+  });
+}
+
+function bindTelegramInput(input) {
+  input.addEventListener('input', () => {
+    const sanitized = sanitizeTelegramValue(input.value);
+    if (input.value !== sanitized) {
+      input.value = sanitized;
+    }
+  });
+
+  input.addEventListener('paste', (event) => {
+    event.preventDefault();
+    const paste = event.clipboardData?.getData('text') || '';
+    input.value = sanitizeTelegramValue(paste);
+  });
+}
+
+function sanitizeNameValue(value) {
+  return String(value || '')
+    .replace(/[^A-Za-zА-Яа-яЁё\s-]/g, '')
+    .replace(/\s{2,}/g, ' ');
+}
+
+function normalizeName(value) {
+  return sanitizeNameValue(value)
+    .replace(/\s*-\s*/g, '-')
+    .trim();
+}
+
+function isValidName(value) {
+  return /^[A-Za-zА-Яа-яЁё]+(?:[ -][A-Za-zА-Яа-яЁё]+)*$/.test(String(value || ''));
+}
+
+function normalizePhoneDigits(value) {
+  let digits = String(value || '').replace(/\D/g, '');
+
+  if (!digits) {
+    return '';
+  }
+
+  if (digits[0] === '8') {
+    digits = `7${digits.slice(1)}`;
+  } else if (digits[0] === '9') {
+    digits = `7${digits}`;
+  } else if (digits[0] !== '7') {
+    digits = `7${digits}`;
+  }
+
+  return digits.slice(0, 11);
+}
+
+function formatPhoneInputValue(value) {
+  const digits = normalizePhoneDigits(value);
+
+  if (!digits) {
+    return '';
+  }
+
+  const local = digits.slice(1);
+  let result = '+7';
+
+  if (local.length) {
+    result += ` (${local.slice(0, 3)}`;
+  }
+
+  if (local.length >= 3) {
+    result += ')';
+  }
+
+  if (local.length > 3) {
+    result += ` ${local.slice(3, 6)}`;
+  }
+
+  if (local.length > 6) {
+    result += `-${local.slice(6, 8)}`;
+  }
+
+  if (local.length > 8) {
+    result += `-${local.slice(8, 10)}`;
+  }
+
+  return result;
+}
+
+function isValidPhone(value) {
+  const digits = normalizePhoneDigits(value);
+  return digits.length === 11 && digits.startsWith('7');
+}
+
+function sanitizeTelegramValue(value) {
+  return String(value || '')
+    .replace(/^@+/, '')
+    .replace(/[^A-Za-z0-9_]/g, '')
+    .slice(0, 32);
+}
+
+function isValidTelegram(value) {
+  return /^@[A-Za-z0-9_]+$/.test(String(value || ''));
+}
+
+function resetLeadFormInputs(form) {
+  const phoneInput = form.querySelector('[data-phone-input]');
+  const telegramInput = form.querySelector('[data-telegram-input]');
+  const nameInput = form.querySelector('[data-name-input]');
+
+  if (phoneInput) {
+    phoneInput.value = '';
+  }
+
+  if (telegramInput) {
+    telegramInput.value = '';
+  }
+
+  if (nameInput) {
+    nameInput.value = '';
+  }
 }
 
 function setFormFeedback(node, message, type) {
@@ -533,9 +749,31 @@ function setFormFeedback(node, message, type) {
 
 function bindScrollLinks() {
   document.querySelectorAll('[data-scroll-link]').forEach((link) => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', (event) => {
+      const href = link.getAttribute('href') || '';
+
+      if (href.startsWith('#')) {
+        const target = document.querySelector(href);
+
+        if (target) {
+          event.preventDefault();
+          scrollToTarget(target);
+        }
+      }
+
       trackEvent('cta_click', { label: link.dataset.eventLabel || 'scroll_link' });
     });
+  });
+}
+
+function scrollToTarget(target) {
+  const header = document.querySelector('[data-header]');
+  const offset = (header ? header.offsetHeight : 0) + 18;
+  const top = window.scrollY + target.getBoundingClientRect().top - offset;
+
+  window.scrollTo({
+    top: Math.max(top, 0),
+    behavior: 'smooth',
   });
 }
 

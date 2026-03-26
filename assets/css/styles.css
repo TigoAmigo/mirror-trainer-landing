@@ -1090,6 +1090,72 @@ body.nav-open .mobile-toggle-icon span:last-child {
   margin-top: 24px;
 }
 
+.price-stack-marketing {
+  gap: 16px;
+}
+
+.price-hero-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 14px;
+  padding: 22px 22px 20px;
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(205, 219, 247, 0.05)),
+    rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price-muted-marketing {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: clamp(1.22rem, 2.2vw, 1.58rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.price-discount-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(219, 229, 251, 0.12);
+  border: 1px solid rgba(219, 229, 251, 0.18);
+  color: var(--accent-strong);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.price-current {
+  font-size: clamp(2.5rem, 4.8vw, 3.45rem);
+  letter-spacing: -0.07em;
+  line-height: 1;
+}
+
+.price-economy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.price-economy-row span {
+  color: var(--muted);
+}
+
+.price-economy-row strong {
+  font-size: 1.26rem;
+  letter-spacing: -0.04em;
+}
+
 .price-row {
   display: flex;
   align-items: center;
@@ -1172,7 +1238,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
   gap: 8px;
 }
 
-.lead-form span {
+.lead-form label > span:first-child {
   font-size: 0.92rem;
   color: var(--muted-strong);
 }
@@ -1205,6 +1271,71 @@ body.nav-open .mobile-toggle-icon span:last-child {
   box-shadow: 0 0 0 6px rgba(199, 214, 245, 0.06);
 }
 
+.lead-form textarea {
+  min-height: 132px;
+  resize: none;
+}
+
+.lead-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.field-span-2 {
+  grid-column: 1 / -1;
+}
+
+.telegram-input-shell {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 16px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition);
+}
+
+.telegram-input-shell:hover,
+.telegram-input-shell:focus-within {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 6px rgba(199, 214, 245, 0.06);
+}
+
+.telegram-prefix {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.telegram-input-shell input {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.telegram-input-shell input:hover,
+.telegram-input-shell input:focus-visible {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
 .form-meta {
   font-size: 0.9rem;
 }
@@ -1230,12 +1361,19 @@ body.nav-open .mobile-toggle-icon span:last-child {
 }
 
 .faq-item {
+  overflow: hidden;
+  max-height: 88px;
   padding: 0 24px;
   border-radius: 20px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
     rgba(10, 16, 27, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    max-height 360ms ease,
+    border-color var(--transition),
+    background var(--transition),
+    box-shadow var(--transition);
 }
 
 .faq-item summary {
@@ -1261,13 +1399,31 @@ body.nav-open .mobile-toggle-icon span:last-child {
   transition: transform var(--transition);
 }
 
-.faq-item[open] summary::after {
+.faq-item.is-open {
+  border-color: rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
+    rgba(10, 16, 27, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.faq-item.is-open summary::after {
   transform: translateY(-50%) rotate(45deg);
 }
 
 .faq-item p {
   padding: 0 0 20px;
   margin: 0;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+.faq-item.is-open p {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .final-cta {
@@ -1927,6 +2083,18 @@ body.modal-open {
     font-size: 1.5rem;
   }
 
+  .price-hero-line {
+    padding: 18px 18px 16px;
+  }
+
+  .price-current {
+    font-size: clamp(2.15rem, 8vw, 2.8rem);
+  }
+
+  .price-economy-row {
+    padding: 14px 16px;
+  }
+
   .price-row {
     flex-direction: column;
     align-items: flex-start;
@@ -1970,9 +2138,20 @@ body.modal-open {
     gap: 11px;
   }
 
+  .lead-form-grid {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
   .lead-form input,
   .lead-form textarea {
     padding: 13px 14px;
+    border-radius: 14px;
+  }
+
+  .telegram-input-shell {
+    min-height: 50px;
+    padding: 0 14px;
     border-radius: 14px;
   }
 

@@ -4,8 +4,6 @@ const memoryStore = window.__MIRROR_TRAINER_MEMORY__ || (window.__MIRROR_TRAINER
 
 const STORAGE_KEYS = {
   leads: 'mirror-trainer-leads',
-  feedbackVotes: 'mirror-trainer-feedback-votes',
-  purchaseIntent: 'mirror-trainer-purchase-intent',
   eventLogs: 'mirror-trainer-event-logs',
 };
 
@@ -22,31 +20,15 @@ const EMPTY_DASHBOARD_SNAPSHOT = {
   summary: {
     totalLeads: 0,
     uniqueVisitors: 0,
-    veryInterested: 0,
-    buyYes: 0,
-    buyLowerPrice: 0,
     formConversion: 0,
     ctaClicks: 0,
   },
-  interestBreakdown: [
-    { label: 'Очень интересно', count: 0 },
-    { label: 'Скорее интересно', count: 0 },
-    { label: 'Нейтрально', count: 0 },
-    { label: 'Неинтересно', count: 0 },
-  ],
-  purchaseBreakdown: [
-    { label: 'Да, купил(а) бы', count: 0 },
-    { label: 'Возможно, если будут отзывы / подробности', count: 0 },
-    { label: 'Возможно, если будет ниже цена', count: 0 },
-    { label: 'Нет', count: 0 },
-  ],
   ctaBreakdown: [
     { label: 'hero_primary', count: 0 },
     { label: 'hero_secondary', count: 0 },
     { label: 'hero_quick_product', count: 0 },
     { label: 'hero_quick_training', count: 0 },
     { label: 'header_preorder', count: 0 },
-    { label: 'final_cta', count: 0 },
   ],
   scrollDepth: [
     { label: '25%', depth: 25, count: 0 },
@@ -55,8 +37,6 @@ const EMPTY_DASHBOARD_SNAPSHOT = {
     { label: '100%', depth: 100, count: 0 },
   ],
 };
-
-const EMPTY_LEAD_RECORDS = [];
 
 async function getSupabaseClient() {
   if (!hasRemoteConfig) {
@@ -151,19 +131,6 @@ function writeCookie(name, value) {
   document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
 }
 
-function upsertLocal(collectionKey, row, matcher) {
-  const collection = readLocal(collectionKey, []);
-  const index = collection.findIndex(matcher);
-
-  if (index >= 0) {
-    collection[index] = { ...collection[index], ...row, updated_at: new Date().toISOString() };
-  } else {
-    collection.push(row);
-  }
-
-  writeLocal(collectionKey, collection);
-}
-
 function createLocalId(prefix) {
   const randomPart =
     typeof crypto !== 'undefined' && crypto.randomUUID
@@ -193,27 +160,23 @@ function countByLabel(rows, labelKey, order = []) {
     map.set(label, (map.get(label) || 0) + 1);
   });
 
-  const entries = Array.from(map.entries()).map(([label, count]) => ({ label, count }));
-
   if (!order.length) {
-    return entries.sort((a, b) => b.count - a.count);
+    return Array.from(map.entries())
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => b.count - a.count);
   }
 
-  return order
-    .map((label) => ({
-      label,
-      count: map.get(label) || 0,
-    }))
-    .filter((item) => item.count > 0 || order.includes(item.label));
+  return order.map((label) => ({
+    label,
+    count: map.get(label) || 0,
+  }));
 }
 
 function buildLocalDashboardSnapshot() {
   const leads = readLocal(STORAGE_KEYS.leads, []);
-  const feedbackVotes = readLocal(STORAGE_KEYS.feedbackVotes, []);
-  const purchaseIntent = readLocal(STORAGE_KEYS.purchaseIntent, []);
   const eventLogs = readLocal(STORAGE_KEYS.eventLogs, []);
 
-  if (!leads.length && !feedbackVotes.length && !purchaseIntent.length && !eventLogs.length) {
+  if (!leads.length && !eventLogs.length) {
     return EMPTY_DASHBOARD_SNAPSHOT;
   }
 
@@ -228,27 +191,12 @@ function buildLocalDashboardSnapshot() {
   const totalLeads = leads.length;
   const formConversion = uniqueVisitors ? (totalLeads / uniqueVisitors) * 100 : 0;
 
-  const interestBreakdown = countByLabel(feedbackVotes, 'interest_level', [
-    'Очень интересно',
-    'Скорее интересно',
-    'Нейтрально',
-    'Неинтересно',
-  ]);
-
-  const purchaseBreakdown = countByLabel(purchaseIntent, 'purchase_choice', [
-    'Да, купил(а) бы',
-    'Возможно, если будут отзывы / подробности',
-    'Возможно, если будет ниже цена',
-    'Нет',
-  ]);
-
   const ctaBreakdown = countByLabel(ctaClicks, 'label', [
     'hero_primary',
     'hero_secondary',
     'hero_quick_product',
     'hero_quick_training',
     'header_preorder',
-    'final_cta',
   ]);
 
   const scrollOrder = [25, 50, 75, 100];
@@ -264,19 +212,9 @@ function buildLocalDashboardSnapshot() {
     summary: {
       totalLeads,
       uniqueVisitors,
-      veryInterested:
-        feedbackVotes.filter((item) => item.interest_level === 'Очень интересно').length,
-      buyYes:
-        purchaseIntent.filter((item) => item.purchase_choice === 'Да, купил(а) бы').length,
-      buyLowerPrice:
-        purchaseIntent.filter(
-          (item) => item.purchase_choice === 'Возможно, если будет ниже цена'
-        ).length,
       formConversion,
       ctaClicks: ctaClicks.length,
     },
-    interestBreakdown,
-    purchaseBreakdown,
     ctaBreakdown,
     scrollDepth: scrollBreakdown,
   };
@@ -400,14 +338,14 @@ async function saveLead(payload) {
     id: createLocalId('lead'),
     created_at: new Date().toISOString(),
     name: payload.name.trim(),
+    phone: payload.phone.trim(),
+    telegram: payload.telegram.trim(),
     contact: payload.contact.trim(),
     email: normalizeNullable(payload.email),
     comment: normalizeNullable(payload.comment),
     page_path: payload.pagePath,
     source_context: payload.sourceContext,
     session_id: payload.sessionId,
-    purchase_intent_choice: normalizeNullable(payload.purchaseIntentChoice),
-    interest_choice: normalizeNullable(payload.interestChoice),
     utm_source: normalizeNullable(payload.utmSource),
     utm_medium: normalizeNullable(payload.utmMedium),
     utm_campaign: normalizeNullable(payload.utmCampaign),
@@ -423,63 +361,16 @@ async function saveLead(payload) {
     writeLocal(STORAGE_KEYS.leads, collection);
     return { mode: 'local', id: row.id };
   }
+
   return { mode: 'remote', id: data };
 }
 
-async function saveInterestVote(payload) {
-  const row = {
-    id: createLocalId('interest'),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    session_id: payload.sessionId,
-    interest_level: payload.value,
-    page_path: payload.pagePath,
-    utm_source: normalizeNullable(payload.utmSource),
-    utm_medium: normalizeNullable(payload.utmMedium),
-    utm_campaign: normalizeNullable(payload.utmCampaign),
-    device_type: normalizeNullable(payload.deviceType),
-    referrer: normalizeNullable(payload.referrer),
-  };
-
-  const data = await runRpc('upsert_feedback_vote', { payload: row });
-
-  if (!data) {
-    upsertLocal(
-      STORAGE_KEYS.feedbackVotes,
-      row,
-      (item) => item.session_id === payload.sessionId
-    );
-    return { mode: 'local', id: row.id };
-  }
-  return { mode: 'remote', id: data };
+async function saveInterestVote() {
+  return { mode: storageMode, skipped: true };
 }
 
-async function savePurchaseIntent(payload) {
-  const row = {
-    id: createLocalId('purchase'),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    session_id: payload.sessionId,
-    purchase_choice: payload.value,
-    page_path: payload.pagePath,
-    utm_source: normalizeNullable(payload.utmSource),
-    utm_medium: normalizeNullable(payload.utmMedium),
-    utm_campaign: normalizeNullable(payload.utmCampaign),
-    device_type: normalizeNullable(payload.deviceType),
-    referrer: normalizeNullable(payload.referrer),
-  };
-
-  const data = await runRpc('upsert_purchase_intent', { payload: row });
-
-  if (!data) {
-    upsertLocal(
-      STORAGE_KEYS.purchaseIntent,
-      row,
-      (item) => item.session_id === payload.sessionId
-    );
-    return { mode: 'local', id: row.id };
-  }
-  return { mode: 'remote', id: data };
+async function savePurchaseIntent() {
+  return { mode: storageMode, skipped: true };
 }
 
 async function logEvent(payload) {
@@ -507,6 +398,7 @@ async function logEvent(payload) {
     writeLocal(STORAGE_KEYS.eventLogs, collection);
     return { mode: 'local', id: row.id };
   }
+
   return { mode: 'remote', id: data };
 }
 
@@ -516,6 +408,7 @@ async function getDashboardSnapshot() {
   if (!data) {
     return buildLocalDashboardSnapshot();
   }
+
   return {
     ...data,
     demo: false,
@@ -532,10 +425,6 @@ async function getLeadRecords(limit = 50) {
   }
 
   const leads = readLocal(STORAGE_KEYS.leads, []);
-
-  if (!leads.length) {
-    return EMPTY_LEAD_RECORDS.slice(0, normalizedLimit);
-  }
 
   return leads
     .slice()

@@ -148,6 +148,11 @@ a:focus-visible {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(212, 224, 247, 0.88));
 }
 
+.admin-button-secondary {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -292,6 +297,14 @@ a:focus-visible {
   letter-spacing: -0.03em;
 }
 
+.panel-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .panel-header span,
 .admin-note p {
   color: var(--muted);
@@ -362,6 +375,10 @@ a:focus-visible {
   color: var(--muted);
   line-height: 1.6;
   overflow-wrap: anywhere;
+}
+
+.lead-meta strong {
+  color: var(--text);
 }
 
 .lead-tags {
@@ -476,6 +493,11 @@ a:focus-visible {
   .panel-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .panel-header-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .admin-actions {
