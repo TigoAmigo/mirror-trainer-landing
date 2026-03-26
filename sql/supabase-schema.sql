@@ -410,8 +410,7 @@ begin
         ('hero_quick_product', 3),
         ('hero_quick_training', 4),
         ('header_preorder', 5),
-        ('mobile_dock', 6),
-        ('final_cta', 7)
+        ('final_cta', 6)
     ) as labels(label, sort_order)
     left join lateral (
       select count(*) as total

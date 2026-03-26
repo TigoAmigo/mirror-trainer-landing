@@ -46,7 +46,6 @@ const EMPTY_DASHBOARD_SNAPSHOT = {
     { label: 'hero_quick_product', count: 0 },
     { label: 'hero_quick_training', count: 0 },
     { label: 'header_preorder', count: 0 },
-    { label: 'mobile_dock', count: 0 },
     { label: 'final_cta', count: 0 },
   ],
   scrollDepth: [
@@ -249,7 +248,6 @@ function buildLocalDashboardSnapshot() {
     'hero_quick_product',
     'hero_quick_training',
     'header_preorder',
-    'mobile_dock',
     'final_cta',
   ]);
 
