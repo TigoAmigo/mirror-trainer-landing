@@ -358,111 +358,120 @@ function initFaqAccordion() {
   state.faqItems = items;
 
   items.forEach((item) => {
-    const summary = item.querySelector('summary');
+    const button = item.querySelector('.faq-toggle');
+    const answer = item.querySelector('.faq-answer');
 
-    if (!summary) {
+    if (!button || !answer) {
       return;
     }
 
-    item.open = false;
     item.classList.remove('is-open');
-    summary.setAttribute('aria-expanded', 'false');
-    syncFaqItemHeight(item);
+    button.setAttribute('aria-expanded', 'false');
+    answer.hidden = true;
+    answer.style.height = '0px';
 
-    summary.addEventListener('click', (event) => {
-      event.preventDefault();
-
+    button.addEventListener('click', () => {
       if (item.dataset.animating === 'true') {
         return;
       }
 
-      if (item.open) {
+      if (item.classList.contains('is-open')) {
         closeFaqItem(item);
-      } else {
-        openFaqItem(item);
+        return;
       }
+
+      items.forEach((otherItem) => {
+        if (otherItem !== item && otherItem.classList.contains('is-open')) {
+          closeFaqItem(otherItem, { immediate: true });
+        }
+      });
+
+      openFaqItem(item);
     });
   });
 
-  window.addEventListener('resize', syncFaqHeights, { passive: true });
-}
+  window.addEventListener('resize', () => {
+    state.faqItems.forEach((item) => {
+      if (!item.classList.contains('is-open')) {
+        return;
+      }
 
-function syncFaqHeights() {
-  state.faqItems.forEach((item) => syncFaqItemHeight(item));
-}
-
-function syncFaqItemHeight(item) {
-  const summary = item.querySelector('summary');
-
-  if (!summary) {
-    return;
-  }
-
-  if (item.open) {
-    item.style.maxHeight = 'none';
-    return;
-  }
-
-  item.style.maxHeight = `${summary.offsetHeight}px`;
+      const answer = item.querySelector('.faq-answer');
+      if (answer) {
+        answer.style.height = `${answer.scrollHeight}px`;
+      }
+    });
+  }, { passive: true });
 }
 
 function openFaqItem(item) {
-  const summary = item.querySelector('summary');
+  const button = item.querySelector('.faq-toggle');
+  const answer = item.querySelector('.faq-answer');
 
-  if (!summary) {
+  if (!button || !answer) {
     return;
   }
 
   item.dataset.animating = 'true';
-  item.open = true;
+  answer.hidden = false;
   item.classList.add('is-open');
-  summary.setAttribute('aria-expanded', 'true');
-  item.style.maxHeight = `${summary.offsetHeight}px`;
+  button.setAttribute('aria-expanded', 'true');
+  answer.style.height = '0px';
 
   requestAnimationFrame(() => {
-    item.style.maxHeight = `${item.scrollHeight}px`;
+    answer.style.height = `${answer.scrollHeight}px`;
   });
 
   const handleTransitionEnd = (event) => {
-    if (event.target !== item || event.propertyName !== 'max-height') {
+    if (event.target !== answer || event.propertyName !== 'height') {
       return;
     }
 
-    item.style.maxHeight = 'none';
+    answer.style.height = 'auto';
     item.dataset.animating = 'false';
-    item.removeEventListener('transitionend', handleTransitionEnd);
+    answer.removeEventListener('transitionend', handleTransitionEnd);
   };
 
-  item.addEventListener('transitionend', handleTransitionEnd);
+  answer.addEventListener('transitionend', handleTransitionEnd);
 }
 
-function closeFaqItem(item) {
-  const summary = item.querySelector('summary');
+function closeFaqItem(item, options = {}) {
+  const button = item.querySelector('.faq-toggle');
+  const answer = item.querySelector('.faq-answer');
 
-  if (!summary) {
+  if (!button || !answer) {
+    return;
+  }
+
+  if (options.immediate) {
+    item.classList.remove('is-open');
+    item.dataset.animating = 'false';
+    button.setAttribute('aria-expanded', 'false');
+    answer.hidden = true;
+    answer.style.height = '0px';
     return;
   }
 
   item.dataset.animating = 'true';
-  item.style.maxHeight = `${item.scrollHeight}px`;
+  answer.style.height = `${answer.scrollHeight}px`;
 
   requestAnimationFrame(() => {
     item.classList.remove('is-open');
-    item.style.maxHeight = `${summary.offsetHeight}px`;
+    button.setAttribute('aria-expanded', 'false');
+    answer.style.height = '0px';
   });
 
   const handleTransitionEnd = (event) => {
-    if (event.target !== item || event.propertyName !== 'max-height') {
+    if (event.target !== answer || event.propertyName !== 'height') {
       return;
     }
 
-    item.open = false;
     item.dataset.animating = 'false';
-    summary.setAttribute('aria-expanded', 'false');
-    item.removeEventListener('transitionend', handleTransitionEnd);
+    answer.hidden = true;
+    answer.removeEventListener('transitionend', handleTransitionEnd);
   };
 
-  item.addEventListener('transitionend', handleTransitionEnd);
+  answer.addEventListener('transitionend', handleTransitionEnd);
 }
 
 function initLeadForms() {
