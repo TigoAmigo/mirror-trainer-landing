@@ -1374,14 +1374,19 @@ body.nav-open .mobile-toggle-icon span:last-child {
 }
 
 .faq-toggle {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   position: relative;
   display: block;
   padding: 22px 34px 22px 0;
+  font: inherit;
   color: var(--text);
   text-align: left;
+  cursor: pointer;
   background: transparent;
   border: 0;
+  border-radius: 0;
   font-weight: 700;
 }
 
