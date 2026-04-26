@@ -353,7 +353,13 @@ async function saveLead(payload) {
     referrer: normalizeNullable(payload.referrer),
   };
 
-  const data = await runRpc('create_lead', { payload: row });
+  let data = null;
+
+  try {
+    data = await runRpc('create_lead', { payload: row });
+  } catch (error) {
+    console.warn('Falling back to local lead storage because remote create_lead failed.', error);
+  }
 
   if (!data) {
     const collection = readLocal(STORAGE_KEYS.leads, []);
@@ -390,7 +396,13 @@ async function logEvent(payload) {
     metadata: payload.metadata || {},
   };
 
-  const data = await runRpc('log_event', { payload: row });
+  let data = null;
+
+  try {
+    data = await runRpc('log_event', { payload: row });
+  } catch (error) {
+    console.warn('Falling back to local event storage because remote log_event failed.', error);
+  }
 
   if (!data) {
     const collection = readLocal(STORAGE_KEYS.eventLogs, []);
@@ -403,7 +415,13 @@ async function logEvent(payload) {
 }
 
 async function getDashboardSnapshot() {
-  const data = await runRpc('get_dashboard_snapshot', {});
+  let data = null;
+
+  try {
+    data = await runRpc('get_dashboard_snapshot', {});
+  } catch (error) {
+    console.warn('Falling back to local dashboard snapshot because remote snapshot failed.', error);
+  }
 
   if (!data) {
     return buildLocalDashboardSnapshot();
@@ -418,7 +436,13 @@ async function getDashboardSnapshot() {
 
 async function getLeadRecords(limit = 50) {
   const normalizedLimit = Math.max(1, Number(limit) || 50);
-  const data = await runRpc('get_recent_leads', { limit_count: normalizedLimit });
+  let data = null;
+
+  try {
+    data = await runRpc('get_recent_leads', { limit_count: normalizedLimit });
+  } catch (error) {
+    console.warn('Falling back to local lead list because remote leads query failed.', error);
+  }
 
   if (Array.isArray(data)) {
     return data;

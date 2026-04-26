@@ -6,27 +6,21 @@
     <title>Тренажёр работы через зеркало | Premium landing page</title>
     <meta
       name="description"
-      content="Авторская рабочая тетрадь-тренажёр для студентов-стоматологов: системные упражнения для работы через зеркало, точности движений и контроля руки."
+      content="Премиальная рабочая тетрадь-тренажёр для студентов и начинающих стоматологов: системная практика непрямого зрения, точности движений и контроля руки через зеркало."
     />
-    <meta
-      property="og:title"
-      content="Тренажёр работы через зеркало"
-    />
+    <meta property="og:title" content="Тренажёр работы через зеркало" />
     <meta
       property="og:description"
-      content="Освой работу через зеркало быстрее и увереннее с авторской рабочей тетрадью-тренажёром и системой упражнений для непрямого зрения и контроля руки."
+      content="Профессиональный тренажёр для системной практики работы через зеркало: рабочая тетрадь формата A4, зеркало и упражнения для уверенного контроля руки."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tigoamigo.github.io/mirror-trainer-landing/" />
     <meta
       property="og:image"
-      content="https://tigoamigo.github.io/mirror-trainer-landing/assets/images/hero-render.png"
+      content="https://tigoamigo.github.io/mirror-trainer-landing/assets/images/v2/og-image.jpg"
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="theme-color"
-      content="#070b12"
-    />
+    <meta name="theme-color" content="#070b12" />
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -34,35 +28,44 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oranienbaum&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260327-2" />
+    <link
+      rel="preload"
+      as="image"
+      href="./assets/images/v2/hero-notebook-1024.jpg"
+      imagesrcset="./assets/images/v2/hero-notebook-480.jpg 480w, ./assets/images/v2/hero-notebook-768.jpg 768w, ./assets/images/v2/hero-notebook-1024.jpg 1024w"
+      imagesizes="(max-width: 960px) 92vw, 46vw"
+    />
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260427-2" />
   </head>
   <body>
     <div class="runtime-warning" data-runtime-warning hidden>
       <div class="container runtime-warning-inner">
-        <strong>Локальный файл-режим ограничивает работу сайта.</strong>
+        <strong>Локальный file-режим ограничивает работу сайта.</strong>
         <span>
-          Откройте сайт через локальный сервер:
+          Откройте лендинг через локальный сервер:
           <code>bash "/Users/ilqar/Documents/Блокнот/start-local.sh"</code>
         </span>
       </div>
     </div>
 
-    <div class="page-glow page-glow-left" aria-hidden="true"></div>
-    <div class="page-glow page-glow-right" aria-hidden="true"></div>
+    <div class="page-noise" aria-hidden="true"></div>
+    <div class="page-orb page-orb-left" aria-hidden="true"></div>
+    <div class="page-orb page-orb-right" aria-hidden="true"></div>
 
     <header class="site-header" data-header>
       <div class="container header-inner">
         <a class="brand" href="#top" aria-label="Тренажёр работы через зеркало">
-          <span class="brand-mark" aria-hidden="true">MT</span>
+          <span class="brand-mark" aria-hidden="true"></span>
           <span class="brand-copy">
             <span class="brand-title">Mirror Trainer</span>
-            <span class="brand-subtitle">Тренажёр через зеркало</span>
+            <span class="brand-subtitle">Тренажёр работы через зеркало</span>
           </span>
         </a>
 
         <nav class="site-nav" data-mobile-nav aria-label="Основная навигация">
           <a href="#product">О продукте</a>
           <a href="#inside">Что внутри</a>
+          <a href="#training">Как тренироваться</a>
           <a href="#pricing">Цена</a>
           <a href="#faq">FAQ</a>
         </nav>
@@ -82,12 +85,12 @@
             <span class="mobile-toggle-label">Меню</span>
           </button>
           <a
-            class="button button-primary button-small button-prominent header-cta"
+            class="button button-primary button-small header-cta"
             href="#lead-form"
             data-scroll-link
             data-event-label="header_preorder"
           >
-            Предзаказ
+            Оставить предзаказ
           </a>
         </div>
       </div>
@@ -95,21 +98,20 @@
 
     <main id="top">
       <section class="hero section" data-section id="hero">
-        <div class="container hero-grid">
+        <div class="container hero-layout">
           <div class="hero-copy">
-            <p class="eyebrow reveal">Авторский premium-тренажёр для стоматологов</p>
+            <p class="hero-kicker reveal">Premium dental training tool</p>
             <h1 class="hero-title reveal reveal-delay-1">
               Освой работу через зеркало быстрее и увереннее
             </h1>
             <p class="hero-text reveal reveal-delay-2">
-              Авторский тренажёр для студентов-стоматологов: рабочая тетрадь,
-              зеркало и система упражнений для развития непрямого зрения,
-              точности и контроля руки.
+              Рабочая тетрадь-тренажёр, зеркало и система упражнений для
+              непрямого зрения, точности движений и более уверенного контроля руки.
             </p>
 
             <div class="hero-actions reveal reveal-delay-3">
               <a
-                class="button button-primary hero-primary-cta"
+                class="button button-primary hero-primary"
                 href="#lead-form"
                 data-scroll-link
                 data-event-label="hero_primary"
@@ -117,240 +119,283 @@
                 Оставить предзаказ
               </a>
               <a
-                class="button button-ghost hero-secondary-cta"
-                href="#inside"
+                class="button button-ghost hero-secondary"
+                href="#lead-form"
                 data-scroll-link
                 data-event-label="hero_secondary"
               >
-                Посмотреть, что внутри
+                Узнать о первой партии
               </a>
             </div>
 
-            <ul class="hero-points reveal reveal-delay-4" aria-label="Короткие преимущества">
-              <li>Формат A4</li>
+            <ul class="hero-signals reveal reveal-delay-4" aria-label="Ключевые преимущества">
+              <li>A4 формат</li>
               <li>Тетрадь + зеркало</li>
-              <li>Пошаговые упражнения</li>
-              <li>Предзаказ 1490 ₽</li>
+              <li>Пошаговая система практики</li>
+              <li>1490 ₽ по предзаказу</li>
             </ul>
 
-            <div class="hero-metrics reveal reveal-delay-4" aria-label="Ключевые акценты продукта">
-              <article class="metric-card">
-                <strong>3 шага</strong>
-                <span>понятный цикл тренировки</span>
+            <div class="hero-summary reveal reveal-delay-4">
+              <article class="summary-card">
+                <span class="summary-label">Для кого</span>
+                <strong>Студенты и начинающие стоматологи</strong>
               </article>
-              <article class="metric-card">
-                <strong>1 комплект</strong>
-                <span>тетрадь, зеркало и готовая логика практики</span>
-              </article>
-              <article class="metric-card">
-                <strong>0 перегруза</strong>
-                <span>короткая практика вместо хаотичных попыток</span>
+              <article class="summary-card">
+                <span class="summary-label">Фокус</span>
+                <strong>Непрямое зрение и контроль руки</strong>
               </article>
             </div>
           </div>
 
-          <div class="hero-visual reveal reveal-delay-2">
-            <div class="hero-frame">
-              <div class="media-surface hero-media-surface">
-                <div class="image-placeholder">
-                  <span class="placeholder-chip">Hero visual</span>
-                  <strong>Премиальный рендер продукта</strong>
-                  <p>Даже если изображение временно недоступно, layout первого экрана остаётся полностью собранным.</p>
-                </div>
-                <img
-                  src="./assets/images/hero-render.png"
-                  alt="Обложка тренажёра работы через зеркало с зеркалом, зубом и тренировочными листами"
-                  class="hero-image"
-                  width="1024"
-                  height="1536"
-                  fetchpriority="high"
-                  decoding="async"
-                  data-image-fallback
-                />
-              </div>
-
-              <div class="hero-media-actions">
-                <a
-                  class="hero-media-action"
-                  href="#product"
-                  data-scroll-link
-                  data-event-label="hero_quick_product"
-                >
-                  <span class="hero-media-action-title">Состав комплекта</span>
-                  <span class="hero-media-action-meta">Покажем, что входит в продукт</span>
-                </a>
-
-                <a
-                  class="hero-media-action"
-                  href="#training"
-                  data-scroll-link
-                  data-event-label="hero_quick_training"
-                >
-                  <span class="hero-media-action-title">Как проходит тренировка</span>
-                  <span class="hero-media-action-meta">Сразу перейти к механике использования</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section compact-section" data-section id="problem">
-        <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">В чём основная сложность</p>
-            <h2>Навык нужен всем, но системно тренировать его обычно негде</h2>
-            <p>
-              Лендинг должен быстро объяснять ценность продукта. Поэтому боли
-              собраны в четыре коротких, узнаваемых сигнала.
-            </p>
-          </div>
-
-          <div class="card-grid four-up">
-            <article class="info-card reveal">
-              <span class="card-index">01</span>
-              <h3>Сложно привыкнуть к отражению</h3>
-              <p>
-                В начале обучения мозг медленно адаптируется к обратной
-                координации и непрямому зрению.
-              </p>
-            </article>
-            <article class="info-card reveal reveal-delay-1">
-              <span class="card-index">02</span>
-              <h3>Рука двигается неуверенно</h3>
-              <p>
-                Даже простые траектории становятся нестабильными, когда
-                работаешь не напрямую, а через зеркало.
-              </p>
-            </article>
-            <article class="info-card reveal reveal-delay-2">
-              <span class="card-index">03</span>
-              <h3>Теряется ориентация</h3>
-              <p>
-                Отражение меняет привычное восприятие формы, движения и
-                направления инструмента.
-              </p>
-            </article>
-            <article class="info-card reveal reveal-delay-3">
-              <span class="card-index">04</span>
-              <h3>Нет понятной системы тренировки</h3>
-              <p>
-                Без последовательных упражнений навык часто развивается
-                случайно, а не целенаправленно.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" data-section id="product">
-        <div class="container split-grid product-layout">
-          <div class="section-heading reveal">
-            <p class="eyebrow">Что это за продукт</p>
-            <h2>Не просто тетрадь, а компактная система тренировки навыка</h2>
-            <p>
-              «Тренажёр работы через зеркало» объединяет физический комплект и
-              понятную логику занятий: от базовых линий до более точных
-              упражнений на контроль руки, траектории и ориентацию в отражении.
-            </p>
-
-            <div class="feature-stack">
-              <div class="feature-row reveal">
-                <span class="feature-badge">A4</span>
-                <div>
-                  <h3>Рабочая тетрадь</h3>
-                  <p>Структурированные задания с возрастающей сложностью.</p>
-                </div>
-              </div>
-              <div class="feature-row reveal reveal-delay-1">
-                <span class="feature-badge">01</span>
-                <div>
-                  <h3>Зеркало в комплекте</h3>
-                  <p>Тренировка сразу в нужной механике работы.</p>
-                </div>
-              </div>
-              <div class="feature-row reveal reveal-delay-2">
-                <span class="feature-badge">02</span>
-                <div>
-                  <h3>Пошаговая система</h3>
-                  <p>Последовательность упражнений помогает тренироваться регулярно и без хаоса.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="media-panel reveal reveal-delay-2">
+          <div class="hero-visual reveal reveal-delay-2" data-parallax-stage>
             <button
-              class="media-button"
+              class="hero-stage"
               type="button"
               data-open-lightbox
-              data-image-src="./assets/images/product-breakdown.png"
-              data-image-alt="Состав продукта и комплекта тренажёра"
-              data-image-caption="Полный комплект продукта для системной самостоятельной практики."
+              data-image-src="./assets/images/v2/hero-notebook.png"
+              data-image-alt="Тетрадь-тренажёр и зеркало на предметном тёмном фоне"
+              data-image-caption="Предметный hero-кадр продукта с акцентом на форму, материалы и тренировочные листы."
             >
-              <div class="media-surface">
-                <div class="image-placeholder">
-                  <span class="placeholder-chip">Product breakdown</span>
-                  <strong>Комплект продукта</strong>
-                  <p>Здесь видно, что внутри: рабочая тетрадь, зеркало и тренировочные страницы для регулярной практики.</p>
+              <div class="hero-stage-frame">
+                <div class="media-surface hero-surface">
+                  <div class="image-placeholder">
+                    <span class="placeholder-chip">Hero notebook</span>
+                    <strong>Предметный кадр продукта</strong>
+                    <p>Верхний экран остаётся собранным даже до замены исходников на финальные фото.</p>
+                  </div>
+                  <picture>
+                    <source
+                      type="image/jpeg"
+                      srcset="
+                        ./assets/images/v2/hero-notebook-480.jpg 480w,
+                        ./assets/images/v2/hero-notebook-768.jpg 768w,
+                        ./assets/images/v2/hero-notebook-1024.jpg 1024w
+                      "
+                      sizes="(max-width: 960px) 92vw, 46vw"
+                    />
+                    <img
+                      src="./assets/images/v2/hero-notebook-1024.jpg"
+                      alt="Тетрадь-тренажёр и зеркало на предметном тёмном фоне"
+                      class="hero-image"
+                      width="1024"
+                      height="1536"
+                      fetchpriority="high"
+                      decoding="async"
+                      data-image-fallback
+                    />
+                  </picture>
                 </div>
-                <img
-                  src="./assets/images/product-breakdown.png"
-                  alt="Состав продукта: рабочая тетрадь, упаковка, зеркало и тренировочные страницы"
-                  width="1024"
-                  height="1536"
-                  loading="lazy"
-                  decoding="async"
-                  data-image-fallback
-                />
+
+                <div class="hero-image-mask hero-image-mask-top" aria-hidden="true"></div>
+                <div class="hero-image-mask hero-image-mask-bottom" aria-hidden="true"></div>
+
+                <div class="hero-floating hero-floating-spec" data-parallax-layer="0.18">
+                  <span class="floating-label">Формат комплекта</span>
+                  <strong>A4 рабочая тетрадь + зеркало</strong>
+                </div>
+
+                <div class="hero-floating hero-floating-price" data-parallax-layer="0.1">
+                  <span class="floating-label">Стартовая цена</span>
+                  <strong>1490 ₽</strong>
+                </div>
               </div>
             </button>
           </div>
         </div>
       </section>
 
-      <section class="section compact-section" data-section id="inside">
+      <section class="section section-problem" data-section id="problem">
         <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">Что внутри</p>
-            <h2>Тренировочные страницы сделаны под ритм короткой, повторяемой практики</h2>
-            <p>
-              Внутренние развороты построены так, чтобы развивать непрямое
-              зрение и точность без перегруза: линии, формы зубов, контуры,
-              повторяющиеся паттерны и задания на стабильность движения.
+          <div class="section-intro reveal">
+            <p class="section-kicker">Проблема навыка</p>
+            <h2 class="section-title">
+              Самая сложная часть в начале практики —
+              <span>не теория, а адаптация к отражению</span>
+            </h2>
+            <p class="section-text">
+              Когда работа идёт через зеркало, мозг иначе считывает форму, а рука
+              теряет привычную опору. Именно поэтому нужен не случайный набор
+              попыток, а спокойная повторяемая система тренировки.
             </p>
           </div>
 
-          <div class="gallery-grid">
-            <figure class="gallery-card reveal">
-              <button
-                class="gallery-button"
-                type="button"
-                data-open-lightbox
-                data-image-src="./assets/images/workbook-spread.png"
-                data-image-alt="Разворот внутренней рабочей тетради"
-                data-image-caption="Разворот с прогрессирующими заданиями на контуры, паттерны и координацию."
-              >
-                <div class="media-surface">
-                  <div class="image-placeholder">
-                    <span class="placeholder-chip">Workbook spread</span>
-                    <strong>Разворот рабочих страниц</strong>
-                    <p>Траектории, формы зубов, повторяемые паттерны и постепенное усложнение.</p>
-                  </div>
+          <div class="problem-grid">
+            <article class="problem-card reveal">
+              <span class="problem-index">01</span>
+              <h3>Ориентация в отражении приходит не сразу</h3>
+              <p>Даже понятные формы ощущаются иначе, когда работаешь не напрямую, а через зеркало.</p>
+            </article>
+            <article class="problem-card reveal reveal-delay-1">
+              <span class="problem-index">02</span>
+              <h3>Траектория движения становится нестабильной</h3>
+              <p>Линия уходит, рука теряет спокойствие, а мелкие ошибки накапливаются быстрее.</p>
+            </article>
+            <article class="problem-card reveal reveal-delay-2">
+              <span class="problem-index">03</span>
+              <h3>Без системы прогресс получается случайным</h3>
+              <p>Развитие навыка замедляется, когда нет понятной последовательности коротких упражнений.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-product" data-section id="product">
+        <div class="container product-layout">
+          <div class="section-intro section-intro-tight reveal">
+            <p class="section-kicker">О продукте</p>
+            <h2 class="section-title">
+              Это не просто рабочая тетрадь, а
+              <span>готовая система практики сложного моторного навыка</span>
+            </h2>
+            <p class="section-text">
+              Комплект собран так, чтобы сократить путь от неуверенного движения к
+              более спокойной и точной работе через зеркало: короткие повторяемые
+              задания, предметный формат и удобный ритм практики.
+            </p>
+
+            <div class="product-points">
+              <article class="product-point reveal">
+                <span class="point-index">A4</span>
+                <div>
+                  <h3>Рабочая тетрадь на пружине</h3>
+                  <p>Упражнения остаются перед глазами в удобном формате, который легко брать на практику.</p>
+                </div>
+              </article>
+              <article class="product-point reveal reveal-delay-1">
+                <span class="point-index">01</span>
+                <div>
+                  <h3>Зеркало в комплекте</h3>
+                  <p>Можно сразу тренироваться в той механике, с которой предстоит работать в реальной практике.</p>
+                </div>
+              </article>
+              <article class="product-point reveal reveal-delay-2">
+                <span class="point-index">02</span>
+                <div>
+                  <h3>Пошаговая логика заданий</h3>
+                  <p>Сначала простые траектории и формы, затем больше контроля, точности и устойчивости движения.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="product-stage-wrap reveal reveal-delay-2">
+            <button
+              class="product-stage"
+              type="button"
+              data-open-lightbox
+              data-image-src="./assets/images/v2/product-kit.png"
+              data-image-alt="Комплект тренажёра: тетрадь, зеркало и тренировочные страницы"
+              data-image-caption="Предметный кадр комплекта. На финальной замене ассетов структура callout-меток сохранится без переписывания кода."
+            >
+              <div class="media-surface product-surface">
+                <div class="image-placeholder">
+                  <span class="placeholder-chip">Product kit</span>
+                  <strong>Комплект продукта</strong>
+                  <p>Предметная композиция остаётся читаемой и без финальной фотосессии.</p>
+                </div>
+                <picture>
+                  <source
+                    type="image/jpeg"
+                    srcset="
+                      ./assets/images/v2/product-kit-480.jpg 480w,
+                      ./assets/images/v2/product-kit-768.jpg 768w,
+                      ./assets/images/v2/product-kit-1024.jpg 1024w
+                    "
+                    sizes="(max-width: 960px) 92vw, 48vw"
+                  />
                   <img
-                    src="./assets/images/workbook-spread.png"
-                    alt="Разворот тренировочной тетради с упражнениями на формы зубов и паттерны"
+                    src="./assets/images/v2/product-kit-1024.jpg"
+                    alt="Комплект тренажёра: тетрадь, зеркало и тренировочные страницы"
+                    class="product-image"
                     width="1024"
                     height="1536"
                     loading="lazy"
                     decoding="async"
                     data-image-fallback
                   />
+                </picture>
+              </div>
+
+              <div class="product-image-veil veil-top" aria-hidden="true"></div>
+              <div class="product-image-veil veil-bottom" aria-hidden="true"></div>
+              <div class="product-image-veil veil-center" aria-hidden="true"></div>
+
+              <div class="product-callout callout-notebook">
+                <span class="callout-dot"></span>
+                <span class="callout-line"></span>
+                <span class="callout-label">A4 тетрадь-тренажёр</span>
+              </div>
+              <div class="product-callout callout-mirror">
+                <span class="callout-dot"></span>
+                <span class="callout-line"></span>
+                <span class="callout-label">Зеркало в комплекте</span>
+              </div>
+              <div class="product-callout callout-pages">
+                <span class="callout-dot"></span>
+                <span class="callout-line"></span>
+                <span class="callout-label">Тренировочные страницы</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-inside" data-section id="inside">
+        <div class="container">
+          <div class="section-intro reveal">
+            <p class="section-kicker">Что внутри</p>
+            <h2 class="section-title">
+              Внутренние страницы собраны так, чтобы
+              <span>движение стало спокойнее, а отражение — понятнее</span>
+            </h2>
+            <p class="section-text">
+              Линии, формы зубов, повторяющиеся паттерны и задания на точность
+              работают не как “обычные прописи”, а как постепенно усложняющаяся
+              практика для развития моторного контроля.
+            </p>
+          </div>
+
+          <div class="inside-gallery">
+            <figure class="gallery-card gallery-card-large reveal">
+              <button
+                class="gallery-button"
+                type="button"
+                data-open-lightbox
+                data-image-src="./assets/images/v2/workbook-spread.png"
+                data-image-alt="Разворот тетради с упражнениями и формами зубов"
+                data-image-caption="Разворот внутренних страниц с повторяемыми заданиями и плавным ростом сложности."
+              >
+                <div class="media-surface gallery-surface">
+                  <div class="image-placeholder">
+                    <span class="placeholder-chip">Workbook spread</span>
+                    <strong>Разворот внутренних страниц</strong>
+                    <p>Задания на линии, формы зубов и ритм повторения движения.</p>
+                  </div>
+                  <picture>
+                    <source
+                      type="image/jpeg"
+                      srcset="
+                        ./assets/images/v2/workbook-spread-480.jpg 480w,
+                        ./assets/images/v2/workbook-spread-768.jpg 768w,
+                        ./assets/images/v2/workbook-spread-1024.jpg 1024w
+                      "
+                      sizes="(max-width: 960px) 92vw, 40vw"
+                    />
+                    <img
+                      src="./assets/images/v2/workbook-spread-1024.jpg"
+                      alt="Разворот тетради с упражнениями и формами зубов"
+                      width="1024"
+                      height="1536"
+                      loading="lazy"
+                      decoding="async"
+                      data-image-fallback
+                    />
+                  </picture>
                 </div>
               </button>
               <figcaption>
-                <h3>Упражнения на траектории</h3>
-                <p>Повторяемые линии и формы для постановки точного движения.</p>
+                <h3>Траектории и повторяемые паттерны</h3>
+                <p>Постепенный переход от базовой координации к более аккуратному контролю руки.</p>
               </figcaption>
             </figure>
 
@@ -359,30 +404,41 @@
                 class="gallery-button"
                 type="button"
                 data-open-lightbox
-                data-image-src="./assets/images/workbook-closeup.png"
-                data-image-alt="Крупный план внутренней страницы"
-                data-image-caption="Близкий план страниц с фокусом на форму зубов, оси и повторение движения."
+                data-image-src="./assets/images/v2/workbook-closeup.png"
+                data-image-alt="Макро-кадр страницы с контурами зубов и линиями"
+                data-image-caption="Макро-кадр рабочих страниц с фокусом на форму, повторение и аккуратность линий."
               >
-                <div class="media-surface">
+                <div class="media-surface gallery-surface">
                   <div class="image-placeholder">
-                    <span class="placeholder-chip">Close-up</span>
-                    <strong>Крупный план страницы</strong>
-                    <p>Сразу считывается, что продукт визуально продуман и не выглядит обычной учебной тетрадью.</p>
+                    <span class="placeholder-chip">Workbook close-up</span>
+                    <strong>Макро страницы</strong>
+                    <p>Контуры, оси и детализация, которые помогают работать спокойнее и точнее.</p>
                   </div>
-                  <img
-                    src="./assets/images/workbook-closeup.png"
-                    alt="Крупный план тренировочной страницы с контурами зубов"
-                    width="1024"
-                    height="1536"
-                    loading="lazy"
-                    decoding="async"
-                    data-image-fallback
-                  />
+                  <picture>
+                    <source
+                      type="image/jpeg"
+                      srcset="
+                        ./assets/images/v2/workbook-closeup-480.jpg 480w,
+                        ./assets/images/v2/workbook-closeup-768.jpg 768w,
+                        ./assets/images/v2/workbook-closeup-1024.jpg 1024w
+                      "
+                      sizes="(max-width: 960px) 92vw, 28vw"
+                    />
+                    <img
+                      src="./assets/images/v2/workbook-closeup-1024.jpg"
+                      alt="Макро-кадр страницы с контурами зубов и линиями"
+                      width="1024"
+                      height="1536"
+                      loading="lazy"
+                      decoding="async"
+                      data-image-fallback
+                    />
+                  </picture>
                 </div>
               </button>
               <figcaption>
-                <h3>Формы зубов и контуры</h3>
-                <p>Отработка ориентации, симметрии и понимания формы в отражении.</p>
+                <h3>Форма и точность</h3>
+                <p>Упражнения на контуры помогают лучше считывать форму и вести линию увереннее.</p>
               </figcaption>
             </figure>
 
@@ -391,175 +447,225 @@
                 class="gallery-button"
                 type="button"
                 data-open-lightbox
-                data-image-src="./assets/images/cover-prototype.png"
-                data-image-alt="Работа с зеркалом над листом задания"
-                data-image-caption="Временный визуальный блок под финальный контент или дополнительный макро-кадр продукта."
+                data-image-src="./assets/images/v2/mirror-detail.png"
+                data-image-alt="Атмосферный кадр зеркала и деталей рабочей тетради"
+                data-image-caption="Дополнительный атмосферный кадр для ощущения аккуратного профессионального инструмента."
               >
-                <div class="media-surface">
+                <div class="media-surface gallery-surface">
                   <div class="image-placeholder">
-                    <span class="placeholder-chip">Cover prototype</span>
-                    <strong>Дополнительный визуальный слот</strong>
-                    <p>Эту карточку можно заменить на финальный lifestyle-shot, detail-shot или фото автора без переписывания сетки.</p>
+                    <span class="placeholder-chip">Mirror detail</span>
+                    <strong>Деталь инструмента</strong>
+                    <p>Макро-ритм материалов, который добавляет сайту ощущение реального предмета.</p>
                   </div>
-                  <img
-                    src="./assets/images/cover-prototype.png"
-                    alt="Дополнительный визуальный кадр продукта для галереи"
-                    width="1024"
-                    height="1536"
-                    loading="lazy"
-                    decoding="async"
-                    data-image-fallback
-                  />
+                  <picture>
+                    <source
+                      type="image/jpeg"
+                      srcset="
+                        ./assets/images/v2/mirror-detail-480.jpg 480w,
+                        ./assets/images/v2/mirror-detail-768.jpg 768w,
+                        ./assets/images/v2/mirror-detail-1024.jpg 1024w
+                      "
+                      sizes="(max-width: 960px) 92vw, 28vw"
+                    />
+                    <img
+                      src="./assets/images/v2/mirror-detail-1024.jpg"
+                      alt="Атмосферный кадр зеркала и деталей рабочей тетради"
+                      width="1024"
+                      height="1536"
+                      loading="lazy"
+                      decoding="async"
+                      data-image-fallback
+                    />
+                  </picture>
                 </div>
               </button>
               <figcaption>
-                <h3>Точность и контроль руки</h3>
-                <p>Блок под дополнительный premium-визуал, который усиливает доверие и ощущение готового продукта.</p>
+                <h3>Материалы и предметность</h3>
+                <p>Сайт строится вокруг продукта и деталей, а не вокруг клишированных медицинских образов.</p>
               </figcaption>
             </figure>
           </div>
         </div>
       </section>
 
-      <section class="section" data-section id="training">
-        <div class="container split-grid training-layout">
-          <div class="media-panel reveal">
+      <section class="section section-training" data-section id="training">
+        <div class="container training-layout">
+          <div class="training-visual reveal">
             <button
-              class="media-button"
+              class="training-stage"
               type="button"
               data-open-lightbox
-              data-image-src="./assets/images/training-process.png"
-              data-image-alt="Процесс выполнения упражнений через зеркало"
-              data-image-caption="Практика через зеркало: задание, отражение, движение и постепенный прогресс."
+              data-image-src="./assets/images/v2/training-process.png"
+              data-image-alt="Руки в перчатках выполняют упражнения через зеркало по рабочей тетради"
+              data-image-caption="Сценарий использования продукта: задание, зеркало, движение, контроль и повторение."
             >
-              <div class="media-surface">
+              <div class="media-surface training-surface">
                 <div class="image-placeholder">
                   <span class="placeholder-chip">Training process</span>
-                  <strong>Как выглядит тренировка</strong>
-                  <p>Даже без новых фото блок уже показывает механику использования и делает продукт понятным с первого экрана.</p>
+                  <strong>Сценарий тренировки</strong>
+                  <p>Процесс использования понятен с одного взгляда и работает как trust-сигнал.</p>
                 </div>
-                <img
-                  src="./assets/images/training-process.png"
-                  alt="Руки в перчатках выполняют упражнения через зеркало по рабочей тетради"
-                  width="1024"
-                  height="1536"
-                  loading="lazy"
-                  decoding="async"
-                  data-image-fallback
-                />
+                <picture>
+                  <source
+                    type="image/jpeg"
+                    srcset="
+                      ./assets/images/v2/training-process-480.jpg 480w,
+                      ./assets/images/v2/training-process-768.jpg 768w,
+                      ./assets/images/v2/training-process-1024.jpg 1024w
+                    "
+                    sizes="(max-width: 960px) 92vw, 44vw"
+                  />
+                  <img
+                    src="./assets/images/v2/training-process-1024.jpg"
+                    alt="Руки в перчатках выполняют упражнения через зеркало по рабочей тетради"
+                    width="1024"
+                    height="1536"
+                    loading="lazy"
+                    decoding="async"
+                    data-image-fallback
+                  />
+                </picture>
               </div>
             </button>
           </div>
 
-          <div class="section-heading reveal reveal-delay-1">
-            <p class="eyebrow">Как проходит тренировка</p>
-            <h2>Три шага, которые легко встроить в регулярную практику</h2>
+          <div class="training-copy">
+            <div class="section-intro section-intro-tight reveal reveal-delay-1">
+              <p class="section-kicker">Как тренироваться</p>
+              <h2 class="section-title">
+                Спокойная практика, которую
+                <span>легко встроить в учёбу и раннюю клиническую работу</span>
+              </h2>
+            </div>
 
-            <div class="step-list">
-              <article class="step-card reveal">
-                <span class="step-number">1</span>
+            <div class="training-steps">
+              <article class="training-step reveal">
+                <span class="step-counter">01</span>
                 <div>
                   <h3>Открой задание</h3>
-                  <p>Выбери упражнение и подготовь рабочую позицию.</p>
+                  <p>Выбери страницу и подготовь ровную рабочую поверхность без лишних отвлекающих элементов.</p>
                 </div>
               </article>
-              <article class="step-card reveal reveal-delay-1">
-                <span class="step-number">2</span>
+              <article class="training-step reveal reveal-delay-1">
+                <span class="step-counter">02</span>
                 <div>
-                  <h3>Выполняй через зеркало</h3>
-                  <p>Следи за линией, отражением и стабильностью движения.</p>
+                  <h3>Работай через зеркало</h3>
+                  <p>Смотри на отражение, веди линию аккуратно и удерживай спокойное движение без рывков.</p>
                 </div>
               </article>
-              <article class="step-card reveal reveal-delay-2">
-                <span class="step-number">3</span>
+              <article class="training-step reveal reveal-delay-2">
+                <span class="step-counter">03</span>
                 <div>
-                  <h3>Повторяй и отслеживай прогресс</h3>
-                  <p>Чем больше повторений, тем увереннее координация и контроль руки.</p>
+                  <h3>Повторяй и сравнивай прогресс</h3>
+                  <p>Именно короткая регулярная практика постепенно убирает скованность и делает движение точнее.</p>
                 </div>
               </article>
             </div>
+
+            <div class="training-diagram reveal reveal-delay-3" aria-hidden="true">
+              <span>Отражение</span>
+              <span class="diagram-link"></span>
+              <span>Движение</span>
+              <span class="diagram-link"></span>
+              <span>Контроль</span>
+            </div>
+
+            <a
+              class="button button-ghost training-cta reveal reveal-delay-4"
+              href="#lead-form"
+              data-scroll-link
+              data-event-label="hero_quick_training"
+            >
+              Перейти к предзаказу
+            </a>
           </div>
         </div>
       </section>
 
-      <section class="section compact-section" data-section id="audience">
+      <section class="section section-audience" data-section id="audience">
         <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">Для кого</p>
-            <h2>Сделано для тех, кому важен рост навыка, а не случайная практика</h2>
+          <div class="section-intro reveal">
+            <p class="section-kicker">Для кого</p>
+            <h2 class="section-title">
+              Сделано для тех, кому важен
+              <span>реальный рост навыка, а не хаотичная практика</span>
+            </h2>
           </div>
 
-          <div class="card-grid audience-grid">
+          <div class="audience-grid">
             <article class="audience-card reveal">
               <h3>Студенты стоматфака</h3>
-              <p>Чтобы быстрее пройти этап адаптации к работе через зеркало.</p>
+              <p>Чтобы быстрее пройти период адаптации к работе через зеркало.</p>
             </article>
             <article class="audience-card reveal reveal-delay-1">
-              <h3>Начинающие стоматологи</h3>
-              <p>Чтобы укрепить контроль руки и повысить уверенность в работе.</p>
+              <h3>Ординаторы</h3>
+              <p>Чтобы сделать движение спокойнее и увереннее ещё до роста реальной нагрузки.</p>
             </article>
             <article class="audience-card reveal reveal-delay-2">
-              <h3>Тем, кто хочет развить непрямое зрение</h3>
-              <p>Для регулярной короткой практики без сложной подготовки.</p>
+              <h3>Начинающие стоматологи</h3>
+              <p>Чтобы тренировать контроль руки системно, а не только на случайных повторениях.</p>
             </article>
             <article class="audience-card reveal reveal-delay-3">
-              <h3>Тем, кто любит системность</h3>
-              <p>Чтобы тренировать движение не хаотично, а по понятной структуре.</p>
+              <h3>Тем, кто развивает непрямое зрение</h3>
+              <p>Для короткой, понятной и повторяемой практики без перегруза.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="section" data-section id="pricing">
-        <div class="container">
-          <div class="section-heading reveal pricing-heading">
-            <p class="eyebrow">Цена и предзаказ</p>
-            <h2>Стартовая цена первой партии заметно ниже полной стоимости</h2>
-            <p>
-              Сейчас можно оставить предзаказ по цене запуска. После выхода основной партии
-              стоимость вернётся к полной цене.
+      <section class="section section-offer" data-section id="pricing">
+        <div class="container offer-layout">
+          <div class="offer-panel reveal">
+            <p class="section-kicker">Цена предзаказа</p>
+            <h2 class="section-title offer-title">
+              Зафиксируйте цену запуска до выхода основной партии
+            </h2>
+            <p class="section-text offer-text">
+              Сейчас действует более мягкая стартовая цена для первых заявок. После
+              запуска полной партии комплект вернётся к своей базовой стоимости.
             </p>
+
+            <div class="offer-price-block">
+              <div class="offer-price-line">
+                <span class="offer-old-price">2490 ₽</span>
+                <span class="offer-discount">-40%</span>
+                <strong class="offer-new-price">1490 ₽</strong>
+              </div>
+              <div class="offer-saving">
+                <span>Экономия</span>
+                <strong>1000 ₽</strong>
+              </div>
+            </div>
+
+            <div class="offer-meta">
+              <article class="offer-chip">
+                <span class="offer-chip-label">Полная цена</span>
+                <strong>2490 ₽</strong>
+              </article>
+              <article class="offer-chip">
+                <span class="offer-chip-label">Цена предзаказа</span>
+                <strong>1490 ₽</strong>
+              </article>
+            </div>
+
+            <a
+              class="button button-primary offer-anchor"
+              href="#lead-form"
+              data-scroll-link
+              data-event-label="hero_quick_product"
+            >
+              Перейти к заявке
+            </a>
           </div>
 
-          <div class="pricing-grid">
-            <article class="price-panel reveal">
-              <p class="eyebrow">Стоимость комплекта</p>
-              <h2>Зафиксируйте цену запуска до выхода основной партии</h2>
-              <div class="price-stack price-stack-marketing">
-                <div class="price-hero-line">
-                  <span class="price-muted-marketing">2490 ₽</span>
-                  <span class="price-discount-pill">-40%</span>
-                  <strong class="price-current">1490 ₽</strong>
-                </div>
-                <div class="price-economy-row">
-                  <span>Экономия</span>
-                  <strong>1000 ₽</strong>
-                </div>
-              </div>
-              <div class="price-benefits">
-                <article class="price-badge">
-                  <strong>Первая партия</strong>
-                  <span>специальная цена действует только на стартовом наборе заявок</span>
-                </article>
-                <article class="price-badge">
-                  <strong>1490 ₽</strong>
-                  <span>стоимость предзаказа фиксируется после отправки заявки</span>
-                </article>
-              </div>
-              <p class="price-note">
-                Полная цена составит 2490 ₽. Для первых заявок действует стартовая стоимость 1490 ₽,
-                чтобы можно было войти в запуск на более выгодных условиях.
-              </p>
-            </article>
+          <article class="form-panel reveal reveal-delay-1" id="lead-form">
+            <div class="form-heading">
+              <p class="panel-kicker">Форма предзаказа</p>
+              <h3>Оставьте контакт, чтобы зафиксировать стартовую цену</h3>
+            </div>
 
-            <article class="form-panel reveal reveal-delay-1" id="lead-form">
-              <div class="form-heading">
-                <p class="panel-kicker">Форма предзаказа</p>
-                <h3>Оставьте заявку, чтобы зафиксировать стартовую цену</h3>
-              </div>
-
-              <form class="lead-form" data-lead-form data-form-source="inline">
-                <div class="lead-form-grid">
+            <form class="lead-form" data-lead-form data-form-source="inline">
+              <div class="lead-form-grid">
                 <label>
                   <span>Имя</span>
                   <input
@@ -601,117 +707,129 @@
                 </label>
                 <label>
                   <span>Email</span>
-                  <input type="email" name="email" autocomplete="email" placeholder="Необязательно" />
+                  <input
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    placeholder="Необязательно"
+                  />
                 </label>
                 <label class="field-span-2">
                   <span>Комментарий</span>
                   <textarea
                     name="comment"
                     rows="4"
-                    placeholder="Например: интересует доставка, сроки выхода или количество комплектов"
+                    placeholder="Например: сроки выхода, доставка или количество комплектов"
                   ></textarea>
                 </label>
-                </div>
-                <button class="button button-primary button-wide" type="submit">
-                  Хочу предзаказ
-                </button>
-                <p class="form-meta">
-                  Мы используем данные только для связи по предзаказу и запуску первой партии.
-                </p>
-                <p class="form-feedback" data-form-feedback></p>
-              </form>
-            </article>
-          </div>
+              </div>
+
+              <button class="button button-primary button-wide" type="submit">
+                Хочу предзаказ
+              </button>
+              <p class="form-meta">
+                Мы используем контакты только для связи по предзаказу и запуску первой партии.
+              </p>
+              <p class="form-feedback" data-form-feedback></p>
+            </form>
+          </article>
         </div>
       </section>
 
-      <section class="section compact-section" data-section id="faq">
+      <section class="section section-faq" data-section id="faq">
         <div class="container">
-          <div class="section-heading reveal">
-            <p class="eyebrow">FAQ</p>
-            <h2>Коротко о запуске, формате и пользе продукта</h2>
+          <div class="section-intro reveal">
+            <p class="section-kicker">FAQ</p>
+            <h2 class="section-title">
+              Важное о формате, запуске и
+              <span>том, как этот продукт помогает в практике</span>
+            </h2>
           </div>
 
           <div class="faq-list">
             <article class="faq-item reveal">
               <button class="faq-toggle" type="button" aria-expanded="false">
                 <span>Для кого подходит этот тренажёр?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  Тренажёр в первую очередь сделан для студентов стоматологических
-                  факультетов, ординаторов и начинающих стоматологов, которым
-                  важно быстрее адаптироваться к работе через зеркало. Он особенно
-                  полезен на этапе, когда теорию уже понимаешь, а уверенности в
-                  отражении, ориентации и движении руки ещё не хватает.
+                  Продукт прежде всего рассчитан на студентов стоматологических факультетов,
+                  ординаторов и начинающих стоматологов, которым нужно быстрее адаптироваться
+                  к работе через зеркало. Он особенно полезен на этапе, когда базовая теория
+                  уже понятна, но отражение всё ещё замедляет движение и снижает уверенность.
                 </p>
               </div>
             </article>
+
             <article class="faq-item reveal reveal-delay-1">
               <button class="faq-toggle" type="button" aria-expanded="false">
                 <span>Что входит в комплект?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  В комплект входит рабочая тетрадь формата A4 с системой
-                  последовательных упражнений и зеркало для практики в нужной
-                  механике. Основной продукт здесь именно тетрадь-тренажёр:
-                  она задаёт структуру занятий и помогает проходить путь от
-                  базовых линий и контуров к более точным упражнениям.
+                  В комплект входит рабочая тетрадь-тренажёр формата A4 и стоматологическое
+                  зеркало. Главная ценность комплекта — не в отдельных предметах, а в том,
+                  что они собраны в один понятный сценарий регулярной практики без перегруза.
                 </p>
               </div>
             </article>
+
             <article class="faq-item reveal reveal-delay-2">
               <button class="faq-toggle" type="button" aria-expanded="false">
-                <span>Когда продукт будет доступен?</span>
+                <span>Когда будет доступна первая партия?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  Сейчас мы собираем предзаказ на первую партию. После того как
-                  будет сформирован стартовый список заявок, мы отдельно сообщим
-                  подтверждённые сроки готовности, комплектации и старта выдачи
-                  или отправки продукта.
+                  Сейчас мы собираем заявки на предзаказ. После формирования первой партии
+                  всем, кто оставил контакт, отдельно придёт информация о сроках готовности,
+                  подтверждении заказа и дальнейшей выдаче или отправке комплекта.
                 </p>
               </div>
             </article>
+
             <article class="faq-item reveal">
               <button class="faq-toggle" type="button" aria-expanded="false">
-                <span>Это для новичков или для тех, у кого уже есть опыт?</span>
+                <span>Это решение для новичков или и для тех, у кого уже есть опыт?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  База отлично подходит новичкам, потому что помогает пройти этап
-                  первичной адаптации к непрямому зрению без хаотичных попыток.
-                  Но и тем, кто уже начал практику, тренажёр тоже полезен:
-                  повторяющиеся упражнения помогают быстрее укрепить точность,
-                  аккуратность и контроль руки.
+                  База отлично подходит новичкам, потому что помогает пройти самую неудобную
+                  часть адаптации к непрямому зрению. Но и тем, кто уже начал работать,
+                  тетрадь полезна: регулярное повторение упражнений помогает укрепить
+                  контроль руки, сделать движение спокойнее и снизить скованность.
                 </p>
               </div>
             </article>
+
             <article class="faq-item reveal reveal-delay-1">
               <button class="faq-toggle" type="button" aria-expanded="false">
-                <span>Можно ли использовать тренажёр дома?</span>
+                <span>Можно ли тренироваться дома?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  Да. Формат специально рассчитан на короткие самостоятельные
-                  сессии дома, в вузе или перед практическими занятиями. Для
-                  работы не нужна сложная подготовка: достаточно ровной поверхности,
-                  ручки или карандаша и зеркала из комплекта.
+                  Да. Формат тетради рассчитан именно на короткие самостоятельные сессии:
+                  дома, в вузе или перед практическими занятиями. Для старта не нужна сложная
+                  подготовка — достаточно ровной поверхности, письменного инструмента и зеркала.
                 </p>
               </div>
             </article>
+
             <article class="faq-item reveal reveal-delay-2">
               <button class="faq-toggle" type="button" aria-expanded="false">
                 <span>Что даёт регулярная практика с тетрадью?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  Регулярная короткая практика помогает быстрее ориентироваться в
-                  отражении, спокойнее вести линию, точнее контролировать движение
-                  руки и в целом увереннее чувствовать себя при работе через зеркало.
-                  Главная ценность не в разовом упражнении, а в системном повторении,
-                  которое постепенно убирает скованность и хаос в движениях.
+                  Повторяемая практика помогает быстрее привыкнуть к отражению, точнее вести
+                  линию, спокойнее контролировать движение и увереннее чувствовать себя при
+                  работе через зеркало. Главный эффект приходит не от одного упражнения,
+                  а от системного повторения без хаоса и перегруза.
                 </p>
               </div>
             </article>
@@ -721,19 +839,22 @@
     </main>
 
     <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <p class="footer-brand">Тренажёр работы через зеркало</p>
+      <div class="container footer-layout">
+        <div class="footer-brand-block">
+          <p class="footer-brand">Mirror Trainer</p>
           <p class="footer-text">
-            Рабочая тетрадь-тренажёр для системной практики и развития навыка работы через зеркало.
+            Рабочая тетрадь-тренажёр для системной практики работы через зеркало,
+            развития непрямого зрения и более точного контроля руки.
           </p>
         </div>
+
         <div class="footer-links">
           <a href="https://t.me/your_handle" target="_blank" rel="noreferrer" data-contact-link>
             Telegram: <span data-contact-label>@your_handle</span>
           </a>
           <a href="./privacy.html">Политика конфиденциальности</a>
         </div>
+
         <p class="footer-copy">© 2026 Mirror Trainer. Все права защищены.</p>
       </div>
     </footer>
@@ -766,8 +887,8 @@
           <p class="panel-kicker">Спасибо</p>
           <h2 id="success-modal-title">Заявка отправлена</h2>
           <p class="modal-text">
-            Спасибо за интерес к рабочей тетради-тренажёру. Мы свяжемся с вами,
-            когда подтвердим детали первой партии и откроем выдачу предзаказов.
+            Спасибо за интерес к тренажёру. Мы свяжемся с вами, когда подтвердим
+            детали первой партии и откроем выдачу предзаказов.
           </p>
         </div>
       </div>
@@ -781,8 +902,8 @@
         if (node) node.hidden = false;
       }
     </script>
-    <script src="./assets/js/config.js?v=20260327-2"></script>
-    <script src="./assets/js/supabase.js?v=20260327-2"></script>
-    <script src="./assets/js/app.js?v=20260327-2"></script>
+    <script src="./assets/js/config.js?v=20260427-2"></script>
+    <script src="./assets/js/supabase.js?v=20260427-2"></script>
+    <script src="./assets/js/app.js?v=20260427-2"></script>
   </body>
 </html>

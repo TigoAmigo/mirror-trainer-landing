@@ -615,9 +615,9 @@ function escapeHtml(value) {
 function humanizeCtaLabel(label) {
   const map = {
     hero_primary: 'Hero: оставить предзаказ',
-    hero_secondary: 'Hero: посмотреть наполнение',
-    hero_quick_product: 'Hero: состав комплекта',
-    hero_quick_training: 'Hero: тренировка',
+    hero_secondary: 'Hero: узнать о первой партии',
+    hero_quick_product: 'Цена: перейти к заявке',
+    hero_quick_training: 'Тренировка: перейти к заявке',
     header_preorder: 'Header: предзаказ',
   };
 

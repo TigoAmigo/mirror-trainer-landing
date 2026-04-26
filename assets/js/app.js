@@ -5,6 +5,7 @@ const persistLead = dataApi.saveLead || (async () => ({ mode: 'noop' }));
 const config = window.APP_CONFIG || {};
 const memoryStore = window.__MIRROR_TRAINER_MEMORY__ || (window.__MIRROR_TRAINER_MEMORY__ = {});
 const SESSION_KEY = 'mirror-trainer-session-id';
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const state = {
   sessionId: getOrCreateSessionId(),
@@ -31,6 +32,7 @@ function init() {
     applyContactInfo();
     initHeader();
     initRevealObserver();
+    initHeroParallax();
     initImageFallbacks();
     initSectionTracking();
     initScrollDepthTracking();
@@ -194,9 +196,12 @@ function initHeader() {
 
 function initRevealObserver() {
   const items = document.querySelectorAll('.reveal');
-  document.documentElement.classList.add('js-animations');
 
-  if (!('IntersectionObserver' in window)) {
+  if (!prefersReducedMotion) {
+    document.documentElement.classList.add('js-animations');
+  }
+
+  if (!('IntersectionObserver' in window) || prefersReducedMotion) {
     items.forEach((item) => item.classList.add('in-view'));
     return;
   }
@@ -217,6 +222,42 @@ function initRevealObserver() {
   );
 
   items.forEach((item) => observer.observe(item));
+}
+
+function initHeroParallax() {
+  if (prefersReducedMotion) {
+    return;
+  }
+
+  const stage = document.querySelector('[data-parallax-stage]');
+
+  if (!stage) {
+    return;
+  }
+
+  const layers = Array.from(stage.querySelectorAll('[data-parallax-layer]'));
+
+  const update = (event) => {
+    const rect = stage.getBoundingClientRect();
+    const relativeX = (event.clientX - rect.left) / rect.width - 0.5;
+    const relativeY = (event.clientY - rect.top) / rect.height - 0.5;
+
+    layers.forEach((layer) => {
+      const depth = Number(layer.dataset.parallaxLayer || 0.1);
+      const moveX = relativeX * 28 * depth;
+      const moveY = relativeY * 24 * depth;
+      layer.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
+    });
+  };
+
+  const reset = () => {
+    layers.forEach((layer) => {
+      layer.style.transform = '';
+    });
+  };
+
+  stage.addEventListener('pointermove', update);
+  stage.addEventListener('pointerleave', reset);
 }
 
 function initSectionTracking() {
@@ -782,7 +823,7 @@ function scrollToTarget(target) {
 
   window.scrollTo({
     top: Math.max(top, 0),
-    behavior: 'smooth',
+    behavior: prefersReducedMotion ? 'auto' : 'smooth',
   });
 }
 
