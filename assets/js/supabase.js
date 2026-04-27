@@ -6,11 +6,13 @@ const STORAGE_KEYS = {
   leads: 'mirror-trainer-leads',
   eventLogs: 'mirror-trainer-event-logs',
 };
+const DASHBOARD_CHANNEL = 'mirror-trainer-dashboard-sync';
 
 const hasRemoteConfig =
   window.location.protocol !== 'file:' &&
   Boolean(appConfig.supabaseUrl && appConfig.supabaseAnonKey);
 let clientPromise = null;
+let dashboardChannel = null;
 
 const storageMode = hasRemoteConfig ? 'remote' : 'local';
 
@@ -113,6 +115,33 @@ function writeStorageValue(key, value) {
       detail: { key },
     })
   );
+
+  notifyDashboardUpdated({ source: 'local_storage', key });
+}
+
+function notifyDashboardUpdated(detail = {}) {
+  const payload = {
+    ...detail,
+    updatedAt: new Date().toISOString(),
+  };
+
+  window.dispatchEvent(
+    new CustomEvent('mirror-trainer-dashboard-updated', {
+      detail: payload,
+    })
+  );
+
+  try {
+    if ('BroadcastChannel' in window) {
+      if (!dashboardChannel) {
+        dashboardChannel = new BroadcastChannel(DASHBOARD_CHANNEL);
+      }
+
+      dashboardChannel.postMessage(payload);
+    }
+  } catch (error) {
+    console.warn('Dashboard sync channel is unavailable.', error);
+  }
 }
 
 function readCookie(name) {
@@ -368,6 +397,8 @@ async function saveLead(payload) {
     return { mode: 'local', id: row.id };
   }
 
+  notifyDashboardUpdated({ source: 'remote', type: 'lead_saved' });
+
   return { mode: 'remote', id: data };
 }
 
@@ -409,6 +440,14 @@ async function logEvent(payload) {
     collection.push(row);
     writeLocal(STORAGE_KEYS.eventLogs, collection);
     return { mode: 'local', id: row.id };
+  }
+
+  if (['page_view', 'cta_click', 'form_submit', 'scroll_depth'].includes(row.event_name)) {
+    notifyDashboardUpdated({
+      source: 'remote',
+      type: 'event_logged',
+      eventName: row.event_name,
+    });
   }
 
   return { mode: 'remote', id: data };
@@ -473,6 +512,7 @@ function clearLocalData() {
       detail: { cleared: true },
     })
   );
+  notifyDashboardUpdated({ source: 'local_storage', type: 'cleared' });
 
   return {
     mode: 'local',
@@ -483,6 +523,7 @@ function clearLocalData() {
 window.MirrorTrainerData = {
   storageMode,
   hasRemoteConfig,
+  dashboardChannel: DASHBOARD_CHANNEL,
   saveLead,
   saveInterestVote,
   savePurchaseIntent,

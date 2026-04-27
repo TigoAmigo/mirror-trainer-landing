@@ -160,6 +160,41 @@ a:focus-visible {
   margin-bottom: 18px;
 }
 
+.admin-sync-panel {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.admin-sync-panel > div {
+  min-height: 92px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+    rgba(13, 19, 30, 0.72);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.22);
+}
+
+.admin-sync-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-sync-panel strong {
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
 .kpi-card,
 .panel,
 .admin-note {
@@ -409,7 +444,7 @@ a:focus-visible {
 
 .funnel-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -485,6 +520,10 @@ a:focus-visible {
 
   .funnel-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-sync-panel {
+    grid-template-columns: 1fr;
   }
 }
 

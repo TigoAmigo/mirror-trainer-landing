@@ -73,8 +73,7 @@ body::after {
   filter: blur(14px);
 }
 
-.page-noise,
-.page-orb {
+.page-noise {
   position: fixed;
   pointer-events: none;
   z-index: -2;
@@ -87,25 +86,6 @@ body::after {
     radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08) 0, transparent 2px),
     radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.06) 0, transparent 1.5px);
   background-size: 180px 180px, 220px 220px;
-}
-
-.page-orb {
-  top: -120px;
-  width: 420px;
-  height: 420px;
-  border-radius: 999px;
-  opacity: 0.2;
-  filter: blur(84px);
-}
-
-.page-orb-left {
-  left: -180px;
-  background: rgba(173, 188, 219, 0.24);
-}
-
-.page-orb-right {
-  right: -180px;
-  background: rgba(115, 136, 186, 0.18);
 }
 
 img {
@@ -579,6 +559,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
   display: block;
   width: 100%;
   text-align: left;
+  color: var(--text);
 }
 
 .hero-stage-frame {
@@ -643,8 +624,8 @@ body.nav-open .mobile-toggle-icon span:last-child {
 }
 
 .hero-surface img {
-  object-position: center 72%;
-  transform: scale(1.14);
+  object-position: center 54%;
+  transform: scale(1.04);
 }
 
 .product-surface img {
@@ -661,7 +642,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
 .product-stage:hover img,
 .gallery-button:hover img,
 .training-stage:hover img {
-  transform: scale(1.12);
+  transform: scale(1.08);
 }
 
 .product-stage:hover .product-surface img,
@@ -725,17 +706,6 @@ body.nav-open .mobile-toggle-icon span:last-child {
   z-index: 3;
 }
 
-.hero-image-mask-top {
-  top: 2%;
-  left: 16%;
-  width: 66%;
-  height: 24%;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(13, 18, 29, 0.16), rgba(6, 9, 15, 0.84) 72%);
-  filter: blur(18px);
-  opacity: 0.92;
-}
-
 .hero-image-mask-bottom {
   left: 10%;
   bottom: -3%;
@@ -780,6 +750,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
 }
 
 .hero-floating strong {
+  color: var(--accent-strong);
   font-size: 1rem;
   line-height: 1.45;
 }
@@ -1832,6 +1803,10 @@ body.modal-open {
     gap: 22px;
   }
 
+  .hero-layout {
+    gap: 24px;
+  }
+
   .hero-title,
   .section-title {
     font-size: clamp(2.15rem, 10vw, 3.25rem);
@@ -1861,6 +1836,10 @@ body.modal-open {
     grid-template-columns: 1fr;
   }
 
+  .hero-summary {
+    display: none;
+  }
+
   .summary-card,
   .problem-card,
   .audience-card,
@@ -1878,7 +1857,8 @@ body.modal-open {
   }
 
   .hero-surface {
-    aspect-ratio: 0.82;
+    aspect-ratio: 4 / 5;
+    max-height: 520px;
   }
 
   .hero-floating-price {

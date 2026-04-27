@@ -15,7 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oranienbaum&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/admin.css?v=20260427-2" />
+    <link rel="stylesheet" href="./assets/css/admin.css?v=20260427-3" />
   </head>
   <body>
     <div class="runtime-warning runtime-warning-admin" data-runtime-warning hidden>
@@ -84,7 +84,22 @@
         </section>
 
         <div data-admin-dashboard hidden>
-        <section class="kpi-grid" data-dashboard-state="loading">
+          <section class="admin-sync-panel">
+            <div>
+              <span class="admin-sync-label">Связь лендинга и админки</span>
+              <strong data-admin-storage-mode>Проверяем источник данных</strong>
+            </div>
+            <div>
+              <span class="admin-sync-label">Последнее обновление</span>
+              <strong data-admin-last-sync>нет данных</strong>
+            </div>
+            <div>
+              <span class="admin-sync-label">Состояние</span>
+              <strong data-admin-sync-health>ожидаем данные</strong>
+            </div>
+          </section>
+
+          <section class="kpi-grid" data-dashboard-state="loading">
           <article class="kpi-card">
             <span>Уникальные посетители</span>
             <strong data-kpi="uniqueVisitors">0</strong>
@@ -162,9 +177,9 @@
         if (node) node.hidden = false;
       }
     </script>
-    <script src="./assets/js/config.js?v=20260427-2"></script>
-    <script src="./assets/js/supabase.js?v=20260427-2"></script>
+    <script src="./assets/js/config.js?v=20260427-3"></script>
+    <script src="./assets/js/supabase.js?v=20260427-3"></script>
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-    <script src="./assets/js/admin.js?v=20260427-2"></script>
+    <script src="./assets/js/admin.js?v=20260427-3"></script>
   </body>
 </html>

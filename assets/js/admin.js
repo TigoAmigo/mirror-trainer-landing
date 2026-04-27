@@ -18,12 +18,19 @@ const sessionActions = document.querySelector('[data-admin-session-actions]');
 const sessionEmail = document.querySelector('[data-admin-session-email]');
 const logoutButton = document.querySelector('[data-admin-logout]');
 const dashboard = document.querySelector('[data-admin-dashboard]');
+const storageModeLabel = document.querySelector('[data-admin-storage-mode]');
+const lastSyncLabel = document.querySelector('[data-admin-last-sync]');
+const syncHealthLabel = document.querySelector('[data-admin-sync-health]');
 const hasRemoteConfig = Boolean(dataApi.hasRemoteConfig);
+const dashboardChannelName = dataApi.dashboardChannel || 'mirror-trainer-dashboard-sync';
 
 let isLoading = false;
 let authReady = false;
 let currentUser = null;
 let cachedLeads = [];
+let refreshTimer = null;
+let syncChannel = null;
+let pendingRefresh = false;
 
 init();
 
@@ -36,26 +43,55 @@ async function init() {
     loadDashboard();
   }
 
-  if (refreshButton) {
-    refreshButton.addEventListener('click', () => loadDashboard());
-  }
-
-  window.addEventListener('storage', () => loadDashboard());
-  window.addEventListener('mirror-trainer-storage-updated', () => loadDashboard());
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      loadDashboard();
-    }
-  });
-  window.setInterval(() => {
-    if (document.visibilityState === 'visible') {
-      loadDashboard();
-    }
-  }, 12000);
+  bindDashboardSync();
 
   subscribeToAuthChanges(handleAuthStateChange).catch((error) => {
     console.error('Failed to subscribe to auth state changes', error);
   });
+}
+
+function bindDashboardSync() {
+  if (refreshButton) {
+    refreshButton.addEventListener('click', () => loadDashboard());
+  }
+
+  const scheduleRefresh = () => scheduleDashboardRefresh();
+  window.addEventListener('storage', scheduleRefresh);
+  window.addEventListener('mirror-trainer-storage-updated', scheduleRefresh);
+  window.addEventListener('mirror-trainer-dashboard-updated', scheduleRefresh);
+
+  try {
+    if ('BroadcastChannel' in window) {
+      syncChannel = new BroadcastChannel(dashboardChannelName);
+      syncChannel.addEventListener('message', scheduleRefresh);
+    }
+  } catch (error) {
+    console.warn('Dashboard sync channel is unavailable.', error);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      scheduleDashboardRefresh(60);
+    }
+  });
+
+  window.setInterval(() => {
+    if (document.visibilityState === 'visible') {
+      scheduleDashboardRefresh(0);
+    }
+  }, 12000);
+}
+
+function scheduleDashboardRefresh(delay = 320) {
+  if (document.visibilityState !== 'visible') {
+    return;
+  }
+
+  window.clearTimeout(refreshTimer);
+  refreshTimer = window.setTimeout(() => {
+    refreshTimer = null;
+    loadDashboard();
+  }, delay);
 }
 
 function bindAuthUi() {
@@ -274,6 +310,7 @@ async function loadDashboard() {
   }
 
   if (isLoading) {
+    pendingRefresh = true;
     return;
   }
 
@@ -300,6 +337,7 @@ async function loadDashboard() {
     renderBarList('[data-list="cta"]', ctaBreakdown);
     renderBarList('[data-list="scroll"]', scrollDepth);
     renderLeads(cachedLeads);
+    renderSyncStatus(snapshot, cachedLeads);
 
     if (updatedLabel) {
       const formatted = formatDate(snapshot.updatedAt);
@@ -310,6 +348,15 @@ async function loadDashboard() {
     }
   } catch (error) {
     console.error(error);
+    renderSyncStatus(
+      {
+        storageMode: 'error',
+        updatedAt: new Date().toISOString(),
+      },
+      cachedLeads,
+      'Не удалось получить свежие данные'
+    );
+
     if (updatedLabel) {
       updatedLabel.textContent = 'Не удалось загрузить данные';
     }
@@ -323,6 +370,42 @@ async function loadDashboard() {
       refreshButton.disabled = false;
       refreshButton.textContent = 'Обновить данные';
     }
+
+    if (pendingRefresh) {
+      pendingRefresh = false;
+      scheduleDashboardRefresh(80);
+    }
+  }
+}
+
+function renderSyncStatus(snapshot, leads, forcedHealth = '') {
+  const formatted = formatDate(snapshot.updatedAt);
+  const isRemote = snapshot.storageMode === 'remote';
+  const isError = snapshot.storageMode === 'error';
+  const leadCount = Array.isArray(leads) ? leads.length : 0;
+
+  if (storageModeLabel) {
+    if (isError) {
+      storageModeLabel.textContent = 'Ошибка подключения';
+    } else if (isRemote) {
+      storageModeLabel.textContent = 'Supabase онлайн';
+    } else {
+      storageModeLabel.textContent = hasRemoteConfig
+        ? 'Локальный fallback'
+        : 'Локальный режим';
+    }
+  }
+
+  if (lastSyncLabel) {
+    lastSyncLabel.textContent = formatted;
+  }
+
+  if (syncHealthLabel) {
+    syncHealthLabel.textContent =
+      forcedHealth ||
+      (isRemote
+        ? `Боевые данные синхронизированы, заявок в списке: ${number(leadCount)}`
+        : 'Админка показывает данные этого браузера. Для общей статистики нужен вход в Supabase.');
   }
 }
 

@@ -423,7 +423,7 @@ function initFaqAccordion() {
 
       items.forEach((otherItem) => {
         if (otherItem !== item && otherItem.classList.contains('is-open')) {
-          closeFaqItem(otherItem, { immediate: true });
+          closeFaqItem(otherItem);
         }
       });
 
@@ -468,10 +468,17 @@ function openFaqItem(item) {
       return;
     }
 
+    window.clearTimeout(fallbackTimer);
     answer.style.height = 'auto';
     item.dataset.animating = 'false';
     answer.removeEventListener('transitionend', handleTransitionEnd);
   };
+
+  const fallbackTimer = window.setTimeout(() => {
+    answer.style.height = 'auto';
+    item.dataset.animating = 'false';
+    answer.removeEventListener('transitionend', handleTransitionEnd);
+  }, 520);
 
   answer.addEventListener('transitionend', handleTransitionEnd);
 }
@@ -507,10 +514,17 @@ function closeFaqItem(item, options = {}) {
       return;
     }
 
+    window.clearTimeout(fallbackTimer);
     item.dataset.animating = 'false';
     answer.hidden = true;
     answer.removeEventListener('transitionend', handleTransitionEnd);
   };
+
+  const fallbackTimer = window.setTimeout(() => {
+    item.dataset.animating = 'false';
+    answer.hidden = true;
+    answer.removeEventListener('transitionend', handleTransitionEnd);
+  }, 520);
 
   answer.addEventListener('transitionend', handleTransitionEnd);
 }
