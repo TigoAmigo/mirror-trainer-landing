@@ -15,7 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oranienbaum&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/admin.css?v=20260427-3" />
+    <link rel="stylesheet" href="./assets/css/admin.css?v=20260511-2" />
   </head>
   <body>
     <div class="runtime-warning runtime-warning-admin" data-runtime-warning hidden>
@@ -51,7 +51,7 @@
           <div class="panel-header">
             <div>
               <h2 data-admin-auth-title>Проверка доступа</h2>
-              <span data-admin-auth-subtitle>Подготавливаем режим админки</span>
+              <span data-admin-auth-subtitle>Введите логин и пароль администратора</span>
             </div>
             <div class="admin-session-actions" data-admin-session-actions hidden>
               <span class="admin-session-email" data-admin-session-email></span>
@@ -61,25 +61,37 @@
             </div>
           </div>
 
-          <form class="admin-auth-form" data-admin-login-form hidden>
+          <form class="admin-auth-form" data-admin-login-form>
             <label class="admin-label">
-              <span>Email администратора</span>
+              <span>Логин</span>
               <input
                 class="admin-input"
-                type="email"
-                name="email"
-                autocomplete="email"
-                placeholder="you@example.com"
+                type="text"
+                name="login"
+                autocomplete="username"
+                inputmode="text"
+                placeholder="admin"
+                required
+              />
+            </label>
+            <label class="admin-label">
+              <span>Пароль</span>
+              <input
+                class="admin-input"
+                type="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="Введите пароль"
                 required
               />
             </label>
             <button class="admin-button" type="submit">
-              Получить ссылку для входа
+              Войти в админку
             </button>
           </form>
 
           <p class="admin-auth-feedback" data-admin-auth-feedback>
-            Проверяем подключение к Supabase и текущую сессию.
+            Для входа используйте логин <strong>admin</strong> и пароль администратора.
           </p>
         </section>
 
@@ -164,7 +176,8 @@
         <section class="admin-note">
           <p>
             Если Supabase ещё не подключён, страница работает в локальном режиме.
-            После подключения Supabase доступ к онлайн-данным выдаётся через вход по email.
+            После подключения Supabase админка читает онлайн-данные через защищённые RPC-функции
+            с логином и паролем администратора.
           </p>
         </section>
         </div>
@@ -177,9 +190,9 @@
         if (node) node.hidden = false;
       }
     </script>
-    <script src="./assets/js/config.js?v=20260427-3"></script>
-    <script src="./assets/js/supabase.js?v=20260427-3"></script>
+    <script src="./assets/js/config.js?v=20260511-2"></script>
+    <script src="./assets/js/supabase.js?v=20260511-2"></script>
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-    <script src="./assets/js/admin.js?v=20260427-3"></script>
+    <script src="./assets/js/admin.js?v=20260511-2"></script>
   </body>
 </html>

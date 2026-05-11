@@ -84,6 +84,13 @@ create table if not exists public.admin_users (
   created_at timestamptz not null default timezone('utc', now())
 );
 
+create table if not exists public.admin_credentials (
+  username text primary key,
+  password_hash text not null,
+  created_at timestamptz not null default timezone('utc', now()),
+  updated_at timestamptz not null default timezone('utc', now())
+);
+
 create index if not exists idx_leads_created_at on public.leads (created_at desc);
 create index if not exists idx_leads_session_id on public.leads (session_id);
 create index if not exists idx_feedback_votes_interest_level on public.feedback_votes (interest_level);
@@ -97,12 +104,21 @@ alter table public.feedback_votes enable row level security;
 alter table public.purchase_intent enable row level security;
 alter table public.event_logs enable row level security;
 alter table public.admin_users enable row level security;
+alter table public.admin_credentials enable row level security;
 
 revoke all on table public.leads from anon, authenticated;
 revoke all on table public.feedback_votes from anon, authenticated;
 revoke all on table public.purchase_intent from anon, authenticated;
 revoke all on table public.event_logs from anon, authenticated;
 revoke all on table public.admin_users from anon, authenticated;
+revoke all on table public.admin_credentials from public, anon, authenticated;
+
+insert into public.admin_credentials (username, password_hash, updated_at)
+values ('admin', crypt('714513', gen_salt('bf')), timezone('utc', now()))
+on conflict (username) do update
+set
+  password_hash = excluded.password_hash,
+  updated_at = excluded.updated_at;
 
 create or replace function public.is_admin_user()
 returns boolean
@@ -129,6 +145,26 @@ begin
   end if;
 end;
 $$;
+
+create or replace function public.assert_admin_credentials(admin_login text, admin_password text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1
+    from public.admin_credentials
+    where username = btrim(coalesce(admin_login, ''))
+      and password_hash = crypt(coalesce(admin_password, ''), password_hash)
+  ) then
+    raise exception 'invalid admin credentials';
+  end if;
+end;
+$$;
+
+revoke execute on function public.assert_admin_credentials(text, text) from public, anon, authenticated;
 
 create or replace function public.create_lead(payload jsonb)
 returns uuid
@@ -353,7 +389,7 @@ begin
 end;
 $$;
 
-create or replace function public.get_dashboard_snapshot()
+create or replace function public.build_dashboard_snapshot()
 returns jsonb
 language plpgsql
 security definer
@@ -362,8 +398,6 @@ as $$
 declare
   result jsonb;
 begin
-  perform public.assert_admin_access();
-
   with summary as (
     select
       (select count(*) from public.leads) as total_leads,
@@ -432,7 +466,36 @@ begin
 end;
 $$;
 
-create or replace function public.get_recent_leads(limit_count int default 50)
+revoke execute on function public.build_dashboard_snapshot() from public, anon, authenticated;
+
+create or replace function public.get_dashboard_snapshot()
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  perform public.assert_admin_access();
+  return public.build_dashboard_snapshot();
+end;
+$$;
+
+create or replace function public.get_dashboard_snapshot_admin(
+  admin_login text,
+  admin_password text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  perform public.assert_admin_credentials(admin_login, admin_password);
+  return public.build_dashboard_snapshot();
+end;
+$$;
+
+create or replace function public.build_recent_leads(limit_count int default 50)
 returns jsonb
 language plpgsql
 security definer
@@ -441,8 +504,6 @@ as $$
 declare
   result jsonb;
 begin
-  perform public.assert_admin_access();
-
   select coalesce(
     jsonb_agg(
       jsonb_build_object(
@@ -477,6 +538,36 @@ begin
 end;
 $$;
 
+revoke execute on function public.build_recent_leads(int) from public, anon, authenticated;
+
+create or replace function public.get_recent_leads(limit_count int default 50)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  perform public.assert_admin_access();
+  return public.build_recent_leads(limit_count);
+end;
+$$;
+
+create or replace function public.get_recent_leads_admin(
+  admin_login text,
+  admin_password text,
+  limit_count int default 50
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  perform public.assert_admin_credentials(admin_login, admin_password);
+  return public.build_recent_leads(limit_count);
+end;
+$$;
+
 grant execute on function public.create_lead(jsonb) to anon, authenticated;
 grant execute on function public.upsert_feedback_vote(jsonb) to anon, authenticated;
 grant execute on function public.upsert_purchase_intent(jsonb) to anon, authenticated;
@@ -484,8 +575,11 @@ grant execute on function public.log_event(jsonb) to anon, authenticated;
 grant execute on function public.is_admin_user() to anon, authenticated;
 grant execute on function public.assert_admin_access() to anon, authenticated;
 grant execute on function public.get_dashboard_snapshot() to anon, authenticated;
+grant execute on function public.get_dashboard_snapshot_admin(text, text) to anon, authenticated;
 grant execute on function public.get_recent_leads(int) to anon, authenticated;
+grant execute on function public.get_recent_leads_admin(text, text, int) to anon, authenticated;
 
--- После выполнения схемы добавьте свой email администратора:
+-- После выполнения схемы админка доступна по логину admin и паролю 714513.
+-- Старый email-вход оставлен только для совместимости со старыми RPC:
 -- insert into public.admin_users (email) values ('you@example.com')
 -- on conflict (email) do nothing;

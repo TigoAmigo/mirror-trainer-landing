@@ -6,6 +6,7 @@ const STORAGE_KEYS = {
   leads: 'mirror-trainer-leads',
   eventLogs: 'mirror-trainer-event-logs',
 };
+const ADMIN_CREDENTIAL_KEY = 'mirror-trainer-admin-credentials';
 const DASHBOARD_CHANNEL = 'mirror-trainer-dashboard-sync';
 
 const hasRemoteConfig =
@@ -13,6 +14,7 @@ const hasRemoteConfig =
   Boolean(appConfig.supabaseUrl && appConfig.supabaseAnonKey);
 let clientPromise = null;
 let dashboardChannel = null;
+let adminCredentials = readAdminCredentials();
 
 const storageMode = hasRemoteConfig ? 'remote' : 'local';
 
@@ -117,6 +119,62 @@ function writeStorageValue(key, value) {
   );
 
   notifyDashboardUpdated({ source: 'local_storage', key });
+}
+
+function readAdminCredentials() {
+  try {
+    const raw = sessionStorage.getItem(ADMIN_CREDENTIAL_KEY);
+    const value = raw ? JSON.parse(raw) : null;
+
+    if (value?.username && value?.password) {
+      return {
+        username: String(value.username),
+        password: String(value.password),
+      };
+    }
+  } catch (error) {
+    console.warn('Failed to read admin credentials from sessionStorage.', error);
+  }
+
+  return null;
+}
+
+function setAdminCredentials(credentials) {
+  const username = String(credentials?.username || '').trim();
+  const password = String(credentials?.password || '').trim();
+
+  if (!username || !password) {
+    clearAdminCredentials();
+    return null;
+  }
+
+  adminCredentials = { username, password };
+
+  try {
+    sessionStorage.setItem(ADMIN_CREDENTIAL_KEY, JSON.stringify(adminCredentials));
+  } catch (error) {
+    console.warn('Failed to persist admin credentials for this browser session.', error);
+  }
+
+  return adminCredentials;
+}
+
+function getAdminCredentials() {
+  if (!adminCredentials) {
+    adminCredentials = readAdminCredentials();
+  }
+
+  return adminCredentials;
+}
+
+function clearAdminCredentials() {
+  adminCredentials = null;
+
+  try {
+    sessionStorage.removeItem(ADMIN_CREDENTIAL_KEY);
+  } catch (error) {
+    console.warn('Failed to clear admin credentials.', error);
+  }
 }
 
 function notifyDashboardUpdated(detail = {}) {
@@ -263,6 +321,20 @@ async function runRpc(functionName, payload) {
   }
 
   return data;
+}
+
+async function runAdminRpc(functionName, payload = {}) {
+  const credentials = getAdminCredentials();
+
+  if (!credentials?.username || !credentials?.password) {
+    return null;
+  }
+
+  return runRpc(functionName, {
+    ...payload,
+    admin_login: credentials.username,
+    admin_password: credentials.password,
+  });
 }
 
 async function getAdminSession() {
@@ -457,9 +529,17 @@ async function getDashboardSnapshot() {
   let data = null;
 
   try {
-    data = await runRpc('get_dashboard_snapshot', {});
+    data = await runAdminRpc('get_dashboard_snapshot_admin');
   } catch (error) {
-    console.warn('Falling back to local dashboard snapshot because remote snapshot failed.', error);
+    console.warn('Password-protected dashboard RPC failed, trying legacy admin session RPC.', error);
+  }
+
+  if (!data) {
+    try {
+      data = await runRpc('get_dashboard_snapshot', {});
+    } catch (error) {
+      console.warn('Falling back to local dashboard snapshot because remote snapshot failed.', error);
+    }
   }
 
   if (!data) {
@@ -478,9 +558,17 @@ async function getLeadRecords(limit = 50) {
   let data = null;
 
   try {
-    data = await runRpc('get_recent_leads', { limit_count: normalizedLimit });
+    data = await runAdminRpc('get_recent_leads_admin', { limit_count: normalizedLimit });
   } catch (error) {
-    console.warn('Falling back to local lead list because remote leads query failed.', error);
+    console.warn('Password-protected leads RPC failed, trying legacy admin session RPC.', error);
+  }
+
+  if (!Array.isArray(data)) {
+    try {
+      data = await runRpc('get_recent_leads', { limit_count: normalizedLimit });
+    } catch (error) {
+      console.warn('Falling back to local lead list because remote leads query failed.', error);
+    }
   }
 
   if (Array.isArray(data)) {
@@ -530,6 +618,9 @@ window.MirrorTrainerData = {
   logEvent,
   getDashboardSnapshot,
   getLeadRecords,
+  setAdminCredentials,
+  getAdminCredentials,
+  clearAdminCredentials,
   getAdminSession,
   requestAdminMagicLink,
   signOutAdmin,

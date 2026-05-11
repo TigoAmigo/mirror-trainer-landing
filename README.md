@@ -80,7 +80,7 @@ python3 -m http.server 4173
 
 - `Project URL`
 - `anon public key`
-- включённым `Email auth` для входа в админку
+- выполненной SQL-схемой из этого проекта
 
 ### 2. Примените SQL schema
 
@@ -96,6 +96,7 @@ python3 -m http.server 4173
 - `purchase_intent`
 - `event_logs`
 - `admin_users`
+- `admin_credentials`
 - RPC-функции для записи и чтения агрегированной сводки
 
 Важно:
@@ -108,28 +109,15 @@ python3 -m http.server 4173
 
 - [reset-live-data.sql](/Users/ilqar/Documents/Блокнот/sql/reset-live-data.sql)
 
-### 3. Настройте Auth для админки
+### 3. Проверьте вход в админку
 
-В Supabase откройте:
+Email Magic Link больше не используется. После выполнения SQL-схемы админка открывается по простому доступу:
 
-- `Authentication -> URL Configuration`
+- логин: `admin`
+- пароль: `714513`
 
-Добавьте:
-
-- `Site URL`: `https://tigoamigo.github.io/mirror-trainer-landing/`
-- `Redirect URL`: `https://tigoamigo.github.io/mirror-trainer-landing/admin.html`
-
-Если хотите тестировать вход локально через `http://127.0.0.1:4173`, добавьте ещё и локальный redirect:
-
-- `http://127.0.0.1:4173/admin.html`
-
-После этого добавьте свой email в список админов через SQL Editor:
-
-```sql
-insert into public.admin_users (email)
-values ('you@example.com')
-on conflict (email) do nothing;
-```
+Пароль хранится в Supabase как `pgcrypto` hash в таблице `admin_credentials`.
+Клиентская часть отправляет логин и пароль только в RPC-функции чтения админских данных.
 
 ### 4. Заполните конфиг
 
@@ -162,9 +150,10 @@ window.APP_CONFIG = {
 2. Заполните форму предзаказа.
 3. Отправьте заявку.
 4. Откройте `admin.html`.
-5. Войдите в админку по email из таблицы `admin_users`.
+5. Войдите в админку: логин `admin`, пароль `714513`.
 
-Если всё подключено правильно, данные пойдут в Supabase, а summary будет строиться по RPC-функции `get_dashboard_snapshot()`.
+Если всё подключено правильно, данные пойдут в Supabase, а summary будет строиться по RPC-функциям
+`get_dashboard_snapshot_admin()` и `get_recent_leads_admin()`.
 
 ## Какие данные собираются
 
@@ -215,7 +204,7 @@ window.APP_CONFIG = {
 Важно:
 
 - если Supabase не подключён, админка показывает локальные данные из того же браузера
-- если Supabase подключён, админка работает как онлайн-кабинет и требует вход по email администратора
+- если Supabase подключён, админка работает как онлайн-кабинет и требует логин/пароль администратора
 - для реальных данных от клиентов с разных устройств нужен заполненный `supabaseUrl` и `supabaseAnonKey`
 - demo-данные в проекте отключены: пустая база теперь показывает нули, а не фейковые цифры
 - для полей `phone` и `telegram` в админке и Excel нужно повторно выполнить обновлённый SQL schema-файл
@@ -231,12 +220,12 @@ window.APP_CONFIG = {
 5. В `Build and deployment` выберите `Deploy from a branch`.
 6. Укажите нужную ветку и `/root`.
 7. После публикации проверьте `index.html` и `admin.html`.
-8. Проверьте, что в Supabase Auth добавлены `Site URL` и `Redirect URL` для `admin.html`.
+8. Проверьте, что в Supabase выполнена свежая версия `sql/supabase-schema.sql`.
 
 ## Что важно обновить перед продом
 
 - Вставить реальные `siteUrl`, `contactTelegramUrl`, `contactTelegramLabel`
-- При необходимости заменить email администратора в `public.admin_users`
+- При необходимости поменять пароль администратора в `public.admin_credentials` и в `assets/js/admin.js`
 - При необходимости заменить изображения в [assets/images](/Users/ilqar/Documents/Блокнот/assets/images)
 - Проверить тексты, FAQ и цену
 
@@ -257,7 +246,8 @@ window.APP_CONFIG = {
 
 ## Ограничения и замечания
 
-- `admin.html` в боевом режиме должен открываться только после входа через Supabase Auth.
+- `admin.html` в боевом режиме открывается после локальной проверки логина/пароля, а чтение онлайн-данных дополнительно проверяется в Supabase RPC.
+- Для более строгой защиты админки в будущем лучше вынести админ-панель на отдельный backend с серверной сессией.
 - Для полного CRM-подобного кабинета с ролями и глубокой фильтрацией уже нужен отдельный backend.
 - `supabase anon key` предназначен для публичного фронтенда, это нормально.
 - В проекте нет тяжёлых фреймворков и нет обязательного build step.

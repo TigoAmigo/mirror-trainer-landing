@@ -2,10 +2,8 @@
 const dataApi = window.MirrorTrainerData || {};
 const fetchDashboardSnapshot = dataApi.getDashboardSnapshot || (async () => ({ summary: {}, ctaBreakdown: [], scrollDepth: [], updatedAt: new Date().toISOString(), storageMode: 'local' }));
 const fetchLeadRecords = dataApi.getLeadRecords || (async () => []);
-const getAdminSession = dataApi.getAdminSession || (async () => ({ mode: 'local', session: null, user: null }));
-const requestAdminMagicLink = dataApi.requestAdminMagicLink || (async () => ({ mode: 'local', sent: false }));
-const performAdminSignOut = dataApi.signOutAdmin || (async () => ({ mode: 'local' }));
-const subscribeToAuthChanges = dataApi.onAuthStateChange || (async () => (() => {}));
+const setAdminCredentials = dataApi.setAdminCredentials || (() => {});
+const clearAdminCredentials = dataApi.clearAdminCredentials || (() => {});
 const refreshButton = document.querySelector('[data-refresh-dashboard]');
 const exportButton = document.querySelector('[data-export-xlsx]');
 const updatedLabel = document.querySelector('[data-updated-label]');
@@ -23,6 +21,9 @@ const lastSyncLabel = document.querySelector('[data-admin-last-sync]');
 const syncHealthLabel = document.querySelector('[data-admin-sync-health]');
 const hasRemoteConfig = Boolean(dataApi.hasRemoteConfig);
 const dashboardChannelName = dataApi.dashboardChannel || 'mirror-trainer-dashboard-sync';
+const ADMIN_LOGIN = 'admin';
+const ADMIN_PASSWORD = '714513';
+const ADMIN_SESSION_KEY = 'mirror-trainer-admin-session';
 
 let isLoading = false;
 let authReady = false;
@@ -37,17 +38,12 @@ init();
 async function init() {
   bindAuthUi();
   bindExport();
-  await syncAuthState();
-
-  if (!hasRemoteConfig) {
+  restoreAdminSession();
+  updateAuthView();
+  if (currentUser) {
     loadDashboard();
   }
-
   bindDashboardSync();
-
-  subscribeToAuthChanges(handleAuthStateChange).catch((error) => {
-    console.error('Failed to subscribe to auth state changes', error);
-  });
 }
 
 function bindDashboardSync() {
@@ -96,48 +92,38 @@ function scheduleDashboardRefresh(delay = 320) {
 
 function bindAuthUi() {
   if (authForm) {
-    authForm.addEventListener('submit', async (event) => {
+    authForm.addEventListener('submit', (event) => {
       event.preventDefault();
 
       const formData = new FormData(authForm);
-      const email = String(formData.get('email') || '').trim().toLowerCase();
+      const login = String(formData.get('login') || '').trim();
+      const password = String(formData.get('password') || '').trim();
 
-      if (!email) {
-        setAuthFeedback('Введите email администратора.', 'error');
+      if (!login || !password) {
+        setAuthFeedback('Введите логин и пароль.', 'error');
         return;
       }
 
-      setAuthFeedback('Отправляем ссылку для входа...', 'warning');
-
-      try {
-        const result = await requestAdminMagicLink(email);
-
-        if (result.sent) {
-          setAuthFeedback(
-            `Ссылка для входа отправлена на ${email}. Открой письмо на этом устройстве и вернитесь в админку.`,
-            'success'
-          );
-          authForm.reset();
-        } else {
-          setAuthFeedback('Supabase ещё не подключён. Сейчас доступен только локальный режим.', 'warning');
-        }
-      } catch (error) {
-        console.error(error);
-        setAuthFeedback(explainAuthError(error), 'error');
+      if (login !== ADMIN_LOGIN || password !== ADMIN_PASSWORD) {
+        setAuthFeedback('Неверный логин или пароль.', 'error');
+        return;
       }
+
+      activateAdminSession(login, password);
+      authForm.reset();
+      setAuthFeedback('Вход выполнен. Загружаем данные админки...', 'success');
+      loadDashboard();
     });
   }
 
   if (logoutButton) {
-    logoutButton.addEventListener('click', async () => {
-      try {
-        await performAdminSignOut();
-        currentUser = null;
-        syncAuthState();
-      } catch (error) {
-        console.error(error);
-        setAuthFeedback('Не удалось завершить сессию.', 'error');
-      }
+    logoutButton.addEventListener('click', () => {
+      clearStoredAdminSession();
+      clearAdminCredentials();
+      currentUser = null;
+      cachedLeads = [];
+      updateAuthView();
+      setAuthFeedback('Вы вышли из админки.', 'warning');
     });
   }
 }
@@ -170,41 +156,8 @@ function bindExport() {
 }
 
 async function syncAuthState() {
-  if (!hasRemoteConfig) {
-    authReady = true;
-    currentUser = null;
-    updateAuthView();
-    return;
-  }
-
-  setAuthFeedback('Проверяем доступ к онлайн-данным...', 'warning');
-
-  try {
-    const { user } = await getAdminSession();
-    authReady = true;
-    currentUser = user || null;
-    updateAuthView();
-
-    if (currentUser) {
-      loadDashboard();
-    }
-  } catch (error) {
-    console.error(error);
-    authReady = true;
-    currentUser = null;
-    updateAuthView();
-    setAuthFeedback('Не удалось проверить сессию. Проверьте настройки Supabase.', 'error');
-  }
-}
-
-function handleAuthStateChange({ user }) {
-  currentUser = user || null;
-  authReady = true;
+  restoreAdminSession();
   updateAuthView();
-
-  if (currentUser) {
-    loadDashboard();
-  }
 }
 
 function updateAuthView() {
@@ -220,34 +173,35 @@ function updateAuthView() {
     return;
   }
 
-  if (!hasRemoteConfig) {
-    setAuthCopy('Локальный режим', 'Supabase не подключён, доступны только локальные данные этого браузера');
-    toggleNode(authForm, false);
-    toggleNode(sessionActions, false);
-    toggleNode(dashboard, true);
-    setAuthFeedback('Для боевого режима подключите Supabase и вход по email для админки.', 'warning');
-    return;
-  }
-
   if (currentUser) {
-    setAuthCopy('Доступ подтверждён', 'Админка подключена к Supabase и показывает общие онлайн-данные');
+    setAuthCopy(
+      'Доступ подтверждён',
+      hasRemoteConfig
+        ? 'Админка подключается к Supabase через защищённые RPC-функции'
+        : 'Supabase не подключён, доступны только локальные данные этого браузера'
+    );
     toggleNode(authForm, false);
     toggleNode(sessionActions, true);
     toggleNode(dashboard, true);
 
     if (sessionEmail) {
-      sessionEmail.textContent = currentUser.email || 'Администратор';
+      sessionEmail.textContent = currentUser.login || 'admin';
     }
 
-    setAuthFeedback('Вход выполнен. Данные читаются из Supabase.', 'success');
+    setAuthFeedback(
+      hasRemoteConfig
+        ? 'Вход выполнен. Данные читаются из Supabase.'
+        : 'Вход выполнен. Сейчас показаны локальные данные этого браузера.',
+      'success'
+    );
     return;
   }
 
-  setAuthCopy('Вход в админку', 'Для просмотра реальных заявок и аналитики войдите по email администратора');
+  setAuthCopy('Вход в админку', 'Введите логин и пароль администратора');
   toggleNode(authForm, true);
   toggleNode(sessionActions, false);
   toggleNode(dashboard, false);
-  setAuthFeedback('После входа откроется общая онлайн-сводка по клиентам.', 'warning');
+  setAuthFeedback('Логин: admin. Пароль вводится вручную.', 'warning');
 }
 
 function setAuthCopy(title, subtitle) {
@@ -273,35 +227,13 @@ function setAuthFeedback(message, type) {
   }
 }
 
-function explainAuthError(error) {
-  const message = String(error?.message || '').trim();
-  const normalized = message.toLowerCase();
-
-  if (
-    normalized.includes('rate limit') ||
-    normalized.includes('too many') ||
-    normalized.includes('otp')
-  ) {
-    return 'Ссылка временно не отправляется из-за лимита писем Supabase. Подождите немного и попробуйте снова. Для боевого режима лучше подключить свой SMTP.';
-  }
-
-  if (normalized.includes('not authorized')) {
-    return 'Этот email не разрешён для отправки через текущую почтовую настройку Supabase. Проверьте SMTP или список разрешённых адресов.';
-  }
-
-  if (message) {
-    return `Не удалось отправить ссылку: ${message}`;
-  }
-
-  return 'Не удалось отправить ссылку. Проверьте настройки Supabase Auth.';
-}
-
 function toggleNode(node, shouldShow) {
   if (!node) {
     return;
   }
 
   node.hidden = !shouldShow;
+  node.style.display = shouldShow ? '' : 'none';
 }
 
 async function loadDashboard() {
@@ -362,7 +294,7 @@ async function loadDashboard() {
     }
 
     if (hasRemoteConfig) {
-      setAuthFeedback('Не удалось получить онлайн-данные. Проверьте, что ваш email добавлен в список администраторов.', 'error');
+      setAuthFeedback('Не удалось получить онлайн-данные. Проверьте, что в Supabase выполнена новая SQL-схема для входа admin/password.', 'error');
     }
   } finally {
     isLoading = false;
@@ -375,6 +307,60 @@ async function loadDashboard() {
       pendingRefresh = false;
       scheduleDashboardRefresh(80);
     }
+  }
+}
+
+function restoreAdminSession() {
+  authReady = true;
+
+  try {
+    const raw = sessionStorage.getItem(ADMIN_SESSION_KEY);
+    const session = raw ? JSON.parse(raw) : null;
+
+    if (session?.login === ADMIN_LOGIN && session?.password === ADMIN_PASSWORD) {
+      activateAdminSession(session.login, session.password, { persist: false });
+      return;
+    }
+  } catch (error) {
+    console.warn('Failed to restore admin session.', error);
+  }
+
+  clearStoredAdminSession();
+  clearAdminCredentials();
+  currentUser = null;
+}
+
+function activateAdminSession(login, password, options = {}) {
+  const { persist = true } = options;
+  currentUser = {
+    login,
+    authenticatedAt: new Date().toISOString(),
+  };
+  setAdminCredentials({ username: login, password });
+
+  if (persist) {
+    try {
+      sessionStorage.setItem(
+        ADMIN_SESSION_KEY,
+        JSON.stringify({
+          login,
+          password,
+          authenticatedAt: currentUser.authenticatedAt,
+        })
+      );
+    } catch (error) {
+      console.warn('Failed to persist admin session.', error);
+    }
+  }
+
+  updateAuthView();
+}
+
+function clearStoredAdminSession() {
+  try {
+    sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  } catch (error) {
+    console.warn('Failed to clear admin session.', error);
   }
 }
 
@@ -405,7 +391,9 @@ function renderSyncStatus(snapshot, leads, forcedHealth = '') {
       forcedHealth ||
       (isRemote
         ? `Боевые данные синхронизированы, заявок в списке: ${number(leadCount)}`
-        : 'Админка показывает данные этого браузера. Для общей статистики нужен вход в Supabase.');
+        : hasRemoteConfig
+          ? 'Показан локальный fallback. Для боевых данных выполните свежий SQL schema в Supabase.'
+          : 'Админка показывает данные этого браузера. Для общей статистики нужен Supabase.');
   }
 }
 
