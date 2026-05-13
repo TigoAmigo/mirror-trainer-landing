@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mirror Trainer — тренажёр работы через зеркало</title>
+    <meta
+      name="description"
+      content="Тренажёр для стоматологов: A4-тетрадь, зеркало и короткие упражнения для уверенной работы через отражение."
+    />
+    <meta property="og:title" content="Mirror Trainer — тренажёр работы через зеркало" />
+    <meta
+      property="og:description"
+      content="Тренажёр для стоматологов: A4-тетрадь, зеркало и короткие упражнения для уверенной работы через отражение."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tigoamigo.github.io/mirror-trainer-landing/landing-3.html" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#05080d" />
+    <link rel="icon" href="./assets/favicon-landing-3.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Onest:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/landing-3.css?v=20260514-2" />
+  </head>
+  <body class="landing-3">
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="icon-eye" viewBox="0 0 24 24">
+        <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M12 7.5V12l3.2 2" />
+      </symbol>
+      <symbol id="icon-brain" viewBox="0 0 24 24">
+        <path d="M8.2 18.2a3.2 3.2 0 0 1-3-3.2 3.1 3.1 0 0 1 .9-2.2 3.6 3.6 0 0 1-.2-1.1 3.4 3.4 0 0 1 3.4-3.4 3.2 3.2 0 0 1 5.8 0 3.4 3.4 0 0 1 3.4 3.4c0 .4-.1.8-.2 1.1.6.6.9 1.4.9 2.2a3.2 3.2 0 0 1-3 3.2" />
+        <path d="M9.4 8.4v10.2M14.6 8.4v10.2M8.2 12.2h2.2M13.6 12.2h2.2M8.4 15.7h2M13.8 15.7h2" />
+      </symbol>
+      <symbol id="icon-wave" viewBox="0 0 24 24">
+        <path d="M2.5 12c2.2-3.2 4.4 3.2 6.6 0s4.4 3.2 6.6 0 4.4 3.2 5.8.6" />
+        <path d="M2.5 16c2.2-3.2 4.4 3.2 6.6 0s4.4 3.2 6.6 0 4.4 3.2 5.8.6" />
+      </symbol>
+      <symbol id="icon-target" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" />
+        <circle cx="12" cy="12" r="4.5" />
+        <path d="M12 12l6.4-6.4M16.7 5.4h2.5v2.5" />
+      </symbol>
+      <symbol id="icon-notebook" viewBox="0 0 24 24">
+        <path d="M7 4.5h11a1.5 1.5 0 0 1 1.5 1.5v12A1.5 1.5 0 0 1 18 19.5H7a2.5 2.5 0 0 1-2.5-2.5V7A2.5 2.5 0 0 1 7 4.5Z" />
+        <path d="M8 4.5v15M11 8h5M11 11.5h5M11 15h3" />
+      </symbol>
+      <symbol id="icon-mirror" viewBox="0 0 24 24">
+        <circle cx="11" cy="8.5" r="5" />
+        <path d="M14.5 12.2l5 5M18.2 15.9l-2.3 2.3M17.3 18.9l1.8 1.8" />
+      </symbol>
+      <symbol id="icon-checklist" viewBox="0 0 24 24">
+        <path d="M6 5h12a1.5 1.5 0 0 1 1.5 1.5v11A1.5 1.5 0 0 1 18 19H6a1.5 1.5 0 0 1-1.5-1.5v-11A1.5 1.5 0 0 1 6 5Z" />
+        <path d="m7.5 9 1.1 1.1 2-2M13 9h4M7.5 14l1.1 1.1 2-2M13 14h4" />
+      </symbol>
+      <symbol id="icon-book-open" viewBox="0 0 24 24">
+        <path d="M12 6.7c-1.6-1.2-3.7-1.8-6.4-1.8v13c2.7 0 4.8.6 6.4 1.8V6.7Z" />
+        <path d="M12 6.7c1.6-1.2 3.7-1.8 6.4-1.8v13c-2.7 0-4.8.6-6.4 1.8V6.7Z" />
+      </symbol>
+      <symbol id="icon-lock" viewBox="0 0 24 24">
+        <path d="M7 10V8a5 5 0 0 1 10 0v2" />
+        <path d="M6.5 10h11A1.5 1.5 0 0 1 19 11.5v6A1.5 1.5 0 0 1 17.5 19h-11A1.5 1.5 0 0 1 5 17.5v-6A1.5 1.5 0 0 1 6.5 10Z" />
+        <path d="M12 14v2" />
+      </symbol>
+      <symbol id="icon-telegram" viewBox="0 0 24 24">
+        <path d="M21 4.8 3.8 11.4c-1.1.4-1.1 1.2-.2 1.5l4.4 1.4 1.7 5.2c.2.7.8.8 1.2.3l2.5-2.4 4.7 3.5c.8.4 1.3.2 1.5-.8L22.1 6c.3-1.1-.4-1.6-1.1-1.2Z" />
+        <path d="m8 14.3 10-6.2-7.8 8.1" />
+      </symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="m10.4 8.8 5 3.2-5 3.2V8.8Z" />
+      </symbol>
+      <symbol id="icon-arrow" viewBox="0 0 24 24">
+        <path d="M4 12h15M13 6l6 6-6 6" />
+      </symbol>
+    </svg>
+
+    <div class="runtime-warning" data-runtime-warning hidden>
+      <div class="container runtime-warning-inner">
+        <strong>Локальный file-режим ограничивает работу формы.</strong>
+        <span>
+          Откройте через сервер:
+          <code>bash "/Users/ilqar/Documents/Блокнот/start-local.sh"</code>
+        </span>
+      </div>
+    </div>
+
+    <header class="site-header" data-header>
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="Mirror Trainer">
+          <span class="brand-logo">
+            <img src="./assets/images/landing-3/logo.png" alt="" width="40" height="40" />
+          </span>
+          <span class="brand-copy">
+            <span class="brand-title">Mirror Trainer</span>
+            <span class="brand-subtitle">работа через зеркало</span>
+          </span>
+        </a>
+
+        <nav class="site-nav" data-mobile-nav aria-label="Основная навигация">
+          <a href="#skill" data-scroll-link data-event-label="landing3_nav_skill">Навык</a>
+          <a href="#kit" data-scroll-link data-event-label="landing3_nav_kit">Комплект</a>
+          <a href="#method" data-scroll-link data-event-label="landing3_nav_method">Метод</a>
+          <a href="#pricing" data-scroll-link data-event-label="landing3_nav_pricing">Предзаказ</a>
+        </nav>
+
+        <div class="header-actions">
+          <button
+            class="button button-ghost button-menu mobile-toggle"
+            type="button"
+            aria-label="Открыть меню"
+            aria-expanded="false"
+            data-mobile-toggle
+          >
+            <span class="mobile-toggle-icon" aria-hidden="true">
+              <span></span>
+              <span></span>
+            </span>
+            <span>Меню</span>
+          </button>
+          <a
+            class="button button-outline header-cta"
+            href="#lead-form"
+            data-scroll-link
+            data-event-label="landing3_header_apply"
+          >
+            Оставить заявку
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero section-hero" data-section id="hero">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="container hero-layout">
+          <div class="hero-copy">
+            <h1 class="hero-title reveal">Спокойная рука в отражении</h1>
+            <p class="hero-text reveal reveal-delay-1">
+              Тренажёр для студентов, ординаторов и начинающих стоматологов, которым
+              нужно увереннее работать через зеркало. Короткие задания помогают
+              привыкнуть к отражению, вести линию ровнее и видеть прогресс.
+            </p>
+
+            <div class="hero-actions reveal reveal-delay-2">
+              <a
+                class="button button-gold"
+                href="#lead-form"
+                data-scroll-link
+                data-event-label="landing3_hero_reserve"
+              >
+                Забронировать 1490 ₽
+              </a>
+              <a
+                class="button button-dark"
+                href="#method"
+                data-scroll-link
+                data-event-label="landing3_hero_method"
+              >
+                <svg class="icon icon-play-small" aria-hidden="true"><use href="#icon-play"></use></svg>
+                Посмотреть метод
+              </a>
+            </div>
+
+            <ul class="hero-benefits reveal reveal-delay-3" aria-label="Преимущества">
+              <li>
+                <svg class="icon"><use href="#icon-notebook"></use></svg>
+                A4-тетрадь
+              </li>
+              <li>
+                <svg class="icon"><use href="#icon-mirror"></use></svg>
+                зеркало в комплекте
+              </li>
+              <li>
+                <svg class="icon"><use href="#icon-clock"></use></svg>
+                10-15 минут в день
+              </li>
+            </ul>
+
+          </div>
+
+          <div class="hero-media reveal reveal-delay-2" data-parallax-stage>
+            <img
+              class="hero-image hero-image-desktop"
+              src="./assets/images/landing-3/hero-bg.png"
+              alt="Комплект Mirror Trainer: тетрадь и стоматологическое зеркало на тёмном столе"
+              width="1672"
+              height="941"
+              fetchpriority="high"
+              decoding="async"
+              data-parallax-layer="0.12"
+            />
+            <img
+              class="hero-image hero-image-mobile"
+              src="./assets/images/landing-3/hero-product.png"
+              alt="Обложка тетради Mirror Trainer с изображением стоматологического зеркала"
+              width="1055"
+              height="1491"
+              fetchpriority="high"
+              decoding="async"
+              data-parallax-layer="0.12"
+            />
+          </div>
+
+          <div class="price-card hero-price reveal reveal-delay-4">
+            <span>Предзаказ</span>
+            <strong>1490 ₽</strong>
+            <small>до старта первой партии</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-skill" data-section id="skill">
+        <div class="container skill-layout">
+          <div class="section-copy reveal">
+            <h2>Главная сложность — не теория, а координация</h2>
+            <p>
+              В зеркале движение кажется обратным. Из-за этого рука спешит, линия
+              дрожит, а простые формы требуют больше контроля.
+            </p>
+          </div>
+
+          <div class="skill-cards">
+            <article class="glass-card reveal">
+              <svg class="card-icon"><use href="#icon-brain"></use></svg>
+              <h3>Меньше ступора</h3>
+              <p>Мозг быстрее привыкает к отражению.</p>
+            </article>
+            <article class="glass-card reveal reveal-delay-1">
+              <svg class="card-icon"><use href="#icon-wave"></use></svg>
+              <h3>Ровнее линия</h3>
+              <p>Рука учится двигаться спокойнее.</p>
+            </article>
+            <article class="glass-card reveal reveal-delay-2">
+              <svg class="card-icon"><use href="#icon-target"></use></svg>
+              <h3>Больше уверенности</h3>
+              <p>Повторы помогают видеть результат.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-kit" data-section id="kit">
+        <div class="container kit-layout">
+          <div class="section-copy reveal">
+            <h2>Всё для тренировки уже в комплекте</h2>
+            <div class="kit-list">
+              <article>
+                <span class="list-icon"><svg class="icon"><use href="#icon-notebook"></use></svg></span>
+                <div>
+                  <h3>A4-тетрадь</h3>
+                  <p>Крупные поля, маршруты и место для повторов.</p>
+                </div>
+              </article>
+              <article>
+                <span class="list-icon"><svg class="icon"><use href="#icon-mirror"></use></svg></span>
+                <div>
+                  <h3>Зеркало</h3>
+                  <p>Практика сразу в нужной механике.</p>
+                </div>
+              </article>
+              <article>
+                <span class="list-icon"><svg class="icon"><use href="#icon-checklist"></use></svg></span>
+                <div>
+                  <h3>Система заданий</h3>
+                  <p>От простых линий к точным формам.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <figure class="image-frame kit-frame reveal reveal-delay-1">
+            <img
+              src="./assets/images/landing-3/kit-flatlay.png"
+              alt="Комплект Mirror Trainer: тетрадь, лист с упражнениями и стоматологическое зеркало"
+              width="1672"
+              height="941"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        </div>
+      </section>
+
+      <section class="section section-method" data-section id="method">
+        <div class="container method-layout">
+          <div class="section-copy reveal">
+            <h2>Практика, которую легко повторять</h2>
+            <p>
+              Не нужен отдельный урок. Достаточно открыть страницу, поставить
+              зеркало и пройти один понятный маршрут.
+            </p>
+          </div>
+
+          <div class="method-steps">
+            <article class="method-step reveal">
+              <span class="step-number">1</span>
+              <svg class="step-icon"><use href="#icon-book-open"></use></svg>
+              <h3>Выбери страницу</h3>
+              <p>Открой задание и настрой рабочее место.</p>
+            </article>
+            <span class="step-arrow" aria-hidden="true">
+              <svg class="icon"><use href="#icon-arrow"></use></svg>
+            </span>
+            <article class="method-step reveal reveal-delay-1">
+              <span class="step-number">2</span>
+              <svg class="step-icon"><use href="#icon-mirror"></use></svg>
+              <h3>Веди линию через зеркало</h3>
+              <p>Смотри в отражение и веди линию ровно и спокойно.</p>
+            </article>
+            <span class="step-arrow" aria-hidden="true">
+              <svg class="icon"><use href="#icon-arrow"></use></svg>
+            </span>
+            <article class="method-step reveal reveal-delay-2">
+              <span class="step-number">3</span>
+              <svg class="step-icon"><use href="#icon-target"></use></svg>
+              <h3>Сравни повторения</h3>
+              <p>Сравни с предыдущим подходом и увидь прогресс.</p>
+            </article>
+          </div>
+
+          <div class="progress-strip reveal reveal-delay-3" aria-label="Прогресс тренировки">
+            <div class="progress-point">
+              <span>День 1</span>
+              <svg viewBox="0 0 220 46" aria-hidden="true">
+                <path d="M6 26 C17 7, 27 38, 39 20 S60 31, 72 19 96 28 119 17 141 26 162 21 187 17 214 26" />
+              </svg>
+            </div>
+            <span class="progress-arrow" aria-hidden="true">
+              <svg class="icon"><use href="#icon-arrow"></use></svg>
+            </span>
+            <div class="progress-point">
+              <span>День 7</span>
+              <svg viewBox="0 0 220 46" aria-hidden="true">
+                <path d="M6 25 C28 13, 44 32, 66 21 S109 20, 132 24 172 31, 214 20" />
+              </svg>
+            </div>
+            <span class="progress-arrow" aria-hidden="true">
+              <svg class="icon"><use href="#icon-arrow"></use></svg>
+            </span>
+            <div class="progress-point">
+              <span>День 14</span>
+              <svg viewBox="0 0 220 46" aria-hidden="true">
+                <path d="M6 24H214" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-visuals" data-section id="visuals">
+        <div class="container visuals-grid">
+          <figure class="image-frame visual-tall reveal">
+            <img
+              src="./assets/images/landing-3/training-process.png"
+              alt="Руки выполняют упражнение через стоматологическое зеркало"
+              width="1122"
+              height="1402"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Рука работает через отражение</figcaption>
+          </figure>
+
+          <figure class="image-frame visual-wide reveal reveal-delay-1">
+            <img
+              src="./assets/images/landing-3/workbook-spread.png"
+              alt="Разворот тетради Mirror Trainer с траекториями упражнений"
+              width="1586"
+              height="992"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Траектории видны сразу</figcaption>
+          </figure>
+
+          <figure class="image-frame visual-wide reveal reveal-delay-2">
+            <img
+              src="./assets/images/landing-3/mirror-detail.png"
+              alt="Крупный план стоматологического зеркала и упражнений в тетради"
+              width="1672"
+              height="941"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Контроль движения крупным планом</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section section-pricing" data-section id="pricing">
+        <div class="container pricing-layout">
+          <div class="pricing-copy reveal">
+            <h2>Первая партия по стартовой цене</h2>
+            <p>
+              Оставьте заявку сейчас — закрепим цену 1490 ₽ и напишем, когда
+              комплект будет готов к отправке.
+            </p>
+            <div class="price-stack">
+              <span class="old-price">2490 ₽</span>
+              <strong>1490 ₽</strong>
+            </div>
+            <ul class="included-list">
+              <li>A4-тренажёр</li>
+              <li>стоматологическое зеркало</li>
+              <li>пошаговые упражнения</li>
+            </ul>
+          </div>
+
+          <article class="form-panel reveal reveal-delay-1" id="lead-form">
+            <div class="form-heading">
+              <h2>Оставить заявку</h2>
+              <p>Контакт нужен только для предзаказа и деталей получения.</p>
+            </div>
+            <form class="lead-form" data-lead-form data-form-source="landing3-inline">
+              <div class="lead-form-grid">
+                <label>
+                  <span>Имя</span>
+                  <input
+                    type="text"
+                    name="name"
+                    autocomplete="name"
+                    placeholder="Имя"
+                    required
+                    data-name-input
+                  />
+                </label>
+                <label>
+                  <span>Телефон</span>
+                  <input
+                    type="tel"
+                    name="phone"
+                    autocomplete="tel-national"
+                    inputmode="tel"
+                    placeholder="Телефон"
+                    data-phone-input
+                  />
+                </label>
+                <label>
+                  <span>Telegram</span>
+                  <span class="telegram-input-shell">
+                    <span class="telegram-prefix" aria-hidden="true">@</span>
+                    <input
+                      type="text"
+                      name="telegram"
+                      autocomplete="off"
+                      autocapitalize="none"
+                      spellcheck="false"
+                      placeholder="Telegram"
+                      data-telegram-input
+                    />
+                  </span>
+                </label>
+                <label>
+                  <span>Email</span>
+                  <input type="email" name="email" autocomplete="email" placeholder="Email" />
+                </label>
+                <label class="field-span-2">
+                  <span>Комментарий</span>
+                  <textarea name="comment" rows="4" placeholder="Комментарий"></textarea>
+                </label>
+              </div>
+              <button class="button button-gold button-wide" type="submit">
+                Закрепить цену 1490 ₽
+              </button>
+              <p class="privacy-note">
+                <svg class="icon"><use href="#icon-lock"></use></svg>
+                Ваши данные в безопасности и не передаются третьим лицам.
+              </p>
+              <p class="form-feedback" data-form-feedback></p>
+            </form>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section-faq" data-section id="faq">
+        <div class="container faq-layout">
+          <div class="faq-title reveal">
+            <h2>Ответы перед предзаказом</h2>
+          </div>
+
+          <div class="faq-list">
+            <article class="faq-item reveal">
+              <button class="faq-toggle" type="button" aria-expanded="false">
+                <span>Для кого этот тренажёр?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>
+                  Для студентов, ординаторов и начинающих стоматологов, которым нужно
+                  тренировать работу через зеркало и непрямое зрение.
+                </p>
+              </div>
+            </article>
+
+            <article class="faq-item reveal reveal-delay-1">
+              <button class="faq-toggle" type="button" aria-expanded="false">
+                <span>Что будет в комплекте?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>A4-тетрадь-тренажёр с упражнениями и стоматологическое зеркало.</p>
+              </div>
+            </article>
+
+            <article class="faq-item reveal reveal-delay-2">
+              <button class="faq-toggle" type="button" aria-expanded="false">
+                <span>Когда вы свяжетесь?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>
+                  Мы напишем после заявки, когда первая партия будет готова к
+                  подтверждению и отправке.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-layout">
+        <a class="footer-brand" href="#top" data-scroll-link aria-label="Mirror Trainer">
+          <span class="brand-logo footer-logo">
+            <img src="./assets/images/landing-3/logo.png" alt="" width="48" height="48" />
+          </span>
+          <span>
+            <strong>Mirror Trainer</strong>
+            <small>Короткая практика непрямого зрения для стоматологов.</small>
+          </span>
+        </a>
+
+        <a class="footer-telegram" href="https://t.me/mirror_trainer" target="_blank" rel="noreferrer">
+          <span class="telegram-mark"><svg class="icon"><use href="#icon-telegram"></use></svg></span>
+          <span>
+            <strong>Telegram</strong>
+            <small>@mirror_trainer</small>
+          </span>
+        </a>
+
+        <a class="footer-policy" href="./privacy.html">
+          <svg class="icon"><use href="#icon-lock"></use></svg>
+          Политика конфиденциальности
+        </a>
+      </div>
+    </footer>
+
+    <div class="modal-shell success-shell" data-modal="success" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="success-dialog" role="dialog" aria-modal="true" aria-labelledby="success-modal-title">
+        <button class="modal-close" type="button" aria-label="Закрыть сообщение" data-close-modal>
+          ×
+        </button>
+        <div class="success-content">
+          <div class="success-badge" aria-hidden="true"></div>
+          <h2 id="success-modal-title">Заявка отправлена</h2>
+          <p>Спасибо. Мы свяжемся с вами, когда подтвердим детали первой партии.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-stack" aria-live="polite" aria-atomic="true" data-toast-stack></div>
+
+    <script>
+      if (window.location.protocol === 'file:') {
+        const node = document.querySelector('[data-runtime-warning]');
+        if (node) node.hidden = false;
+      }
+    </script>
+    <script src="./assets/js/config.js?v=20260506-1"></script>
+    <script src="./assets/js/supabase.js?v=20260506-1"></script>
+    <script src="./assets/js/app.js?v=20260514-1"></script>
+  </body>
+</html>
