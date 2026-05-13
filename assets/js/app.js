@@ -6,6 +6,102 @@ const config = window.APP_CONFIG || {};
 const memoryStore = window.__MIRROR_TRAINER_MEMORY__ || (window.__MIRROR_TRAINER_MEMORY__ = {});
 const SESSION_KEY = 'mirror-trainer-session-id';
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const LANDING2_CONTENT_TARGETS = {
+  'meta.title': { selector: 'title', target: 'text' },
+  'meta.description': { selector: 'meta[name="description"]', target: 'attr', attr: 'content' },
+  'nav.skill': { selector: '.site-nav a[href="#skill"]', target: 'text' },
+  'nav.kit': { selector: '.site-nav a[href="#kit"]', target: 'text' },
+  'nav.method': { selector: '.site-nav a[href="#method"]', target: 'text' },
+  'nav.inside': { selector: '.site-nav a[href="#inside"]', target: 'text' },
+  'nav.pricing': { selector: '.site-nav a[href="#pricing"]', target: 'text' },
+  'nav.faq': { selector: '.site-nav a[href="#faq"]', target: 'text' },
+  'header.cta': { selector: '.header-cta', target: 'text' },
+  'hero.title': { selector: '.hero-title-desktop', target: 'text' },
+  'hero.titleMobile': { selector: '.hero-title-mobile', target: 'text' },
+  'hero.text': { selector: '.hero-text-desktop', target: 'text' },
+  'hero.textMobile': { selector: '.hero-text-mobile', target: 'text' },
+  'hero.ctaPrimary': { selector: '.hero-primary', target: 'text' },
+  'hero.ctaSecondary': { selector: '.hero-secondary', target: 'text' },
+  'hero.ctaTertiary': { selector: '.hero-link', target: 'text' },
+  'hero.priceLabel': { selector: '.hero-price span', target: 'text' },
+  'hero.priceAmount': { selector: '.hero-price strong', target: 'text' },
+  'hero.priceNote': { selector: '.hero-price small', target: 'text' },
+  'hero.chipTimeLabel': { selector: '.hero-chip-time span', target: 'text' },
+  'hero.chipTimeValue': { selector: '.hero-chip-time strong', target: 'text' },
+  'hero.chipKitLabel': { selector: '.hero-chip-kit span', target: 'text' },
+  'hero.chipKitValue': { selector: '.hero-chip-kit strong', target: 'text' },
+  'skill.title': { selector: '#skill .section-heading h2', target: 'text' },
+  'skill.text': { selector: '#skill .section-heading p', target: 'text' },
+  'skill.card1Title': { selector: '#skill .compact-card:nth-child(1) h3', target: 'text' },
+  'skill.card1Text': { selector: '#skill .compact-card:nth-child(1) p', target: 'text' },
+  'skill.card2Title': { selector: '#skill .compact-card:nth-child(2) h3', target: 'text' },
+  'skill.card2Text': { selector: '#skill .compact-card:nth-child(2) p', target: 'text' },
+  'skill.card3Title': { selector: '#skill .compact-card:nth-child(3) h3', target: 'text' },
+  'skill.card3Text': { selector: '#skill .compact-card:nth-child(3) p', target: 'text' },
+  'kit.title': { selector: '#kit .section-copy h2', target: 'text' },
+  'kit.text': { selector: '#kit .section-copy > p', target: 'text' },
+  'kit.item1Title': { selector: '#kit .kit-list article:nth-child(1) strong', target: 'text' },
+  'kit.item1Text': { selector: '#kit .kit-list article:nth-child(1) span', target: 'text' },
+  'kit.item2Title': { selector: '#kit .kit-list article:nth-child(2) strong', target: 'text' },
+  'kit.item2Text': { selector: '#kit .kit-list article:nth-child(2) span', target: 'text' },
+  'kit.item3Title': { selector: '#kit .kit-list article:nth-child(3) strong', target: 'text' },
+  'kit.item3Text': { selector: '#kit .kit-list article:nth-child(3) span', target: 'text' },
+  'kit.item4Title': { selector: '#kit .kit-list article:nth-child(4) strong', target: 'text' },
+  'kit.item4Text': { selector: '#kit .kit-list article:nth-child(4) span', target: 'text' },
+  'method.title': { selector: '#method .method-heading h2', target: 'text' },
+  'method.text': { selector: '#method .method-heading p', target: 'text' },
+  'method.step1Title': { selector: '#method .method-step:nth-child(1) h3', target: 'text' },
+  'method.step1Text': { selector: '#method .method-step:nth-child(1) p', target: 'text' },
+  'method.step2Title': { selector: '#method .method-step:nth-child(2) h3', target: 'text' },
+  'method.step2Text': { selector: '#method .method-step:nth-child(2) p', target: 'text' },
+  'method.step3Title': { selector: '#method .method-step:nth-child(3) h3', target: 'text' },
+  'method.step3Text': { selector: '#method .method-step:nth-child(3) p', target: 'text' },
+  'inside.title': { selector: '#inside .section-heading h2', target: 'text' },
+  'inside.text': { selector: '#inside .section-heading p', target: 'text' },
+  'inside.card1Title': { selector: '#inside figure:nth-child(1) figcaption strong', target: 'text' },
+  'inside.card1Text': { selector: '#inside figure:nth-child(1) figcaption span', target: 'text' },
+  'inside.card2Title': { selector: '#inside figure:nth-child(2) figcaption strong', target: 'text' },
+  'inside.card2Text': { selector: '#inside figure:nth-child(2) figcaption span', target: 'text' },
+  'inside.card3Title': { selector: '#inside figure:nth-child(3) figcaption strong', target: 'text' },
+  'inside.card3Text': { selector: '#inside figure:nth-child(3) figcaption span', target: 'text' },
+  'pricing.title': { selector: '#pricing .price-panel h2', target: 'text' },
+  'pricing.text': { selector: '#pricing .price-panel > p', target: 'text' },
+  'pricing.oldPrice': { selector: '#pricing .old-price', target: 'text' },
+  'pricing.price': { selector: '#pricing .price-card strong', target: 'text' },
+  'pricing.note': { selector: '#pricing .price-card small', target: 'text' },
+  'pricing.list1': { selector: '#pricing .price-list li:nth-child(1)', target: 'text' },
+  'pricing.list2': { selector: '#pricing .price-list li:nth-child(2)', target: 'text' },
+  'pricing.list3': { selector: '#pricing .price-list li:nth-child(3)', target: 'text' },
+  'pricing.list4': { selector: '#pricing .price-list li:nth-child(4)', target: 'text' },
+  'form.title': { selector: '#lead-form .form-heading h3', target: 'text' },
+  'form.text': { selector: '#lead-form .form-heading p', target: 'text' },
+  'form.submit': { selector: '#lead-form button[type="submit"]', target: 'text' },
+  'form.meta': { selector: '#lead-form .form-meta', target: 'text' },
+  'faq.title': { selector: '#faq .faq-heading h2', target: 'text' },
+  'faq.q1': { selector: '#faq .faq-item:nth-child(1) .faq-toggle span:first-child', target: 'text' },
+  'faq.a1': { selector: '#faq .faq-item:nth-child(1) .faq-answer p', target: 'text' },
+  'faq.q2': { selector: '#faq .faq-item:nth-child(2) .faq-toggle span:first-child', target: 'text' },
+  'faq.a2': { selector: '#faq .faq-item:nth-child(2) .faq-answer p', target: 'text' },
+  'faq.q3': { selector: '#faq .faq-item:nth-child(3) .faq-toggle span:first-child', target: 'text' },
+  'faq.a3': { selector: '#faq .faq-item:nth-child(3) .faq-answer p', target: 'text' },
+  'faq.q4': { selector: '#faq .faq-item:nth-child(4) .faq-toggle span:first-child', target: 'text' },
+  'faq.a4': { selector: '#faq .faq-item:nth-child(4) .faq-answer p', target: 'text' },
+  'faq.q5': { selector: '#faq .faq-item:nth-child(5) .faq-toggle span:first-child', target: 'text' },
+  'faq.a5': { selector: '#faq .faq-item:nth-child(5) .faq-answer p', target: 'text' },
+  'footer.text': { selector: '.footer-text', target: 'text' },
+  'footer.telegramLabel': { selector: '[data-contact-label]', target: 'text' },
+  'footer.telegramUrl': { selector: '[data-contact-link]', target: 'attr', attr: 'href' },
+  'sticky.price': { selector: '.mobile-sticky-cta strong', target: 'text' },
+  'sticky.label': { selector: '.mobile-sticky-cta span', target: 'text' },
+  'sticky.cta': { selector: '.mobile-sticky-cta .button', target: 'text' },
+  'photo.heroBackgroundPrompt': { selector: '[data-photo-slot="hero_background"]', target: 'attr', attr: 'data-photo-prompt' },
+  'photo.heroProductDesktopPrompt': { selector: '[data-photo-slot="hero_product_desktop"]', target: 'attr', attr: 'data-photo-prompt' },
+  'photo.heroProductMobilePrompt': { selector: '[data-photo-slot="hero_product_mobile"]', target: 'attr', attr: 'data-photo-prompt' },
+  'photo.kitFlatlayPrompt': { selector: '[data-photo-slot="kit_flatlay"]', target: 'attr', attr: 'data-photo-prompt' },
+  'photo.workbookSpreadPrompt': { selector: '[data-photo-slot="workbook_spread"]', target: 'attr', attr: 'data-photo-prompt' },
+  'photo.trainingProcessPrompt': { selector: '[data-photo-slot="training_process"]', target: 'attr', attr: 'data-photo-prompt' },
+  'photo.mirrorDetailPrompt': { selector: '[data-photo-slot="mirror_detail"]', target: 'attr', attr: 'data-photo-prompt' },
+};
 
 const state = {
   sessionId: getOrCreateSessionId(),
@@ -30,7 +126,9 @@ init();
 function init() {
   try {
     applyContactInfo();
+    initLandingContentOverrides();
     initHeader();
+    initStickyCta();
     initRevealObserver();
     initHeroParallax();
     initImageFallbacks();
@@ -144,6 +242,86 @@ function applyContactInfo() {
   }
 }
 
+function initLandingContentOverrides() {
+  const pageSlug = getEditableLandingSlug();
+
+  if (!pageSlug) {
+    return;
+  }
+
+  const applyState = (contentState) => {
+    applyLandingContentState(contentState, document);
+  };
+
+  try {
+    applyState(dataApi.getLandingContentSnapshotSync?.(pageSlug));
+  } catch (error) {
+    console.warn('Failed to apply local landing content overrides.', error);
+  }
+
+  dataApi.getLandingContent?.(pageSlug)
+    .then(applyState)
+    .catch((error) => {
+      console.warn('Failed to load landing content overrides.', error);
+    });
+
+  dataApi.onLandingContentChange?.((detail) => {
+    if (detail.pageSlug && detail.pageSlug !== pageSlug) {
+      return;
+    }
+
+    dataApi.getLandingContent?.(pageSlug)
+      .then(applyState)
+      .catch((error) => {
+        console.warn('Failed to refresh landing content overrides.', error);
+      });
+  });
+}
+
+function getEditableLandingSlug() {
+  const normalizedPath = window.location.pathname.toLowerCase();
+
+  if (normalizedPath.endsWith('/landing-2.html') || normalizedPath.endsWith('landing-2.html')) {
+    return 'landing2';
+  }
+
+  return '';
+}
+
+function applyLandingContentState(contentState, root) {
+  const items = Array.isArray(contentState?.items) ? contentState.items : [];
+
+  if (!items.length) {
+    return;
+  }
+
+  items.forEach((item) => {
+    const target = LANDING2_CONTENT_TARGETS[item.key];
+    const value = String(item.value ?? '');
+
+    if (!target || !value.trim()) {
+      return;
+    }
+
+    const node = root.querySelector(target.selector);
+
+    if (!node) {
+      return;
+    }
+
+    if (target.target === 'attr' && target.attr) {
+      node.setAttribute(target.attr, value);
+      return;
+    }
+
+    node.textContent = value;
+
+    if (item.key === 'meta.title') {
+      document.title = value;
+    }
+  });
+}
+
 function initHeader() {
   const header = document.querySelector('[data-header]');
   const toggle = document.querySelector('[data-mobile-toggle]');
@@ -192,6 +370,43 @@ function initHeader() {
 
     closeNav();
   });
+}
+
+function initStickyCta() {
+  const stickyCta = document.querySelector('[data-sticky-cta]');
+  const hero = document.querySelector('.hero');
+  const pricing = document.querySelector('#pricing');
+
+  if (!stickyCta || !hero) {
+    return;
+  }
+
+  const hide = () => {
+    stickyCta.classList.remove('is-visible');
+    stickyCta.setAttribute('aria-hidden', 'true');
+  };
+
+  const update = () => {
+    if (window.innerWidth >= 760) {
+      hide();
+      return;
+    }
+
+    const heroRect = hero.getBoundingClientRect();
+    const pricingRect = pricing ? pricing.getBoundingClientRect() : null;
+    const pricingVisible =
+      pricingRect &&
+      pricingRect.top < window.innerHeight - 96 &&
+      pricingRect.bottom > 96;
+    const shouldShow = heroRect.bottom < 0 && !pricingVisible;
+
+    stickyCta.classList.toggle('is-visible', shouldShow);
+    stickyCta.setAttribute('aria-hidden', String(!shouldShow));
+  };
+
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
 }
 
 function initRevealObserver() {
@@ -557,6 +772,9 @@ function initLeadForms() {
       const formData = new FormData(form);
       const feedbackNode = form.querySelector('[data-form-feedback]');
       const submitButton = form.querySelector('button[type="submit"]');
+      const originalSubmitText = submitButton
+        ? submitButton.dataset.submitLabel || submitButton.textContent.trim()
+        : '';
       const sourceContext = form.dataset.formSource || 'inline';
 
       const payload = buildLeadPayload(formData, sourceContext);
@@ -568,6 +786,7 @@ function initLeadForms() {
       }
 
       if (submitButton) {
+        submitButton.dataset.submitLabel = originalSubmitText;
         submitButton.disabled = true;
         submitButton.textContent = 'Отправляем...';
       }
@@ -597,7 +816,7 @@ function initLeadForms() {
       } finally {
         if (submitButton) {
           submitButton.disabled = false;
-          submitButton.textContent = 'Хочу предзаказ';
+          submitButton.textContent = originalSubmitText || 'Забронировать за 1490 ₽';
         }
       }
     });
@@ -633,11 +852,18 @@ function validateLeadPayload(payload) {
     return 'Укажите имя без цифр и лишних символов.';
   }
 
-  if (!isValidPhone(payload.phone)) {
+  const hasPhone = Boolean(payload.phone);
+  const hasTelegram = Boolean(payload.telegram);
+
+  if (!hasPhone && !hasTelegram) {
+    return 'Укажите телефон или Telegram для связи.';
+  }
+
+  if (hasPhone && !isValidPhone(payload.phone)) {
     return 'Укажите корректный российский номер телефона.';
   }
 
-  if (!isValidTelegram(payload.telegram)) {
+  if (hasTelegram && !isValidTelegram(payload.telegram)) {
     return 'Укажите корректный Telegram через username.';
   }
 

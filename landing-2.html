@@ -3,20 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mirror Trainer | Второй лендинг тренажёра</title>
+    <title>Mirror Trainer — тренажёр для работы через стоматологическое зеркало</title>
     <meta
       name="description"
-      content="Современный мобильный лендинг тренажёра работы через зеркало для студентов и начинающих стоматологов. Предзаказ комплекта: A4 тетрадь и зеркало."
+      content="A4-тетрадь с упражнениями и стоматологическое зеркало для тренировки непрямого обзора. Предзаказ первой партии за 1490 ₽."
     />
-    <meta property="og:title" content="Mirror Trainer — тренажёр работы через зеркало" />
+    <meta
+      property="og:title"
+      content="Mirror Trainer — тренажёр для работы через стоматологическое зеркало"
+    />
     <meta
       property="og:description"
-      content="Короткая система практики для непрямого зрения, спокойной руки и точного движения через зеркало."
+      content="A4-тетрадь с упражнениями и стоматологическое зеркало для тренировки непрямого обзора. Предзаказ первой партии за 1490 ₽."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tigoamigo.github.io/mirror-trainer-landing/landing-2.html" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#070b12" />
+    <meta name="theme-color" content="#060A10" />
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +27,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Onest:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/landing-2.css?v=20260512-1" />
+    <link rel="stylesheet" href="./assets/css/landing-2.css?v=20260513-6" />
   </head>
   <body>
     <div class="runtime-warning" data-runtime-warning hidden>
@@ -36,8 +39,6 @@
         </span>
       </div>
     </div>
-
-    <div class="page-grid" aria-hidden="true"></div>
 
     <header class="site-header" data-header>
       <div class="container header-inner">
@@ -54,8 +55,10 @@
         <nav class="site-nav" data-mobile-nav aria-label="Основная навигация">
           <a href="#skill">Зачем</a>
           <a href="#kit">Комплект</a>
-          <a href="#method">Практика</a>
+          <a href="#method">Как заниматься</a>
+          <a href="#inside">Что внутри</a>
           <a href="#pricing">Цена</a>
+          <a href="#faq">FAQ</a>
         </nav>
 
         <div class="header-actions">
@@ -76,9 +79,9 @@
             class="button button-primary button-small header-cta"
             href="#lead-form"
             data-scroll-link
-            data-event-label="landing2_header_preorder"
+            data-event-label="landing2_header_reserve"
           >
-            Заявка
+            Забронировать
           </a>
         </div>
       </div>
@@ -86,24 +89,36 @@
 
     <main id="top">
       <section class="hero" data-section id="hero">
+        <!-- image-slot: hero_background, recommended 1800x1125, aspect 16:10 -->
         <div
-          class="photo-ambient hero-ambient"
-          data-photo-slot="hero_blurred_background"
+          class="photo-slot hero-background-slot"
+          data-photo-slot="hero_background"
           data-photo-ratio="16:10"
           data-photo-size="1800x1125"
-          data-photo-prompt="Размытый фоновый кадр для первого экрана: современный стоматологический кабинет или учебный кабинет с креслом, лампой и чистой рабочей зоной. Кадр тёмный, премиальный, сильно заблюренный, без лиц, без читаемого текста и без ярких отвлекающих деталей. В левой центральной части оставить спокойную safe area под заголовок. Размер 1800x1125."
+          data-photo-prompt="Мягкий размытый фон первого экрана: тёмная медицинская лаборатория или стоматологический кабинет, стол для практики, холодный боковой свет, без людей и читаемого текста. Safe area слева под заголовок."
           aria-hidden="true"
         ></div>
 
         <div class="container hero-layout">
           <div class="hero-copy">
             <h1 class="hero-title reveal">
-              Тренируй точность через зеркало
+              <span class="hero-title-desktop">
+                Тренажёр для уверенной работы через стоматологическое зеркало
+              </span>
+              <span class="hero-title-mobile">Тренируй точность через зеркало</span>
             </h1>
             <p class="hero-text reveal reveal-delay-1">
-              Комплект A4 тетради и стоматологического зеркала для тех, кто знает
-              теорию, но теряет руку в отражении. 10-15 минут в день, понятные
-              задания и заметный контроль линии.
+              <span class="hero-text-desktop">
+                A4-тетрадь с упражнениями и стоматологическое зеркало для студентов,
+                ординаторов и начинающих врачей. 10-15 минут практики в день помогают
+                привыкнуть к обратному движению, вести линию спокойнее и видеть прогресс
+                на странице.
+              </span>
+              <span class="hero-text-mobile">
+                A4-тетрадь и стоматологическое зеркало для короткой практики
+                непрямого зрения. 10-15 минут в день помогают спокойнее вести линию
+                в отражении.
+              </span>
             </p>
 
             <div class="hero-actions reveal reveal-delay-2">
@@ -111,78 +126,111 @@
                 class="button button-primary hero-primary"
                 href="#lead-form"
                 data-scroll-link
-                data-event-label="landing2_hero_primary"
+                data-event-label="landing2_hero_reserve"
               >
-                Оставить заявку
+                Забронировать за 1490 ₽
               </a>
               <a
                 class="button button-outline hero-secondary"
+                href="#inside"
+                data-scroll-link
+                data-event-label="landing2_hero_inside"
+              >
+                Посмотреть упражнения
+              </a>
+              <a
+                class="hero-link"
                 href="#method"
                 data-scroll-link
                 data-event-label="landing2_hero_method"
               >
-                Как это работает
+                Как это работает →
               </a>
             </div>
 
-            <div class="hero-price reveal reveal-delay-3">
-              <span>Цена предзаказа</span>
+            <div class="hero-price reveal reveal-delay-3" aria-label="Цена предзаказа">
+              <span>Предзаказ</span>
               <strong>1490 ₽</strong>
-              <small>первая партия ограничена</small>
+              <small>После запуска — 2490 ₽</small>
             </div>
           </div>
 
-          <div class="hero-visual reveal reveal-delay-1" data-parallax-stage>
+          <div class="hero-stage reveal reveal-delay-2" data-parallax-stage>
+            <!-- image-slot: hero_product_desktop, recommended 1600x2000, aspect 4:5 -->
             <div
-              class="photo-frame hero-photo"
-              data-photo-slot="hero_product"
+              class="photo-slot photo-frame hero-product hero-product-desktop"
+              data-photo-slot="hero_product_desktop"
               data-photo-ratio="4:5"
-              data-photo-size="1440x1800"
-              data-photo-prompt="Главный предметный кадр: комплект Mirror Trainer на чистом светлом столе, A4 тетрадь-тренажёр на пружине, стоматологическое зеркало рядом, 1-2 страницы упражнений частично раскрыты. Съёмка сверху под лёгким углом, премиальная медицинская чистота, мягкий естественный свет, без рук и лиц. Вертикальное 4:5, минимум 1440x1800, важные предметы не ближе 8% к краям."
+              data-photo-size="1600x2000"
+              data-photo-prompt="Главный предметный кадр комплекта Mirror Trainer: светлая A4-тетрадь с упражнениями, стоматологическое зеркало, металлические детали, чистая тёмная медицинская поверхность. Объект крупный, без рук, лиц и читаемого случайного текста."
               data-parallax-layer="0.16"
             >
-              <div class="photo-frame-inner photo-frame-empty" aria-hidden="true"></div>
+              <div class="slot-inner" aria-hidden="true">
+                <span>hero_product_desktop</span>
+                <small>4:5 · 1600x2000</small>
+              </div>
             </div>
 
-            <div class="hero-note hero-note-top" data-parallax-layer="0.24">
+            <!-- image-slot: hero_product_mobile, recommended 1200x1500, aspect 4:5 -->
+            <div
+              class="photo-slot photo-frame hero-product hero-product-mobile"
+              data-photo-slot="hero_product_mobile"
+              data-photo-ratio="4:5"
+              data-photo-size="1200x1500"
+              data-photo-prompt="Мобильный crop главного продукта: A4-тетрадь и стоматологическое зеркало крупнее, safe area сверху/слева, объект читается на маленьком экране."
+              data-parallax-layer="0.16"
+            >
+              <div class="slot-inner" aria-hidden="true">
+                <span>hero_product_mobile</span>
+                <small>4:5 · 1200x1500</small>
+              </div>
+            </div>
+
+            <div class="hero-chip hero-chip-time" data-parallax-layer="0.24">
               <span>10-15 мин</span>
               <strong>в день</strong>
             </div>
-            <div class="hero-note hero-note-bottom" data-parallax-layer="0.1">
-              <span>Навык</span>
-              <strong>точная рука</strong>
+            <div class="hero-chip hero-chip-kit" data-parallax-layer="0.1">
+              <span>A4</span>
+              <strong>тетрадь + зеркало</strong>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section section-skill" data-section id="skill">
-        <div class="container split-layout">
-          <div class="section-copy reveal">
+      <section class="section section-problem" data-section id="skill">
+        <div class="container">
+          <div class="section-heading reveal">
             <span class="section-number">01</span>
-            <h2>Сначала исчезает ступор. Потом появляется контроль</h2>
+            <h2>Почему работа через зеркало даётся тяжело</h2>
             <p>
-              Зеркальная работа ломает привычную координацию: линия уходит, движение
-              становится резким, уверенность падает. Тренажёр превращает этот барьер
-              в понятную практику, которую легко повторять.
+              В отражении привычная координация меняется: движение кажется обратным,
+              линия срывается, рука напрягается. Поэтому навык лучше тренировать
+              отдельно — короткими повторяемыми заданиями до клинической практики.
             </p>
           </div>
 
-          <div class="skill-stack">
-            <article class="skill-card reveal">
-              <span>Сначала</span>
-              <h3>Привыкнуть к зеркалу</h3>
-              <p>Мозг быстрее привыкает к тому, что движение видно через отражение.</p>
+          <div class="problem-grid">
+            <article class="compact-card reveal">
+              <h3>Обратная координация</h3>
+              <p>
+                Мозгу нужно привыкнуть, что движение руки и изображение в зеркале
+                не совпадают привычным образом.
+              </p>
             </article>
-            <article class="skill-card reveal reveal-delay-1">
-              <span>Потом</span>
-              <h3>Стабилизировать линию</h3>
-              <p>Короткие задания помогают меньше дёргаться и точнее вести линию.</p>
+            <article class="compact-card reveal reveal-delay-1">
+              <h3>Контроль линии</h3>
+              <p>
+                Упражнения помогают вести траекторию ровнее, без резких рывков
+                и лишнего напряжения.
+              </p>
             </article>
-            <article class="skill-card reveal reveal-delay-2">
-              <span>После</span>
-              <h3>Закрепить уверенность</h3>
-              <p>Повторяемые страницы показывают, где движение становится спокойнее.</p>
+            <article class="compact-card reveal reveal-delay-2">
+              <h3>Уверенность в движении</h3>
+              <p>
+                Повторы дают ощущение контроля: видно, где линия стала спокойнее
+                и точнее.
+              </p>
             </article>
           </div>
         </div>
@@ -191,38 +239,46 @@
       <section class="section section-kit" data-section id="kit">
         <div class="container kit-layout">
           <div class="kit-media reveal">
+            <!-- image-slot: kit_flatlay, recommended 1440x1800, aspect 4:5 -->
             <div
-              class="photo-frame kit-photo"
+              class="photo-slot photo-frame kit-photo"
               data-photo-slot="kit_flatlay"
               data-photo-ratio="4:5"
               data-photo-size="1440x1800"
-              data-photo-prompt="Вертикальный предметный кадр комплекта: тетрадь-тренажёр A4, стоматологическое зеркало, ручка или тонкий маркер, 2-3 разворота с упражнениями. Фон светло-серый или белый, композиция чистая, предметы хорошо читаются на мобильном экране. Без рук, без лиц, без лишнего декора. Размер 1440x1800, центральный объект занимает 70% кадра."
+              data-photo-prompt="Комплект сверху: A4-тетрадь-тренажёр, стоматологическое зеркало, ручка или маркер, несколько страниц с упражнениями. Чистая премиальная предметная съёмка."
             >
-              <div class="photo-frame-inner photo-frame-empty" aria-hidden="true"></div>
+              <div class="slot-inner" aria-hidden="true">
+                <span>kit_flatlay</span>
+                <small>4:5 · 1440x1800</small>
+              </div>
             </div>
           </div>
 
           <div class="section-copy reveal reveal-delay-1">
             <span class="section-number">02</span>
-            <h2>В комплекте только то, что помогает тренироваться</h2>
+            <h2>Что входит в комплект</h2>
             <p>
-              Не нужно искать шаблоны и тренироваться “как получится”. Открываете
-              страницу, ставите зеркало и проходите маршрут от простых линий к более
-              точным формам.
+              Не нужно искать шаблоны и тренироваться на случайных листах.
+              В комплекте уже есть маршрут: от простых линий к более сложным
+              формам и контурам.
             </p>
 
             <div class="kit-list">
               <article>
-                <strong>A4 тетрадь</strong>
-                <span>крупные задания, понятные траектории и место для повторения</span>
+                <strong>A4-тетрадь-тренажёр</strong>
+                <span>крупные задания, удобные для практики через зеркало</span>
               </article>
               <article>
-                <strong>Зеркало</strong>
-                <span>работа сразу в той механике, которая нужна в реальной практике</span>
+                <strong>Стоматологическое зеркало</strong>
+                <span>тренировка сразу в механике непрямого обзора</span>
               </article>
               <article>
                 <strong>Маршрут упражнений</strong>
-                <span>последовательность, которая снижает хаос и держит ритм</span>
+                <span>последовательность от базовой координации к точным движениям</span>
+              </article>
+              <article>
+                <strong>Место для повторов</strong>
+                <span>можно сравнивать результат и видеть прогресс</span>
               </article>
             </div>
           </div>
@@ -233,79 +289,125 @@
         <div class="container">
           <div class="method-heading reveal">
             <span class="section-number">03</span>
-            <h2>Короткий ритуал, который реально повторять</h2>
+            <h2>Как проходит тренировка</h2>
             <p>
-              Навык развивается не от одного длинного занятия, а от регулярных
-              коротких подходов. Формат помогает начать без сопротивления и
-              возвращаться к упражнениям снова.
+              Один подход занимает 10-15 минут. Формат сделан так, чтобы заниматься
+              регулярно: дома, в вузе или перед практикой.
             </p>
           </div>
 
           <div class="method-flow">
             <article class="method-step reveal">
               <span class="method-index">1</span>
-              <h3>Открыть задание</h3>
-              <p>Перед глазами сразу понятная задача: линия, форма, контур или повтор.</p>
+              <h3>Откройте страницу с заданием</h3>
+              <p>Перед вами конкретная траектория: линия, форма, контур или повтор.</p>
             </article>
             <article class="method-step reveal reveal-delay-1">
               <span class="method-index">2</span>
-              <h3>Вести через отражение</h3>
-              <p>Рука тренируется в той же непривычной логике, которая нужна потом.</p>
+              <h3>Работайте только через отражение</h3>
+              <p>Рука тренируется в той логике, которая нужна при непрямом обзоре.</p>
             </article>
             <article class="method-step reveal reveal-delay-2">
               <span class="method-index">3</span>
-              <h3>Повторить и сравнить</h3>
-              <p>Видно, где линия стала ровнее, а движение спокойнее и увереннее.</p>
+              <h3>Повторите и сравните</h3>
+              <p>По странице видно, где движение стало ровнее, спокойнее и увереннее.</p>
             </article>
+          </div>
+
+          <div class="progress-strip reveal reveal-delay-3" aria-label="Прогресс по дням">
+            <div class="progress-item">
+              <span>День 1</span>
+              <svg viewBox="0 0 180 38" aria-hidden="true">
+                <path d="M6 22 C24 8, 38 34, 56 18 S91 12, 108 25 S143 29, 174 13" />
+              </svg>
+            </div>
+            <div class="progress-item">
+              <span>День 7</span>
+              <svg viewBox="0 0 180 38" aria-hidden="true">
+                <path d="M6 24 C32 16, 48 24, 70 19 S111 15, 132 21 S158 24, 174 17" />
+              </svg>
+            </div>
+            <div class="progress-item">
+              <span>День 14</span>
+              <svg viewBox="0 0 180 38" aria-hidden="true">
+                <path d="M6 21 C38 20, 66 20, 92 19 S140 18, 174 18" />
+              </svg>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="section section-scenes" data-section id="scenes">
-        <div
-          class="photo-ambient section-ambient section-scenes-ambient"
-          data-photo-slot="training_blurred_background"
-          data-photo-ratio="16:9"
-          data-photo-size="1920x1080"
-          data-photo-prompt="Размытый фоновый кадр для середины лендинга: руки в перчатках, тетрадь-тренажёр и зеркало на чистой учебной поверхности. Фото должно быть мягко размытым, тёмно-премиальным, с местом под градиент и текст поверх, без лиц и без читаемого текста. Размер 1920x1080."
-          aria-hidden="true"
-        ></div>
+      <section class="section section-inside" data-section id="inside">
         <div class="container">
-          <div class="scene-grid">
-            <figure
-              class="scene-card scene-card-process reveal"
-              data-photo-slot="hands_training"
-              data-photo-ratio="4:5"
-              data-photo-size="1440x1800"
-              data-photo-prompt="Высокий вертикальный кадр процесса: руки в медицинских перчатках выполняют упражнение в тетради через стоматологическое зеркало. Видна тетрадь, зеркало и траектория задания, лица нет. Чистая учебная среда, натуральный свет, без хаоса на столе. Размер 1440x1800, руки не перекрывают ключевую линию упражнения."
-            >
-              <div class="photo-frame scene-photo">
-                <div class="photo-frame-inner photo-frame-empty" aria-hidden="true"></div>
+          <div class="section-heading reveal">
+            <span class="section-number">04</span>
+            <h2>Что будет внутри тетради</h2>
+            <p>
+              Это не просто блокнот, а готовая система упражнений для тренировки
+              непрямого обзора: страницы, траектории и повторы, которые помогают
+              спокойнее вести движение через зеркало.
+            </p>
+          </div>
+
+          <div class="inside-grid">
+            <figure class="visual-card visual-card-workbook reveal">
+              <!-- image-slot: workbook_spread, recommended 1920x1200, aspect 16:10 -->
+              <div
+                class="photo-slot photo-frame visual-photo visual-photo-wide"
+                data-photo-slot="workbook_spread"
+                data-photo-ratio="16:10"
+                data-photo-size="1920x1200"
+                data-photo-prompt="Развороты A4-тетради с упражнениями: линии, формы и повторяемые траектории для привыкания к зеркалу."
+              >
+                <div class="slot-inner" aria-hidden="true">
+                  <span>workbook_spread</span>
+                  <small>16:10 · 1920x1200</small>
+                </div>
               </div>
+              <figcaption>
+                <strong>Развороты с упражнениями</strong>
+                <span>Линии, формы и повторяемые траектории для постепенного привыкания к зеркалу.</span>
+              </figcaption>
             </figure>
 
-            <figure
-              class="scene-card scene-card-workbook reveal reveal-delay-1"
-              data-photo-slot="workbook_spread"
-              data-photo-ratio="16:10"
-              data-photo-size="1920x1200"
-              data-photo-prompt="Широкий горизонтальный кадр разворота тетради: чисто видны страницы с упражнениями, линии и формы, частично видна пружина A4. Камера сверху, без сильной перспективы, текст на страницах не должен быть мелким или случайным. Размер 1920x1200, оставить 6% воздуха по краям."
-            >
-              <div class="photo-frame scene-photo scene-photo-wide">
-                <div class="photo-frame-inner photo-frame-empty" aria-hidden="true"></div>
+            <figure class="visual-card visual-card-process reveal reveal-delay-1">
+              <!-- image-slot: training_process, recommended 1600x2000, aspect 4:5 -->
+              <div
+                class="photo-slot photo-frame visual-photo visual-photo-tall"
+                data-photo-slot="training_process"
+                data-photo-ratio="4:5"
+                data-photo-size="1600x2000"
+                data-photo-prompt="Руки тренируются через стоматологическое зеркало: тетрадь, зеркало и линия задания в чистой учебной среде."
+              >
+                <div class="slot-inner" aria-hidden="true">
+                  <span>training_process</span>
+                  <small>4:5 · 1600x2000</small>
+                </div>
               </div>
+              <figcaption>
+                <strong>Тренировка через отражение</strong>
+                <span>Задания рассчитаны на работу именно через стоматологическое зеркало.</span>
+              </figcaption>
             </figure>
 
-            <figure
-              class="scene-card scene-card-mirror reveal reveal-delay-2"
-              data-photo-slot="mirror_detail"
-              data-photo-ratio="3:2"
-              data-photo-size="1500x1000"
-              data-photo-prompt="Горизонтальная деталь стоматологического зеркала рядом с краем тетради и тонкой линией упражнения. Фокус на отражении и материальности, фон чистый, глубина резкости мягкая, без пальцев и лиц. Размер 1500x1000, использовать как эмоциональную деталь между смысловыми блоками."
-            >
-              <div class="photo-frame scene-photo scene-photo-detail">
-                <div class="photo-frame-inner photo-frame-empty" aria-hidden="true"></div>
+            <figure class="visual-card visual-card-detail reveal reveal-delay-2">
+              <!-- image-slot: mirror_detail, recommended 1800x1200, aspect 3:2 -->
+              <div
+                class="photo-slot photo-frame visual-photo visual-photo-detail"
+                data-photo-slot="mirror_detail"
+                data-photo-ratio="3:2"
+                data-photo-size="1800x1200"
+                data-photo-prompt="Макро стоматологического зеркала, металл, отражение и линия упражнения на странице."
+              >
+                <div class="slot-inner" aria-hidden="true">
+                  <span>mirror_detail</span>
+                  <small>3:2 · 1800x1200</small>
+                </div>
               </div>
+              <figcaption>
+                <strong>Контроль движения</strong>
+                <span>Повторы помогают замечать прогресс и спокойнее вести линию.</span>
+              </figcaption>
             </figure>
           </div>
         </div>
@@ -315,29 +417,30 @@
         <div class="container pricing-layout">
           <div class="price-panel reveal">
             <span class="section-number">05</span>
-            <h2>Зафиксируйте 1490 ₽ до запуска партии</h2>
+            <h2>Предзаказ: 1490 ₽ вместо 2490 ₽</h2>
             <p>
-              На старте комплект доступен дешевле базовой стоимости. Заявка закрепляет
-              цену предзаказа: когда партия будет готова, мы напишем первыми.
+              Оставьте заявку, чтобы закрепить цену первой партии. Когда комплект
+              будет готов, мы свяжемся с вами, уточним получение и способ оплаты.
             </p>
 
             <div class="price-card">
               <span class="old-price">2490 ₽</span>
               <strong>1490 ₽</strong>
-              <small>вместо 2490 ₽ после запуска</small>
+              <small>Цена первой партии</small>
             </div>
 
             <ul class="price-list">
-              <li>A4 тетрадь-тренажёр</li>
+              <li>A4-тетрадь-тренажёр</li>
               <li>Стоматологическое зеркало</li>
               <li>Пошаговая система упражнений</li>
+              <li>Предзаказ по сниженной цене</li>
             </ul>
           </div>
 
           <article class="form-panel reveal reveal-delay-1" id="lead-form">
             <div class="form-heading">
-              <h3>Забронировать комплект из первой партии</h3>
-              <p>Напишем по срокам, оплате и получению. Без лишних рассылок.</p>
+              <h3>Забронировать Mirror Trainer</h3>
+              <p>Оставьте удобный контакт. Достаточно телефона или Telegram.</p>
             </div>
 
             <form class="lead-form" data-lead-form data-form-source="landing2-inline">
@@ -361,7 +464,6 @@
                     autocomplete="tel-national"
                     inputmode="tel"
                     placeholder="+7 (___) ___-__-__"
-                    required
                     data-phone-input
                   />
                 </label>
@@ -376,7 +478,6 @@
                       autocapitalize="none"
                       spellcheck="false"
                       placeholder="username"
-                      required
                       data-telegram-input
                     />
                   </span>
@@ -401,10 +502,10 @@
               </div>
 
               <button class="button button-primary button-wide" type="submit">
-                Зафиксировать 1490 ₽
+                Забронировать за 1490 ₽
               </button>
               <p class="form-meta">
-                Контакт нужен только для предзаказа и подтверждения первой партии.
+                Контакт нужен только для подтверждения предзаказа. Без лишних рассылок.
               </p>
               <p class="form-feedback" data-form-feedback></p>
             </form>
@@ -422,39 +523,63 @@
           <div class="faq-list">
             <article class="faq-item reveal">
               <button class="faq-toggle" type="button" aria-expanded="false">
-                <span>Кому особенно полезен тренажёр?</span>
+                <span>Кому подходит Mirror Trainer?</span>
                 <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  Тем, кто уже понимает теорию, но теряет уверенность при работе через
-                  отражение: студентам, ординаторам и начинающим стоматологам.
+                  Студентам, ординаторам и начинающим стоматологам, которым нужно
+                  увереннее работать через зеркало и тренировать непрямой обзор.
                 </p>
               </div>
             </article>
 
             <article class="faq-item reveal reveal-delay-1">
               <button class="faq-toggle" type="button" aria-expanded="false">
-                <span>Что входит в комплект?</span>
+                <span>Сколько времени занимает тренировка?</span>
                 <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  A4 тетрадь-тренажёр с упражнениями и стоматологическое зеркало. Формат
-                  рассчитан на самостоятельные короткие подходы дома, в вузе или перед практикой.
+                  Обычно 10-15 минут за подход. Лучше заниматься коротко, но регулярно.
                 </p>
               </div>
             </article>
 
             <article class="faq-item reveal reveal-delay-2">
               <button class="faq-toggle" type="button" aria-expanded="false">
+                <span>Что входит в комплект?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>
+                  A4-тетрадь-тренажёр с упражнениями и стоматологическое зеркало.
+                </p>
+              </div>
+            </article>
+
+            <article class="faq-item reveal reveal-delay-3">
+              <button class="faq-toggle" type="button" aria-expanded="false">
+                <span>Нужно ли оплачивать сейчас?</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </button>
+              <div class="faq-answer" hidden>
+                <p>
+                  Заявка только закрепляет цену предзаказа. Детали оплаты мы отправим
+                  перед подтверждением заказа.
+                </p>
+              </div>
+            </article>
+
+            <article class="faq-item reveal reveal-delay-4">
+              <button class="faq-toggle" type="button" aria-expanded="false">
                 <span>Когда будет первая партия?</span>
                 <span class="faq-icon" aria-hidden="true"></span>
               </button>
               <div class="faq-answer" hidden>
                 <p>
-                  Сейчас собирается список предзаказа. Когда партия будет готова, мы напишем
-                  вам первыми и дадим возможность подтвердить заказ по цене 1490 ₽.
+                  Сейчас собирается список предзаказа. Как только партия будет готова,
+                  мы напишем участникам списка первыми.
                 </p>
               </div>
             </article>
@@ -468,7 +593,8 @@
         <div>
           <p class="footer-brand">Mirror Trainer</p>
           <p class="footer-text">
-            Тренажёр работы через зеркало для регулярной практики непрямого зрения.
+            A4-тетрадь и стоматологическое зеркало для регулярной тренировки
+            непрямого обзора.
           </p>
         </div>
 
@@ -480,6 +606,21 @@
         </div>
       </div>
     </footer>
+
+    <div class="mobile-sticky-cta" data-sticky-cta aria-hidden="true">
+      <div>
+        <strong>1490 ₽</strong>
+        <span>предзаказ</span>
+      </div>
+      <a
+        class="button button-primary button-small"
+        href="#lead-form"
+        data-scroll-link
+        data-event-label="landing2_sticky_reserve"
+      >
+        Заявка
+      </a>
+    </div>
 
     <div class="modal-shell success-shell" data-modal="success" aria-hidden="true">
       <div class="modal-backdrop" data-close-modal></div>
@@ -503,47 +644,53 @@
 
     <script type="application/json" id="landing2-photo-briefs">
       {
-        "hero_blurred_background": {
+        "hero_background": {
           "ratio": "16:10",
           "recommendedSize": "1800x1125",
-          "usage": "Размытый стоматологический фоновый слой первого экрана, не главный предметный кадр.",
-          "prompt": "Современный стоматологический кабинет или учебная зона: кресло, лампа, чистая поверхность, мягкий боковой свет. Кадр тёмный, премиальный, сильно размытый, без лиц и читаемого текста. Левая центральная часть спокойная для заголовка."
+          "usage": "Мягкий размытый фон первого экрана.",
+          "prompt": "Тёмная медицинская лаборатория или стоматологический кабинет, холодный свет, без людей и читаемого текста, safe area слева под заголовок."
         },
-        "hero_product": {
+        "hero_product_desktop": {
           "ratio": "4:5",
-          "recommendedSize": "1440x1800",
-          "usage": "Главный вертикальный кадр продукта в hero.",
-          "prompt": "Комплект Mirror Trainer на светлом столе: A4 тетрадь на пружине, стоматологическое зеркало, частично раскрытые страницы упражнений. Съёмка сверху под лёгким углом, чисто, современно, без рук и лиц, предметы не обрезаны."
+          "recommendedSize": "1600x2000",
+          "usage": "Главный предметный кадр комплекта, тетрадь A4 + зеркало.",
+          "prompt": "Светлая A4-тетрадь с упражнениями и стоматологическое зеркало на тёмной медицинской поверхности, премиальная предметная съёмка."
+        },
+        "hero_product_mobile": {
+          "ratio": "4:5",
+          "recommendedSize": "1200x1500",
+          "usage": "Мобильный crop главного продукта, объект крупнее, safe area сверху/слева.",
+          "prompt": "Крупный мобильный crop A4-тетради и стоматологического зеркала, объект хорошо читается на экране телефона."
         },
         "kit_flatlay": {
           "ratio": "4:5",
           "recommendedSize": "1440x1800",
-          "usage": "Высокий предметный блок состава комплекта, по высоте равен смысловому тексту справа.",
-          "prompt": "Вертикальный flat lay комплекта: тетрадь A4, зеркало, ручка или тонкий маркер, несколько тренировочных страниц. Белый или светло-серый фон, предметы читаются даже на телефоне, без лишнего декора."
-        },
-        "hands_training": {
-          "ratio": "4:5",
-          "recommendedSize": "1440x1800",
-          "usage": "Вертикальный кадр процесса тренировки.",
-          "prompt": "Руки в медицинских перчатках выполняют упражнение в тетради через стоматологическое зеркало. Видны тетрадь, зеркало и линия задания, лица нет, чистая учебная среда, мягкий свет."
+          "usage": "Комплект сверху: тетрадь, зеркало, ручка/маркер.",
+          "prompt": "A4-тетрадь-тренажёр, зеркало, ручка, страницы с упражнениями, чистая предметная композиция сверху."
         },
         "workbook_spread": {
           "ratio": "16:10",
           "recommendedSize": "1920x1200",
-          "usage": "Широкий горизонтальный кадр разворота тетради.",
-          "prompt": "Разворот A4 тетради с упражнениями: линии, формы, повторяемые паттерны. Камера сверху, страницы хорошо читаются, без случайного мелкого текста, оставить воздух по краям."
+          "usage": "Разворот тетради с упражнениями.",
+          "prompt": "Развороты с линиями, формами и повторяемыми траекториями для тренировки через зеркало."
+        },
+        "training_process": {
+          "ratio": "4:5",
+          "recommendedSize": "1600x2000",
+          "usage": "Руки тренируются через зеркало.",
+          "prompt": "Руки выполняют упражнение в тетради через стоматологическое зеркало, чистая учебная среда."
         },
         "mirror_detail": {
           "ratio": "3:2",
-          "recommendedSize": "1500x1000",
-          "usage": "Широкая макро-деталь для эмоционального ритма страницы.",
-          "prompt": "Макро стоматологического зеркала рядом с краем тетради и линией упражнения. Мягкая глубина резкости, чистый фон, акцент на отражении и материальности, без пальцев и лиц."
+          "recommendedSize": "1800x1200",
+          "usage": "Макро зеркала, металл, отражение, линия упражнения.",
+          "prompt": "Макро стоматологического зеркала рядом с линией упражнения, металл и отражение, премиальная глубина резкости."
         },
-        "training_blurred_background": {
-          "ratio": "16:9",
-          "recommendedSize": "1920x1080",
-          "usage": "Размытый фоновый слой для секции с фото-рамками.",
-          "prompt": "Руки в перчатках, тетрадь-тренажёр и зеркало на чистой учебной поверхности, кадр специально размытый, тёмно-премиальный, подходит под градиентный overlay, без лиц и без читаемого текста."
+        "og_image": {
+          "ratio": "1200:630",
+          "recommendedSize": "2400x1260",
+          "usage": "Open Graph изображение для соцсетей.",
+          "prompt": "Премиальный hero-кадр Mirror Trainer: A4-тетрадь, стоматологическое зеркало, тёмная медицинская лаборатория, крупный читаемый продукт."
         }
       }
     </script>
@@ -556,6 +703,6 @@
     </script>
     <script src="./assets/js/config.js?v=20260506-1"></script>
     <script src="./assets/js/supabase.js?v=20260506-1"></script>
-    <script src="./assets/js/app.js?v=20260512-1"></script>
+    <script src="./assets/js/app.js?v=20260513-2"></script>
   </body>
 </html>
