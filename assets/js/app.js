@@ -244,15 +244,17 @@ function initHeroParallax() {
 
     layers.forEach((layer) => {
       const depth = Number(layer.dataset.parallaxLayer || 0.1);
-      const moveX = relativeX * 28 * depth;
-      const moveY = relativeY * 24 * depth;
-      layer.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
+      const moveX = relativeX * 46 * depth;
+      const moveY = relativeY * 38 * depth;
+      layer.style.setProperty('--parallax-x', `${moveX}px`);
+      layer.style.setProperty('--parallax-y', `${moveY}px`);
     });
   };
 
   const reset = () => {
     layers.forEach((layer) => {
-      layer.style.transform = '';
+      layer.style.removeProperty('--parallax-x');
+      layer.style.removeProperty('--parallax-y');
     });
   };
 
