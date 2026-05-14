@@ -180,10 +180,10 @@ body.nav-open .site-header {
 }
 
 .brand-logo img {
-  width: 190%;
-  height: 190%;
-  object-fit: cover;
-  object-position: 50% 30%;
+  width: 112%;
+  height: 112%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .brand-copy {
@@ -601,7 +601,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
   max-width: none;
   margin-left: 0;
   object-fit: cover;
-  object-position: 66% center;
+  object-position: 70% center;
   filter: saturate(1.06) contrast(1.05) brightness(0.92);
 }
 
@@ -1400,7 +1400,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
   }
 
   .hero-image-mobile {
-    object-position: 66% center;
+    object-position: 70% center;
   }
 
   .visuals-grid {
@@ -1473,7 +1473,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
   .hero-image-desktop {
     display: block;
     height: 100%;
-    object-position: 50% center;
+    object-position: 57% center;
   }
 
   .hero-image-mobile {
