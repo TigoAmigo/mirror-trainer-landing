@@ -91,6 +91,20 @@ create table if not exists public.admin_credentials (
   updated_at timestamptz not null default timezone('utc', now())
 );
 
+create table if not exists public.landing_content_overrides (
+  id uuid primary key default gen_random_uuid(),
+  page_slug text not null,
+  content_key text not null,
+  content_type text not null default 'text',
+  label text,
+  group_key text,
+  value text not null default '',
+  updated_by text,
+  created_at timestamptz not null default timezone('utc', now()),
+  updated_at timestamptz not null default timezone('utc', now()),
+  unique (page_slug, content_key)
+);
+
 create index if not exists idx_leads_created_at on public.leads (created_at desc);
 create index if not exists idx_leads_session_id on public.leads (session_id);
 create index if not exists idx_feedback_votes_interest_level on public.feedback_votes (interest_level);
@@ -98,6 +112,7 @@ create index if not exists idx_purchase_intent_choice on public.purchase_intent 
 create index if not exists idx_event_logs_event_name on public.event_logs (event_name);
 create index if not exists idx_event_logs_session_id on public.event_logs (session_id);
 create index if not exists idx_event_logs_created_at on public.event_logs (created_at desc);
+create index if not exists idx_landing_content_page_slug on public.landing_content_overrides (page_slug);
 
 alter table public.leads enable row level security;
 alter table public.feedback_votes enable row level security;
@@ -105,6 +120,7 @@ alter table public.purchase_intent enable row level security;
 alter table public.event_logs enable row level security;
 alter table public.admin_users enable row level security;
 alter table public.admin_credentials enable row level security;
+alter table public.landing_content_overrides enable row level security;
 
 revoke all on table public.leads from anon, authenticated;
 revoke all on table public.feedback_votes from anon, authenticated;
@@ -112,6 +128,7 @@ revoke all on table public.purchase_intent from anon, authenticated;
 revoke all on table public.event_logs from anon, authenticated;
 revoke all on table public.admin_users from anon, authenticated;
 revoke all on table public.admin_credentials from public, anon, authenticated;
+revoke all on table public.landing_content_overrides from public, anon, authenticated;
 
 insert into public.admin_credentials (username, password_hash, updated_at)
 values ('admin', crypt('714513', gen_salt('bf')), timezone('utc', now()))
@@ -183,12 +200,8 @@ begin
     raise exception 'name is required';
   end if;
 
-  if input_phone = '' then
-    raise exception 'phone is required';
-  end if;
-
-  if input_telegram = '' then
-    raise exception 'telegram is required';
+  if input_phone = '' and input_telegram = '' then
+    raise exception 'phone or telegram is required';
   end if;
 
   if input_contact = '' then
@@ -568,6 +581,146 @@ begin
 end;
 $$;
 
+create or replace function public.build_landing_content(page_slug text default 'landing2')
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  normalized_slug text := btrim(coalesce(page_slug, 'landing2'));
+  result jsonb;
+begin
+  if normalized_slug = '' then
+    normalized_slug := 'landing2';
+  end if;
+
+  select coalesce(
+    jsonb_agg(
+      jsonb_build_object(
+        'key', content_key,
+        'value', value,
+        'type', content_type,
+        'label', label,
+        'group', group_key,
+        'updated_at', updated_at
+      )
+      order by content_key
+    ),
+    '[]'::jsonb
+  )
+  into result
+  from public.landing_content_overrides
+  where landing_content_overrides.page_slug = normalized_slug;
+
+  return result;
+end;
+$$;
+
+revoke execute on function public.build_landing_content(text) from public, anon, authenticated;
+
+create or replace function public.get_landing_content(page_slug text default 'landing2')
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  return public.build_landing_content(page_slug);
+end;
+$$;
+
+create or replace function public.get_landing_content_admin(
+  admin_login text,
+  admin_password text,
+  page_slug text default 'landing2'
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  perform public.assert_admin_credentials(admin_login, admin_password);
+  return public.build_landing_content(page_slug);
+end;
+$$;
+
+create or replace function public.save_landing_content_admin(
+  admin_login text,
+  admin_password text,
+  page_slug text,
+  content_items jsonb default '[]'::jsonb
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  normalized_slug text := btrim(coalesce(page_slug, 'landing2'));
+begin
+  perform public.assert_admin_credentials(admin_login, admin_password);
+
+  if normalized_slug = '' then
+    normalized_slug := 'landing2';
+  end if;
+
+  delete from public.landing_content_overrides
+  where landing_content_overrides.page_slug = normalized_slug;
+
+  insert into public.landing_content_overrides (
+    page_slug,
+    content_key,
+    content_type,
+    label,
+    group_key,
+    value,
+    updated_by,
+    updated_at
+  )
+  select
+    normalized_slug,
+    btrim(item ->> 'key'),
+    coalesce(nullif(btrim(item ->> 'type'), ''), 'text'),
+    nullif(btrim(item ->> 'label'), ''),
+    nullif(btrim(item ->> 'group'), ''),
+    coalesce(item ->> 'value', ''),
+    btrim(coalesce(admin_login, 'admin')),
+    timezone('utc', now())
+  from jsonb_array_elements(coalesce(content_items, '[]'::jsonb)) as item
+  where btrim(coalesce(item ->> 'key', '')) <> '';
+
+  return public.build_landing_content(normalized_slug);
+end;
+$$;
+
+create or replace function public.clear_landing_content_admin(
+  admin_login text,
+  admin_password text,
+  page_slug text default 'landing2'
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  normalized_slug text := btrim(coalesce(page_slug, 'landing2'));
+begin
+  perform public.assert_admin_credentials(admin_login, admin_password);
+
+  if normalized_slug = '' then
+    normalized_slug := 'landing2';
+  end if;
+
+  delete from public.landing_content_overrides
+  where landing_content_overrides.page_slug = normalized_slug;
+
+  return public.build_landing_content(normalized_slug);
+end;
+$$;
+
 grant execute on function public.create_lead(jsonb) to anon, authenticated;
 grant execute on function public.upsert_feedback_vote(jsonb) to anon, authenticated;
 grant execute on function public.upsert_purchase_intent(jsonb) to anon, authenticated;
@@ -578,6 +731,10 @@ grant execute on function public.get_dashboard_snapshot() to anon, authenticated
 grant execute on function public.get_dashboard_snapshot_admin(text, text) to anon, authenticated;
 grant execute on function public.get_recent_leads(int) to anon, authenticated;
 grant execute on function public.get_recent_leads_admin(text, text, int) to anon, authenticated;
+grant execute on function public.get_landing_content(text) to anon, authenticated;
+grant execute on function public.get_landing_content_admin(text, text, text) to anon, authenticated;
+grant execute on function public.save_landing_content_admin(text, text, text, jsonb) to anon, authenticated;
+grant execute on function public.clear_landing_content_admin(text, text, text) to anon, authenticated;
 
 -- После выполнения схемы админка доступна по логину admin и паролю 714513.
 -- Старый email-вход оставлен только для совместимости со старыми RPC:

@@ -3,24 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mirror Trainer Admin Summary</title>
+    <title>Mirror Trainer — админка</title>
     <meta
       name="description"
-      content="Сводка по посещениям, заявкам, CTA и глубине скролла для лендинга Тренажёр работы через зеркало."
+      content="Админка Mirror Trainer: заявки, аналитика и редактирование лендингов."
     />
+    <meta name="theme-color" content="#0a0d10" />
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oranienbaum&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Onest:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/admin.css?v=20260511-2" />
+    <link rel="stylesheet" href="./assets/css/admin.css?v=20260514-admin" />
   </head>
   <body>
     <div class="runtime-warning runtime-warning-admin" data-runtime-warning hidden>
-      <div class="admin-shell runtime-warning-inner">
-        <strong>Админка в file-режиме может не синхронизироваться корректно.</strong>
+      <div class="runtime-warning-inner">
+        <strong>Админку лучше открывать через локальный сервер.</strong>
         <span>
           Откройте через локальный сервер:
           <code>bash "/Users/ilqar/Documents/Блокнот/start-local.sh"</code>
@@ -28,25 +29,77 @@
       </div>
     </div>
 
-    <div class="admin-shell">
-      <header class="admin-header">
-        <div>
-          <p class="admin-eyebrow">Admin summary</p>
-          <h1>Сводка по посещениям и предзаказам</h1>
-          <p>
-            Админка показывает только боевые метрики: посещения, клики по ключевым
-            действиям, глубину просмотра и последние заявки на предзаказ.
-          </p>
-        </div>
-        <div class="admin-actions">
-          <a class="admin-link" href="./index.html">Открыть лендинг</a>
-          <button class="admin-button" type="button" data-refresh-dashboard>
-            Обновить данные
-          </button>
-        </div>
-      </header>
+    <div class="admin-app">
+      <aside class="admin-sidebar" aria-label="Навигация админки">
+        <a class="admin-brand" href="./admin.html" aria-label="Админка Mirror Trainer">
+          <span class="admin-brand-mark" aria-hidden="true">M</span>
+          <span>
+            <strong>Mirror Trainer</strong>
+            <small>админка проекта</small>
+          </span>
+        </a>
 
-      <main class="admin-main">
+        <nav class="admin-nav">
+          <button class="admin-nav-btn active" type="button" data-admin-tab-button="overview">
+            <span class="nav-icon" aria-hidden="true">⌂</span>
+            <span>
+              <strong>Обзор</strong>
+              <small>пульс проекта</small>
+            </span>
+          </button>
+          <button class="admin-nav-btn" type="button" data-admin-tab-button="landing">
+            <span class="nav-icon" aria-hidden="true">✎</span>
+            <span>
+              <strong>Лендинги</strong>
+              <small>тексты и контакты</small>
+            </span>
+          </button>
+          <button class="admin-nav-btn" type="button" data-admin-tab-button="leads">
+            <span class="nav-icon" aria-hidden="true">◎</span>
+            <span>
+              <strong>Заявки</strong>
+              <small>контакты клиентов</small>
+            </span>
+          </button>
+          <button class="admin-nav-btn" type="button" data-admin-tab-button="analytics">
+            <span class="nav-icon" aria-hidden="true">▥</span>
+            <span>
+              <strong>Аналитика</strong>
+              <small>воронка и клики</small>
+            </span>
+          </button>
+        </nav>
+
+        <div class="sidebar-card">
+          <span>Связь сайта и админки</span>
+          <strong data-admin-storage-mode>Проверяем источник</strong>
+          <small data-admin-sync-health>ожидаем вход</small>
+        </div>
+      </aside>
+
+      <main class="admin-main" id="main-content">
+        <header class="admin-topbar">
+          <div>
+            <p class="admin-eyebrow" data-admin-context-label>Рабочий стол</p>
+            <h1 data-admin-page-title>Обзор проекта</h1>
+            <span data-admin-page-subtitle>Заявки, лендинги и свежие метрики в одном месте.</span>
+          </div>
+          <div class="admin-actions">
+            <a class="admin-link" href="./landing-3.html" target="_blank" rel="noreferrer" data-open-active-landing>
+              <span aria-hidden="true">↗</span>
+              Открыть сайт
+            </a>
+            <button class="admin-button admin-button-secondary" type="button" data-refresh-dashboard>
+              <span aria-hidden="true">↻</span>
+              Обновить
+            </button>
+            <button class="admin-button" type="button" data-save-content>
+              <span aria-hidden="true">✓</span>
+              Сохранить сайт
+            </button>
+          </div>
+        </header>
+
         <section class="panel admin-auth-panel" data-admin-auth-panel>
           <div class="panel-header">
             <div>
@@ -55,7 +108,7 @@
             </div>
             <div class="admin-session-actions" data-admin-session-actions hidden>
               <span class="admin-session-email" data-admin-session-email></span>
-              <button class="admin-link" type="button" data-admin-logout>
+              <button class="admin-link admin-link-compact" type="button" data-admin-logout>
                 Выйти
               </button>
             </div>
@@ -70,7 +123,7 @@
                 name="login"
                 autocomplete="username"
                 inputmode="text"
-                placeholder="admin"
+                placeholder="админ"
                 required
               />
             </label>
@@ -85,104 +138,249 @@
                 required
               />
             </label>
-            <button class="admin-button" type="submit">
-              Войти в админку
-            </button>
+            <button class="admin-button" type="submit">Войти в админку</button>
           </form>
 
           <p class="admin-auth-feedback" data-admin-auth-feedback>
-            Для входа используйте логин <strong>admin</strong> и пароль администратора.
+            Для входа используйте логин <strong>админ</strong> и пароль администратора.
           </p>
         </section>
 
         <div data-admin-dashboard hidden>
-          <section class="admin-sync-panel">
-            <div>
-              <span class="admin-sync-label">Связь лендинга и админки</span>
-              <strong data-admin-storage-mode>Проверяем источник данных</strong>
-            </div>
-            <div>
-              <span class="admin-sync-label">Последнее обновление</span>
+          <section class="admin-status-grid">
+            <article>
+              <span>Данные</span>
+              <strong data-admin-storage-mode-main>Проверяем</strong>
+            </article>
+            <article>
+              <span>Последнее обновление</span>
               <strong data-admin-last-sync>нет данных</strong>
+            </article>
+            <article>
+              <span>Правки сайта</span>
+              <strong data-content-sync-state>ожидаем данные</strong>
+            </article>
+          </section>
+
+          <section class="admin-tab active" data-admin-tab="overview">
+            <div class="kpi-grid" data-dashboard-state="loading">
+              <article class="kpi-card">
+                <span>Уникальные посетители</span>
+                <strong data-kpi="uniqueVisitors">0</strong>
+                <small>посещения сайта</small>
+              </article>
+              <article class="kpi-card">
+                <span>Всего заявок</span>
+                <strong data-kpi="totalLeads">0</strong>
+                <small>в списке</small>
+              </article>
+              <article class="kpi-card">
+                <span>Конверсия формы</span>
+                <strong data-kpi="formConversion">0%</strong>
+                <small>заявки / визиты</small>
+              </article>
+              <article class="kpi-card">
+                <span>Клики по кнопкам</span>
+                <strong data-kpi="ctaClicks">0</strong>
+                <small>основные действия</small>
+              </article>
             </div>
-            <div>
-              <span class="admin-sync-label">Состояние</span>
-              <strong data-admin-sync-health>ожидаем данные</strong>
+
+            <div class="overview-grid">
+              <article class="panel panel-wide">
+                <div class="panel-header">
+                  <div>
+                    <h2>Что требует внимания</h2>
+                    <span>Короткая сводка без лишних деталей</span>
+                  </div>
+                </div>
+                <div class="ops-grid" data-ops-grid></div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Свежие заявки</h2>
+                    <span>Последние контакты</span>
+                  </div>
+                  <button class="admin-link admin-link-compact" type="button" data-admin-tab-shortcut="leads">
+                    Все заявки
+                  </button>
+                </div>
+                <div class="lead-mini-list" data-recent-leads></div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Сайт</h2>
+                    <span>Сохранённые правки выбранного лендинга</span>
+                  </div>
+                  <button class="admin-link admin-link-compact" type="button" data-admin-tab-shortcut="landing">
+                    Редактор
+                  </button>
+                </div>
+                <div class="content-health-list" data-content-health-list></div>
+              </article>
             </div>
           </section>
 
-          <section class="kpi-grid" data-dashboard-state="loading">
-          <article class="kpi-card">
-            <span>Уникальные посетители</span>
-            <strong data-kpi="uniqueVisitors">0</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Всего заявок</span>
-            <strong data-kpi="totalLeads">0</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Конверсия формы</span>
-            <strong data-kpi="formConversion">0%</strong>
-          </article>
-          <article class="kpi-card">
-            <span>Все CTA клики</span>
-            <strong data-kpi="ctaClicks">0</strong>
-          </article>
-        </section>
+          <section class="admin-tab" data-admin-tab="landing">
+            <div class="landing-workspace">
+              <section class="panel landing-editor-panel">
+                <div class="panel-header panel-header-sticky">
+                  <div>
+                    <h2>Редактор лендинга</h2>
+                    <span data-content-editor-subtitle>Загружаем текущий сайт</span>
+                  </div>
+                  <div class="panel-header-actions">
+                    <button class="admin-link admin-link-compact" type="button" data-preview-draft>
+                      Обновить просмотр
+                    </button>
+                    <button class="admin-link admin-link-compact" type="button" data-reset-content>
+                      Вернуть как на сайте
+                    </button>
+                  </div>
+                </div>
 
-        <section class="admin-grid admin-grid-highlight">
-          <article class="panel panel-wide">
-            <div class="panel-header">
-              <h2>Воронка предзаказа</h2>
-              <span>От визита до оставленной заявки</span>
+                <div class="landing-switcher" data-landing-switcher>
+                  <button class="landing-switcher-btn" type="button" data-landing-select="landing3">
+                    <strong>Лендинг 3</strong>
+                    <span>новый сайт</span>
+                  </button>
+                  <button class="landing-switcher-btn" type="button" data-landing-select="landing2">
+                    <strong>Лендинг 2</strong>
+                    <span>предыдущая версия</span>
+                  </button>
+                </div>
+
+                <div class="content-toolbar">
+                  <label class="admin-label admin-label-search">
+                    <span>Найти поле</span>
+                    <input class="admin-input" type="search" placeholder="Цена, Телеграм, телефон..." data-content-search />
+                  </label>
+                  <div class="content-group-tabs" data-content-group-tabs></div>
+                </div>
+
+                <div class="content-editor-list" data-content-editor-list></div>
+              </section>
+
+              <aside class="panel landing-preview-panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Просмотр</h2>
+                    <span>Так сайт выглядит с вашими правками</span>
+                  </div>
+                  <a class="admin-link admin-link-compact" href="./landing-3.html" target="_blank" rel="noreferrer" data-open-active-landing>
+                    Открыть
+                  </a>
+                </div>
+                <div class="preview-frame-shell">
+                  <iframe title="Предпросмотр лендинга" data-landing-preview src="./landing-3.html"></iframe>
+                </div>
+              </aside>
             </div>
-            <div class="funnel-grid" data-funnel-grid></div>
-          </article>
-        </section>
+          </section>
 
-        <section class="admin-grid">
-          <article class="panel">
-            <div class="panel-header">
-              <h2>CTA клики</h2>
-              <span data-updated-label>Данные загружаются</span>
+          <section class="admin-tab" data-admin-tab="leads">
+            <div class="leads-layout">
+              <section class="panel panel-wide">
+                <div class="panel-header">
+                  <div>
+                    <h2>Заявки</h2>
+                    <span>Контакты клиентов, статусы и заметки</span>
+                  </div>
+                  <div class="panel-header-actions">
+                    <button class="admin-button admin-button-secondary" type="button" data-export-xlsx>
+                      <span aria-hidden="true">↓</span>
+                      Скачать таблицу
+                    </button>
+                  </div>
+                </div>
+
+                <div class="lead-controls">
+                  <label class="admin-label">
+                    <span>Поиск</span>
+                    <input class="admin-input" type="search" placeholder="Имя, телефон, Телеграм, почта" data-lead-search />
+                  </label>
+                  <label class="admin-label">
+                    <span>Статус</span>
+                    <select class="admin-input" data-lead-status-filter>
+                      <option value="all">Все статусы</option>
+                      <option value="new">Новые</option>
+                      <option value="contacted">Связались</option>
+                      <option value="reserved">В резерве</option>
+                      <option value="done">Закрыто</option>
+                      <option value="spam">Спам</option>
+                    </select>
+                  </label>
+                  <label class="admin-label">
+                    <span>Сортировка</span>
+                    <select class="admin-input" data-lead-sort>
+                      <option value="recent">Сначала новые</option>
+                      <option value="oldest">Сначала старые</option>
+                      <option value="priority">Сначала важные</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div class="pipeline-grid" data-pipeline-grid></div>
+                <div class="lead-list" data-lead-list></div>
+              </section>
+
+              <aside class="panel lead-detail-panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Карточка заявки</h2>
+                    <span data-lead-detail-subtitle>Выберите заявку из списка</span>
+                  </div>
+                </div>
+                <div data-lead-detail></div>
+              </aside>
             </div>
-            <div class="bar-list" data-list="cta"></div>
-          </article>
+          </section>
 
-          <article class="panel">
-            <div class="panel-header">
-              <h2>Глубина скролла</h2>
-              <span>Сколько людей доходят до конца</span>
+          <section class="admin-tab" data-admin-tab="analytics">
+            <div class="admin-grid admin-grid-highlight">
+              <article class="panel panel-wide">
+                <div class="panel-header">
+                  <div>
+                    <h2>Воронка предзаказа</h2>
+                    <span>От визита до оставленной заявки</span>
+                  </div>
+                </div>
+                <div class="funnel-grid" data-funnel-grid></div>
+              </article>
             </div>
-            <div class="bar-list" data-list="scroll"></div>
-          </article>
-        </section>
 
-        <section class="admin-grid admin-grid-highlight">
-          <article class="panel panel-wide">
-            <div class="panel-header">
-              <h2>Заявки и предзаказы</h2>
-              <div class="panel-header-actions">
-                <span>Последние контакты и экспорт в Excel</span>
-                <button class="admin-button admin-button-secondary" type="button" data-export-xlsx>
-                  Скачать Excel (.xlsx)
-                </button>
-              </div>
+            <div class="admin-grid">
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Клики по кнопкам</h2>
+                    <span data-updated-label>Данные загружаются</span>
+                  </div>
+                </div>
+                <div class="bar-list" data-list="cta"></div>
+              </article>
+
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Глубина скролла</h2>
+                    <span>Сколько людей доходят до конца</span>
+                  </div>
+                </div>
+                <div class="bar-list" data-list="scroll"></div>
+              </article>
             </div>
-            <div class="lead-list" data-lead-list></div>
-          </article>
-        </section>
+          </section>
 
-        <section class="admin-note">
-          <p>
-            Если Supabase ещё не подключён, страница работает в локальном режиме.
-            После подключения Supabase админка читает онлайн-данные через защищённые RPC-функции
-            с логином и паролем администратора.
-          </p>
-        </section>
         </div>
       </main>
     </div>
+
+    <div class="toast-stack" aria-live="polite" aria-atomic="true" data-admin-toast-stack></div>
 
     <script>
       if (window.location.protocol === 'file:') {
@@ -191,8 +389,8 @@
       }
     </script>
     <script src="./assets/js/config.js?v=20260511-2"></script>
-    <script src="./assets/js/supabase.js?v=20260511-2"></script>
+    <script src="./assets/js/supabase.js?v=20260513-admin"></script>
     <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-    <script src="./assets/js/admin.js?v=20260511-2"></script>
+    <script src="./assets/js/admin.js?v=20260514-admin"></script>
   </body>
 </html>

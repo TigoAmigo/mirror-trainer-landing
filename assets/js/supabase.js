@@ -5,15 +5,18 @@ const memoryStore = window.__MIRROR_TRAINER_MEMORY__ || (window.__MIRROR_TRAINER
 const STORAGE_KEYS = {
   leads: 'mirror-trainer-leads',
   eventLogs: 'mirror-trainer-event-logs',
+  landingContent: 'mirror-trainer-landing-content',
 };
 const ADMIN_CREDENTIAL_KEY = 'mirror-trainer-admin-credentials';
 const DASHBOARD_CHANNEL = 'mirror-trainer-dashboard-sync';
+const LANDING_CONTENT_CHANNEL = 'mirror-trainer-landing-content-sync';
 
 const hasRemoteConfig =
   window.location.protocol !== 'file:' &&
   Boolean(appConfig.supabaseUrl && appConfig.supabaseAnonKey);
 let clientPromise = null;
 let dashboardChannel = null;
+let landingContentChannel = null;
 let adminCredentials = readAdminCredentials();
 
 const storageMode = hasRemoteConfig ? 'remote' : 'local';
@@ -202,6 +205,31 @@ function notifyDashboardUpdated(detail = {}) {
   }
 }
 
+function notifyLandingContentUpdated(detail = {}) {
+  const payload = {
+    ...detail,
+    updatedAt: new Date().toISOString(),
+  };
+
+  window.dispatchEvent(
+    new CustomEvent('mirror-trainer-landing-content-updated', {
+      detail: payload,
+    })
+  );
+
+  try {
+    if ('BroadcastChannel' in window) {
+      if (!landingContentChannel) {
+        landingContentChannel = new BroadcastChannel(LANDING_CONTENT_CHANNEL);
+      }
+
+      landingContentChannel.postMessage(payload);
+    }
+  } catch (error) {
+    console.warn('Landing content sync channel is unavailable.', error);
+  }
+}
+
 function readCookie(name) {
   const source = document.cookie || '';
   const prefix = `${encodeURIComponent(name)}=`;
@@ -305,6 +333,93 @@ function buildLocalDashboardSnapshot() {
     ctaBreakdown,
     scrollDepth: scrollBreakdown,
   };
+}
+
+function normalizePageSlug(pageSlug) {
+  return String(pageSlug || 'landing2')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]/g, '') || 'landing2';
+}
+
+function normalizeContentItem(item) {
+  const key = String(item?.key || item?.content_key || '').trim();
+
+  if (!key) {
+    return null;
+  }
+
+  return {
+    key,
+    value: String(item?.value ?? ''),
+    type: String(item?.type || item?.content_type || 'text'),
+    label: String(item?.label || ''),
+    group: String(item?.group || ''),
+    updatedAt: item?.updatedAt || item?.updated_at || new Date().toISOString(),
+  };
+}
+
+function normalizeLandingContentState(pageSlug, value, mode = storageMode) {
+  const normalizedSlug = normalizePageSlug(pageSlug);
+  const sourceItems = Array.isArray(value)
+    ? value
+    : Array.isArray(value?.items)
+      ? value.items
+      : [];
+  const items = sourceItems.map(normalizeContentItem).filter(Boolean);
+
+  return {
+    storageMode: mode,
+    pageSlug: normalizedSlug,
+    updatedAt: value?.updatedAt || value?.updated_at || new Date().toISOString(),
+    items,
+  };
+}
+
+function readLocalLandingContent(pageSlug = 'landing2') {
+  const normalizedSlug = normalizePageSlug(pageSlug);
+  const allContent = readLocal(STORAGE_KEYS.landingContent, {});
+  return normalizeLandingContentState(
+    normalizedSlug,
+    allContent[normalizedSlug] || { pageSlug: normalizedSlug, items: [] },
+    'local'
+  );
+}
+
+function writeLocalLandingContent(pageSlug, items) {
+  const normalizedSlug = normalizePageSlug(pageSlug);
+  const allContent = readLocal(STORAGE_KEYS.landingContent, {});
+  const updatedAt = new Date().toISOString();
+
+  allContent[normalizedSlug] = {
+    pageSlug: normalizedSlug,
+    updatedAt,
+    items: (Array.isArray(items) ? items : []).map(normalizeContentItem).filter(Boolean),
+  };
+
+  writeLocal(STORAGE_KEYS.landingContent, allContent);
+  notifyLandingContentUpdated({
+    source: 'local_storage',
+    pageSlug: normalizedSlug,
+    type: 'content_saved',
+  });
+
+  return normalizeLandingContentState(normalizedSlug, allContent[normalizedSlug], 'local');
+}
+
+function clearLocalLandingContent(pageSlug) {
+  const normalizedSlug = normalizePageSlug(pageSlug);
+  const allContent = readLocal(STORAGE_KEYS.landingContent, {});
+
+  delete allContent[normalizedSlug];
+  writeLocal(STORAGE_KEYS.landingContent, allContent);
+  notifyLandingContentUpdated({
+    source: 'local_storage',
+    pageSlug: normalizedSlug,
+    type: 'content_cleared',
+  });
+
+  return normalizeLandingContentState(normalizedSlug, { pageSlug: normalizedSlug, items: [] }, 'local');
 }
 
 async function runRpc(functionName, payload) {
@@ -583,6 +698,123 @@ async function getLeadRecords(limit = 50) {
     .slice(0, normalizedLimit);
 }
 
+function getLandingContentSnapshotSync(pageSlug = 'landing2') {
+  return readLocalLandingContent(pageSlug);
+}
+
+async function getLandingContent(pageSlug = 'landing2') {
+  const normalizedSlug = normalizePageSlug(pageSlug);
+  let data = null;
+
+  try {
+    data = await runRpc('get_landing_content', { page_slug: normalizedSlug });
+  } catch (error) {
+    console.warn('Falling back to local landing content because remote content query failed.', error);
+  }
+
+  if (Array.isArray(data)) {
+    return normalizeLandingContentState(normalizedSlug, data, 'remote');
+  }
+
+  return readLocalLandingContent(normalizedSlug);
+}
+
+async function getLandingContentAdmin(pageSlug = 'landing2') {
+  const normalizedSlug = normalizePageSlug(pageSlug);
+  let data = null;
+
+  try {
+    data = await runAdminRpc('get_landing_content_admin', { page_slug: normalizedSlug });
+  } catch (error) {
+    console.warn('Password-protected landing content RPC failed, trying public content RPC.', error);
+  }
+
+  if (Array.isArray(data)) {
+    return normalizeLandingContentState(normalizedSlug, data, 'remote');
+  }
+
+  return getLandingContent(normalizedSlug);
+}
+
+async function saveLandingContentAdmin(pageSlug = 'landing2', items = []) {
+  const normalizedSlug = normalizePageSlug(pageSlug);
+  const normalizedItems = (Array.isArray(items) ? items : [])
+    .map(normalizeContentItem)
+    .filter(Boolean);
+  let data = null;
+
+  try {
+    data = await runAdminRpc('save_landing_content_admin', {
+      page_slug: normalizedSlug,
+      content_items: normalizedItems,
+    });
+  } catch (error) {
+    console.warn('Falling back to local landing content save because remote save failed.', error);
+  }
+
+  if (Array.isArray(data)) {
+    notifyLandingContentUpdated({
+      source: 'remote',
+      pageSlug: normalizedSlug,
+      type: 'content_saved',
+    });
+    return normalizeLandingContentState(normalizedSlug, data, 'remote');
+  }
+
+  return writeLocalLandingContent(normalizedSlug, normalizedItems);
+}
+
+async function clearLandingContentAdmin(pageSlug = 'landing2') {
+  const normalizedSlug = normalizePageSlug(pageSlug);
+  let data = null;
+
+  try {
+    data = await runAdminRpc('clear_landing_content_admin', { page_slug: normalizedSlug });
+  } catch (error) {
+    console.warn('Falling back to local landing content clear because remote clear failed.', error);
+  }
+
+  if (Array.isArray(data)) {
+    notifyLandingContentUpdated({
+      source: 'remote',
+      pageSlug: normalizedSlug,
+      type: 'content_cleared',
+    });
+    return normalizeLandingContentState(normalizedSlug, data, 'remote');
+  }
+
+  return clearLocalLandingContent(normalizedSlug);
+}
+
+function onLandingContentChange(callback) {
+  if (typeof callback !== 'function') {
+    return () => {};
+  }
+
+  const handleWindowEvent = (event) => callback(event.detail || {});
+  window.addEventListener('mirror-trainer-landing-content-updated', handleWindowEvent);
+
+  let channel = null;
+  const handleChannelMessage = (event) => callback(event.data || {});
+
+  try {
+    if ('BroadcastChannel' in window) {
+      channel = new BroadcastChannel(LANDING_CONTENT_CHANNEL);
+      channel.addEventListener('message', handleChannelMessage);
+    }
+  } catch (error) {
+    console.warn('Landing content subscription channel is unavailable.', error);
+  }
+
+  return () => {
+    window.removeEventListener('mirror-trainer-landing-content-updated', handleWindowEvent);
+    if (channel) {
+      channel.removeEventListener('message', handleChannelMessage);
+      channel.close();
+    }
+  };
+}
+
 function clearLocalData() {
   Object.values(STORAGE_KEYS).forEach((key) => {
     try {
@@ -618,6 +850,12 @@ window.MirrorTrainerData = {
   logEvent,
   getDashboardSnapshot,
   getLeadRecords,
+  getLandingContentSnapshotSync,
+  getLandingContent,
+  getLandingContentAdmin,
+  saveLandingContentAdmin,
+  clearLandingContentAdmin,
+  onLandingContentChange,
   setAdminCredentials,
   getAdminCredentials,
   clearAdminCredentials,

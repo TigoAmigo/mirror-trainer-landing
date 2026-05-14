@@ -445,7 +445,7 @@
                   />
                 </label>
                 <label>
-                  <span>Telegram</span>
+                  <span>Телеграм</span>
                   <span class="telegram-input-shell">
                     <span class="telegram-prefix" aria-hidden="true">@</span>
                     <input
@@ -454,14 +454,14 @@
                       autocomplete="off"
                       autocapitalize="none"
                       spellcheck="false"
-                      placeholder="Telegram"
+                      placeholder="Телеграм"
                       data-telegram-input
                     />
                   </span>
                 </label>
                 <label>
-                  <span>Email</span>
-                  <input type="email" name="email" autocomplete="email" placeholder="Email" />
+                  <span>Почта</span>
+                  <input type="email" name="email" autocomplete="email" placeholder="Почта" />
                 </label>
                 <label class="field-span-2">
                   <span>Комментарий</span>
@@ -540,11 +540,19 @@
           </span>
         </a>
 
-        <a class="footer-telegram" href="https://t.me/mirror_trainer" target="_blank" rel="noreferrer">
+        <a class="footer-telegram" href="https://t.me/mirror_trainer" target="_blank" rel="noreferrer" data-contact-telegram-link>
           <span class="telegram-mark"><svg class="icon"><use href="#icon-telegram"></use></svg></span>
           <span>
-            <strong>Telegram</strong>
-            <small>@mirror_trainer</small>
+            <strong>Телеграм</strong>
+            <small data-contact-telegram-label>@mirror_trainer</small>
+          </span>
+        </a>
+
+        <a class="footer-phone" href="tel:+79991234567" data-contact-phone-link>
+          <span class="telegram-mark"><svg class="icon"><use href="#icon-clock"></use></svg></span>
+          <span>
+            <strong>Телефон</strong>
+            <small data-contact-phone-label>+7 (999) 123-45-67</small>
           </span>
         </a>
 

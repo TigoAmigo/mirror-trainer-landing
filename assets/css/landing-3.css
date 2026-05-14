@@ -194,7 +194,8 @@ body.nav-open .site-header {
 
 .brand-title,
 .footer-brand strong,
-.footer-telegram strong {
+.footer-telegram strong,
+.footer-phone strong {
   color: var(--text);
   font-family: "Onest", system-ui, sans-serif;
   font-size: 0.98rem;
@@ -203,7 +204,8 @@ body.nav-open .site-header {
 
 .brand-subtitle,
 .footer-brand small,
-.footer-telegram small {
+.footer-telegram small,
+.footer-phone small {
   color: var(--muted);
   font-size: 0.72rem;
 }
@@ -381,8 +383,8 @@ body.nav-open .mobile-toggle-icon span:last-child {
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(90deg, rgba(5, 8, 13, 0.96) 0%, rgba(5, 8, 13, 0.84) 38%, rgba(5, 8, 13, 0.18) 68%, rgba(5, 8, 13, 0.58) 100%),
-    linear-gradient(180deg, rgba(5, 8, 13, 0.28) 0%, rgba(5, 8, 13, 0.16) 54%, rgba(5, 8, 13, 0.92) 100%),
+    linear-gradient(90deg, rgba(5, 8, 13, 0.98) 0%, rgba(5, 8, 13, 0.9) 34%, rgba(5, 8, 13, 0.34) 58%, rgba(5, 8, 13, 0.1) 76%, rgba(5, 8, 13, 0.34) 100%),
+    linear-gradient(180deg, rgba(5, 8, 13, 0.16) 0%, rgba(5, 8, 13, 0.08) 54%, rgba(5, 8, 13, 0.76) 100%),
     linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
   background-repeat: no-repeat, no-repeat, repeat, repeat;
@@ -400,7 +402,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
     radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 0.22), transparent 22%),
     linear-gradient(112deg, transparent 18%, rgba(213, 229, 255, 0.2), transparent 52%);
   filter: blur(16px);
-  opacity: 0.45;
+  opacity: 0.24;
   transform: rotate(9deg);
 }
 
@@ -409,7 +411,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
   inset: auto -10% 0 0;
   z-index: 2;
   height: 46%;
-  background: radial-gradient(ellipse at 78% 100%, rgba(244, 200, 102, 0.13), transparent 56%);
+  background: radial-gradient(ellipse at 78% 100%, rgba(244, 200, 102, 0.1), transparent 56%);
   pointer-events: none;
 }
 
@@ -425,6 +427,16 @@ body.nav-open .mobile-toggle-icon span:last-child {
   position: relative;
   z-index: 3;
   max-width: 575px;
+}
+
+.hero-copy::before {
+  content: "";
+  position: absolute;
+  inset: -26px -30px -24px -22px;
+  z-index: -1;
+  background: radial-gradient(ellipse at 0% 42%, rgba(5, 8, 13, 0.72), rgba(5, 8, 13, 0.34) 52%, transparent 76%);
+  filter: blur(14px);
+  pointer-events: none;
 }
 
 .hero-title,
@@ -543,6 +555,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
   height: 100%;
   margin: 0;
   min-width: 0;
+  overflow: hidden;
   border-radius: 0;
   pointer-events: none;
 }
@@ -559,9 +572,9 @@ body.nav-open .mobile-toggle-icon span:last-child {
   height: 100%;
   display: block;
   border-radius: 0;
-  object-fit: cover;
-  object-position: 68% center;
-  filter: saturate(0.98) contrast(1.02);
+  object-fit: contain;
+  object-position: right bottom;
+  filter: saturate(1.04) contrast(1.04) brightness(0.94);
   transform: translate3d(var(--parallax-x), var(--parallax-y), 0);
   transition: transform var(--ease), filter var(--ease);
 }
@@ -571,7 +584,11 @@ body.nav-open .mobile-toggle-icon span:last-child {
 }
 
 .hero-image-mobile {
-  object-position: 58% bottom;
+  width: 116%;
+  max-width: none;
+  margin-left: -16%;
+  object-position: right bottom;
+  filter: saturate(1.05) contrast(1.04) brightness(0.9);
 }
 
 .section {
@@ -1126,6 +1143,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
 
 .footer-brand,
 .footer-telegram,
+.footer-phone,
 .footer-policy {
   min-height: 58px;
   display: flex;
@@ -1134,7 +1152,8 @@ body.nav-open .mobile-toggle-icon span:last-child {
 }
 
 .footer-brand span:last-child,
-.footer-telegram span:last-child {
+.footer-telegram span:last-child,
+.footer-phone span:last-child {
   display: grid;
   gap: 4px;
 }
@@ -1358,8 +1377,8 @@ body.nav-open .mobile-toggle-icon span:last-child {
 
   .hero::before {
     background:
-      linear-gradient(90deg, rgba(5, 8, 13, 0.94) 0%, rgba(5, 8, 13, 0.86) 54%, rgba(5, 8, 13, 0.38) 100%),
-      linear-gradient(180deg, rgba(5, 8, 13, 0.42) 0%, rgba(5, 8, 13, 0.16) 46%, rgba(5, 8, 13, 0.86) 100%),
+      linear-gradient(90deg, rgba(5, 8, 13, 0.96) 0%, rgba(5, 8, 13, 0.82) 54%, rgba(5, 8, 13, 0.28) 100%),
+      linear-gradient(180deg, rgba(5, 8, 13, 0.68) 0%, rgba(5, 8, 13, 0.5) 45%, rgba(5, 8, 13, 0.2) 70%, rgba(5, 8, 13, 0.86) 100%),
       linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
     background-repeat: no-repeat, no-repeat, repeat, repeat;
@@ -1367,7 +1386,7 @@ body.nav-open .mobile-toggle-icon span:last-child {
   }
 
   .hero-image-mobile {
-    object-position: 72% bottom;
+    object-position: right bottom;
   }
 
   .visuals-grid {

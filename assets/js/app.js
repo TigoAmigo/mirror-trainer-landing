@@ -91,6 +91,8 @@ const LANDING2_CONTENT_TARGETS = {
   'footer.text': { selector: '.footer-text', target: 'text' },
   'footer.telegramLabel': { selector: '[data-contact-label]', target: 'text' },
   'footer.telegramUrl': { selector: '[data-contact-link]', target: 'attr', attr: 'href' },
+  'footer.phoneLabel': { selector: '[data-contact-phone-label]', target: 'text' },
+  'footer.phoneUrl': { selector: '[data-contact-phone-link]', target: 'attr', attr: 'href' },
   'sticky.price': { selector: '.mobile-sticky-cta strong', target: 'text' },
   'sticky.label': { selector: '.mobile-sticky-cta span', target: 'text' },
   'sticky.cta': { selector: '.mobile-sticky-cta .button', target: 'text' },
@@ -101,6 +103,79 @@ const LANDING2_CONTENT_TARGETS = {
   'photo.workbookSpreadPrompt': { selector: '[data-photo-slot="workbook_spread"]', target: 'attr', attr: 'data-photo-prompt' },
   'photo.trainingProcessPrompt': { selector: '[data-photo-slot="training_process"]', target: 'attr', attr: 'data-photo-prompt' },
   'photo.mirrorDetailPrompt': { selector: '[data-photo-slot="mirror_detail"]', target: 'attr', attr: 'data-photo-prompt' },
+};
+
+const LANDING3_CONTENT_TARGETS = {
+  'meta.title': { selector: 'title', target: 'text' },
+  'meta.description': { selector: 'meta[name="description"]', target: 'attr', attr: 'content' },
+  'nav.skill': { selector: '.site-nav a[href="#skill"]', target: 'text' },
+  'nav.kit': { selector: '.site-nav a[href="#kit"]', target: 'text' },
+  'nav.method': { selector: '.site-nav a[href="#method"]', target: 'text' },
+  'nav.pricing': { selector: '.site-nav a[href="#pricing"]', target: 'text' },
+  'header.cta': { selector: '.header-cta', target: 'text' },
+  'hero.title': { selector: '.hero-title', target: 'text' },
+  'hero.text': { selector: '.hero-text', target: 'text' },
+  'hero.ctaPrimary': { selector: '.hero-actions .button-gold', target: 'text' },
+  'hero.ctaSecondary': { selector: '.hero-actions .button-dark', target: 'text' },
+  'hero.priceLabel': { selector: '.hero-price span', target: 'text' },
+  'hero.priceAmount': { selector: '.hero-price strong', target: 'text' },
+  'hero.priceNote': { selector: '.hero-price small', target: 'text' },
+  'skill.title': { selector: '#skill .section-copy h2', target: 'text' },
+  'skill.text': { selector: '#skill .section-copy p', target: 'text' },
+  'skill.card1Title': { selector: '#skill .glass-card:nth-child(1) h3', target: 'text' },
+  'skill.card1Text': { selector: '#skill .glass-card:nth-child(1) p', target: 'text' },
+  'skill.card2Title': { selector: '#skill .glass-card:nth-child(2) h3', target: 'text' },
+  'skill.card2Text': { selector: '#skill .glass-card:nth-child(2) p', target: 'text' },
+  'skill.card3Title': { selector: '#skill .glass-card:nth-child(3) h3', target: 'text' },
+  'skill.card3Text': { selector: '#skill .glass-card:nth-child(3) p', target: 'text' },
+  'kit.title': { selector: '#kit .section-copy h2', target: 'text' },
+  'kit.item1Title': { selector: '#kit .kit-list article:nth-child(1) h3', target: 'text' },
+  'kit.item1Text': { selector: '#kit .kit-list article:nth-child(1) p', target: 'text' },
+  'kit.item2Title': { selector: '#kit .kit-list article:nth-child(2) h3', target: 'text' },
+  'kit.item2Text': { selector: '#kit .kit-list article:nth-child(2) p', target: 'text' },
+  'kit.item3Title': { selector: '#kit .kit-list article:nth-child(3) h3', target: 'text' },
+  'kit.item3Text': { selector: '#kit .kit-list article:nth-child(3) p', target: 'text' },
+  'method.title': { selector: '#method .section-copy h2', target: 'text' },
+  'method.text': { selector: '#method .section-copy p', target: 'text' },
+  'method.step1Title': { selector: '#method .method-step:nth-of-type(1) h3', target: 'text' },
+  'method.step1Text': { selector: '#method .method-step:nth-of-type(1) p', target: 'text' },
+  'method.step2Title': { selector: '#method .method-step:nth-of-type(2) h3', target: 'text' },
+  'method.step2Text': { selector: '#method .method-step:nth-of-type(2) p', target: 'text' },
+  'method.step3Title': { selector: '#method .method-step:nth-of-type(3) h3', target: 'text' },
+  'method.step3Text': { selector: '#method .method-step:nth-of-type(3) p', target: 'text' },
+  'visuals.card1Caption': { selector: '.section-visuals figure:nth-child(1) figcaption', target: 'text' },
+  'visuals.card2Caption': { selector: '.section-visuals figure:nth-child(2) figcaption', target: 'text' },
+  'visuals.card3Caption': { selector: '.section-visuals figure:nth-child(3) figcaption', target: 'text' },
+  'pricing.title': { selector: '#pricing .pricing-copy h2', target: 'text' },
+  'pricing.text': { selector: '#pricing .pricing-copy p', target: 'text' },
+  'pricing.oldPrice': { selector: '#pricing .old-price', target: 'text' },
+  'pricing.price': { selector: '#pricing .price-stack strong', target: 'text' },
+  'pricing.list1': { selector: '#pricing .included-list li:nth-child(1)', target: 'text' },
+  'pricing.list2': { selector: '#pricing .included-list li:nth-child(2)', target: 'text' },
+  'pricing.list3': { selector: '#pricing .included-list li:nth-child(3)', target: 'text' },
+  'form.title': { selector: '#lead-form .form-heading h2', target: 'text' },
+  'form.text': { selector: '#lead-form .form-heading p', target: 'text' },
+  'form.submit': { selector: '#lead-form button[type="submit"]', target: 'text' },
+  'form.meta': { selector: '#lead-form .privacy-note', target: 'text' },
+  'faq.title': { selector: '#faq .faq-title h2', target: 'text' },
+  'faq.q1': { selector: '#faq .faq-item:nth-child(1) .faq-toggle span:first-child', target: 'text' },
+  'faq.a1': { selector: '#faq .faq-item:nth-child(1) .faq-answer p', target: 'text' },
+  'faq.q2': { selector: '#faq .faq-item:nth-child(2) .faq-toggle span:first-child', target: 'text' },
+  'faq.a2': { selector: '#faq .faq-item:nth-child(2) .faq-answer p', target: 'text' },
+  'faq.q3': { selector: '#faq .faq-item:nth-child(3) .faq-toggle span:first-child', target: 'text' },
+  'faq.a3': { selector: '#faq .faq-item:nth-child(3) .faq-answer p', target: 'text' },
+  'footer.brandNote': { selector: '.footer-brand small', target: 'text' },
+  'footer.telegramTitle': { selector: '.footer-telegram strong', target: 'text' },
+  'footer.telegramLabel': { selector: '[data-contact-telegram-label]', target: 'text' },
+  'footer.telegramUrl': { selector: '[data-contact-telegram-link]', target: 'attr', attr: 'href' },
+  'footer.phoneTitle': { selector: '.footer-phone strong', target: 'text' },
+  'footer.phoneLabel': { selector: '[data-contact-phone-label]', target: 'text' },
+  'footer.phoneUrl': { selector: '[data-contact-phone-link]', target: 'attr', attr: 'href' },
+};
+
+const LANDING_CONTENT_TARGETS = {
+  landing2: LANDING2_CONTENT_TARGETS,
+  landing3: LANDING3_CONTENT_TARGETS,
 };
 
 const state = {
@@ -230,15 +305,33 @@ function getDeviceType() {
 }
 
 function applyContactInfo() {
-  const link = document.querySelector('[data-contact-link]');
-  const label = document.querySelector('[data-contact-label]');
+  const telegramLinks = document.querySelectorAll('[data-contact-link], [data-contact-telegram-link]');
+  const telegramLabels = document.querySelectorAll('[data-contact-label], [data-contact-telegram-label]');
+  const phoneLinks = document.querySelectorAll('[data-contact-phone-link]');
+  const phoneLabels = document.querySelectorAll('[data-contact-phone-label]');
 
-  if (link && config.contactTelegramUrl) {
-    link.href = config.contactTelegramUrl;
+  if (config.contactTelegramUrl) {
+    telegramLinks.forEach((link) => {
+      link.href = config.contactTelegramUrl;
+    });
   }
 
-  if (label && config.contactTelegramLabel) {
-    label.textContent = config.contactTelegramLabel;
+  if (config.contactTelegramLabel) {
+    telegramLabels.forEach((label) => {
+      label.textContent = config.contactTelegramLabel;
+    });
+  }
+
+  if (config.contactPhoneUrl) {
+    phoneLinks.forEach((link) => {
+      link.href = config.contactPhoneUrl;
+    });
+  }
+
+  if (config.contactPhoneLabel) {
+    phoneLabels.forEach((label) => {
+      label.textContent = config.contactPhoneLabel;
+    });
   }
 }
 
@@ -281,6 +374,10 @@ function initLandingContentOverrides() {
 function getEditableLandingSlug() {
   const normalizedPath = window.location.pathname.toLowerCase();
 
+  if (normalizedPath.endsWith('/landing-3.html') || normalizedPath.endsWith('landing-3.html')) {
+    return 'landing3';
+  }
+
   if (normalizedPath.endsWith('/landing-2.html') || normalizedPath.endsWith('landing-2.html')) {
     return 'landing2';
   }
@@ -290,13 +387,15 @@ function getEditableLandingSlug() {
 
 function applyLandingContentState(contentState, root) {
   const items = Array.isArray(contentState?.items) ? contentState.items : [];
+  const pageSlug = contentState?.pageSlug || getEditableLandingSlug() || 'landing2';
+  const targetMap = LANDING_CONTENT_TARGETS[pageSlug] || LANDING_CONTENT_TARGETS.landing2;
 
   if (!items.length) {
     return;
   }
 
   items.forEach((item) => {
-    const target = LANDING2_CONTENT_TARGETS[item.key];
+    const target = targetMap[item.key];
     const value = String(item.value ?? '');
 
     if (!target || !value.trim()) {
@@ -809,7 +908,7 @@ function initLeadForms() {
         console.error(error);
         setFormFeedback(
           feedbackNode,
-          'Не удалось отправить форму. Проверьте подключение к Supabase.',
+          'Не удалось отправить форму. Проверьте подключение к онлайн-базе.',
           'error'
         );
         showToast('Не удалось отправить форму.', 'error');
@@ -856,7 +955,7 @@ function validateLeadPayload(payload) {
   const hasTelegram = Boolean(payload.telegram);
 
   if (!hasPhone && !hasTelegram) {
-    return 'Укажите телефон или Telegram для связи.';
+    return 'Укажите телефон или Телеграм для связи.';
   }
 
   if (hasPhone && !isValidPhone(payload.phone)) {
@@ -864,7 +963,7 @@ function validateLeadPayload(payload) {
   }
 
   if (hasTelegram && !isValidTelegram(payload.telegram)) {
-    return 'Укажите корректный Telegram через username.';
+    return 'Укажите корректное имя в Телеграме.';
   }
 
   return '';
