@@ -8,7 +8,7 @@
       name="description"
       content="Админка Mirror Trainer: заявки, аналитика и редактирование лендингов."
     />
-    <meta name="theme-color" content="#0a0d10" />
+    <meta name="theme-color" content="#07090c" />
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Onest:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./assets/css/admin.css?v=20260514-admin" />
+    <link rel="stylesheet" href="./assets/css/admin.css?v=20260514-dark" />
   </head>
   <body>
     <div class="runtime-warning runtime-warning-admin" data-runtime-warning hidden>
@@ -70,9 +70,9 @@
           </button>
         </nav>
 
-        <div class="sidebar-card">
-          <span>Связь сайта и админки</span>
-          <strong data-admin-storage-mode>Проверяем источник</strong>
+        <div class="sidebar-card" data-admin-side-status>
+          <span>Источник данных</span>
+          <strong data-admin-storage-mode>Проверяем</strong>
           <small data-admin-sync-health>ожидаем вход</small>
         </div>
       </aside>
@@ -85,6 +85,12 @@
             <span data-admin-page-subtitle>Заявки, лендинги и свежие метрики в одном месте.</span>
           </div>
           <div class="admin-actions">
+            <div class="topbar-session" data-admin-topbar-session hidden>
+              <span data-admin-topbar-user>Администратор</span>
+              <button class="admin-link admin-link-compact" type="button" data-admin-logout>
+                Выйти
+              </button>
+            </div>
             <a class="admin-link" href="./landing-3.html" target="_blank" rel="noreferrer" data-open-active-landing>
               <span aria-hidden="true">↗</span>
               Открыть сайт

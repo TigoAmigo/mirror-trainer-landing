@@ -283,7 +283,9 @@ const dom = {
   authForm: document.querySelector('[data-admin-login-form]'),
   sessionActions: document.querySelector('[data-admin-session-actions]'),
   sessionEmail: document.querySelector('[data-admin-session-email]'),
-  logoutButton: document.querySelector('[data-admin-logout]'),
+  logoutButtons: document.querySelectorAll('[data-admin-logout]'),
+  topbarSession: document.querySelector('[data-admin-topbar-session]'),
+  topbarUser: document.querySelector('[data-admin-topbar-user]'),
   dashboard: document.querySelector('[data-admin-dashboard]'),
   storageModeLabels: document.querySelectorAll('[data-admin-storage-mode], [data-admin-storage-mode-main]'),
   lastSyncLabel: document.querySelector('[data-admin-last-sync]'),
@@ -531,8 +533,8 @@ function bindAuthUi() {
     });
   }
 
-  if (dom.logoutButton) {
-    dom.logoutButton.addEventListener('click', () => {
+  dom.logoutButtons.forEach((button) => {
+    button.addEventListener('click', () => {
       clearStoredAdminSession();
       clearAdminCredentials();
       state.currentUser = null;
@@ -540,7 +542,7 @@ function bindAuthUi() {
       updateAuthView();
       setAuthFeedback('Вы вышли из админки.', 'warning');
     });
-  }
+  });
 }
 
 function restoreAdminSession() {
@@ -604,8 +606,10 @@ function updateAuthView() {
 
   if (!state.authReady) {
     setAuthCopy('Проверка доступа', 'Подготавливаем режим админки');
+    toggleNode(dom.authPanel, true);
     toggleNode(dom.authForm, false);
     toggleNode(dom.sessionActions, false);
+    toggleNode(dom.topbarSession, false);
     toggleNode(dom.dashboard, false);
     return;
   }
@@ -617,12 +621,17 @@ function updateAuthView() {
         ? 'Админка подключена к онлайн-базе'
         : 'Доступны данные этого браузера'
     );
+    toggleNode(dom.authPanel, false);
     toggleNode(dom.authForm, false);
-    toggleNode(dom.sessionActions, true);
+    toggleNode(dom.sessionActions, false);
+    toggleNode(dom.topbarSession, true);
     toggleNode(dom.dashboard, true);
 
     if (dom.sessionEmail) {
       dom.sessionEmail.textContent = 'Администратор';
+    }
+    if (dom.topbarUser) {
+      dom.topbarUser.textContent = 'Администратор';
     }
 
     setAuthFeedback(
@@ -635,8 +644,10 @@ function updateAuthView() {
   }
 
   setAuthCopy('Вход в админку', 'Введите логин и пароль администратора');
+  toggleNode(dom.authPanel, true);
   toggleNode(dom.authForm, true);
   toggleNode(dom.sessionActions, false);
+  toggleNode(dom.topbarSession, false);
   toggleNode(dom.dashboard, false);
   setAuthFeedback('Логин: админ. Пароль вводится вручную.', 'warning');
 }
